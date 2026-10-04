@@ -19,8 +19,13 @@ local RunService = game:GetService("RunService")
 -- Versão A: script dentro do Model. Versão B: dentro da pasta DinoKit do modelo importado.
 local container = script.Parent
 local isKit = not container:IsA("Model")
-local model = isKit and container.Parent or container
+local model = container
 if isKit then
+	-- o servidor pode mover o kit para dentro do modelo certo: espera isso
+	while not (container.Parent and container.Parent:IsA("Model")) do
+		container.AncestryChanged:Wait()
+	end
+	model = container.Parent
 	local t0 = os.clock()
 	while not model:GetAttribute("DinoReady") and os.clock() - t0 < 30 do
 		task.wait(0.1)

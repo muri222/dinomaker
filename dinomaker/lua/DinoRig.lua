@@ -54,6 +54,28 @@ function Rig.findBones(model, kit)
 	return out, n
 end
 
+-- Acha o modelo do dino: o pai do kit, ou (kit solto) o Model com mais ossos que batem
+function Rig.findTarget(kit)
+	local p = kit.Parent
+	if p and p:IsA("Model") then
+		return p
+	end
+	local best, bestN = nil, 0
+	for _, m in ipairs((p or workspace):GetDescendants()) do
+		if m:IsA("Model") and not m:FindFirstChild("DinoKit") then
+			local _, n = Rig.findBones(m, kit)
+			if n > bestN then
+				best, bestN = m, n
+			end
+		end
+	end
+	if best and bestN >= 3 then
+		kit.Parent = best
+		return best
+	end
+	return nil
+end
+
 local function rotations()
 	local axes = { Vector3.xAxis, Vector3.yAxis, Vector3.zAxis }
 	local out = {}
@@ -124,6 +146,10 @@ end
 
 -- Servidor: cria HumanoidRootPart/Humanoid, solda, move os VFX e grava o mapa
 function Rig.setup(model, kit)
+	if not model or not model:IsA("Model") or model == workspace then
+		warn("[DinoKit] A pasta DinoKit precisa estar dentro do modelo importado do dino.")
+		return false
+	end
 	if model:GetAttribute("DinoReady") then
 		return true
 	end

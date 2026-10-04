@@ -39,7 +39,7 @@ def rand_rot(rng):
 
 @unittest.skipIf(LuaRuntime is None, "lupa não instalado")
 class TestKitLua(unittest.TestCase):
-    def run_case(self, species, clip, frame):
+    def run_case(self, species, clip, frame, loose=False):
         g = resolve({"species": species, "seed": 4})
         m = build_model(g)
         clips, rig, meta = bake(m, g)
@@ -73,7 +73,15 @@ class TestKitLua(unittest.TestCase):
         P[:3, 3] = [4, 1, 2]
         part.CFrame = G.CFrame.new(*comps(P))
         part.Parent = model
-        kit.Parent = model
+        ws = G.Instance.new("Workspace")
+        G.workspace = ws
+        base = G.Instance.new("Part")
+        base.Name = "Baseplate"
+        base.Anchored = True
+        base.CFrame = G.CFrame.new(0, -1, 0)
+        base.Parent = ws
+        model.Parent = ws
+        kit.Parent = ws if loose else model
         W, O, inst = {}, {}, {}
         for n, b in m.bones.items():
             O[n] = rand_rot(rng)
@@ -88,7 +96,13 @@ class TestKitLua(unittest.TestCase):
             bone.Parent = inst[b["parent"]] if b["parent"] else part
             inst[n] = bone
 
+        self.assertFalse(Rig.setup(ws, kit))  # nunca trata o Workspace como dino
+        same = L.eval("function(a, b) return rawequal(a, b) end")
+        self.assertTrue(same(Rig.findTarget(kit), model))
+        self.assertTrue(same(kit.Parent, model))
         self.assertTrue(Rig.setup(model, kit))
+        self.assertTrue(base.Anchored)
+        self.assertIsNone(ws.FindFirstChildOfClass(ws, "Humanoid"))
         hrp = model.HumanoidRootPart
         drv = Rig.newDriver(model, hrp, kit)
         loc = clips[clip]["local"][frame]
@@ -119,6 +133,9 @@ class TestKitLua(unittest.TestCase):
 
     def test_quadruped_walk(self):
         self.run_case("triceratops", "Walk", 7)
+
+    def test_kit_loose_in_workspace(self):
+        self.run_case("stegosaurus", "Idle", 10, loose=True)
 
     def test_pterosaur_fly(self):
         self.run_case("pteranodon", "Fly", 5)

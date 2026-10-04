@@ -11,9 +11,14 @@
 
 -- Versão A: dentro do Model. Versão B: dentro da pasta DinoKit (monta o rig no Play).
 local container = script.Parent
-local model = container:IsA("Model") and container or container.Parent
-if not container:IsA("Model") then
+local model = container:IsA("Model") and container or nil
+if not model then
 	local Rig = require(container:WaitForChild("DinoRig"))
+	model = Rig.findTarget(container)
+	if not model then
+		warn("[DinoKit] Não achei o modelo do dino. Arraste a pasta DinoKit para dentro do modelo importado pelo Importar 3D.")
+		return
+	end
 	if not Rig.setup(model, container) then
 		return
 	end
