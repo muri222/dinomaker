@@ -92,7 +92,7 @@ def kit_node(model, genome, clips, meta):
     kit.add(script_node("Script", "DinoAnimator", src("DinoAnimator"), run_context=2))
     kit.add(script_node("Script", "DinoBrain", src("DinoBrain"), run_context=1))
     kit.props.append(attrs_xml({
-        "DinoName": genome["name"], "Species": genome["species"], "Archetype": genome["archetype"],
+        "DinoName": genome["name"], "DinoId": genome["id"], "Species": genome["species"], "Archetype": genome["archetype"],
         "Wander": False, "WanderRadius": 40.0, "Action": "", "ActionNonce": 0.0,
         "AttackStyle": genome["attack"], "Flying": False, "VFX": True, "VFXTheme": theme,
     }))

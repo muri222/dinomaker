@@ -150,7 +150,7 @@ SurfaceAppearance), `{id}.blend` e `{id}.glb`.
 """
 
 
-def generate(spec, out_root, history_path, threshold=0.82, formats=("A", "B"), previews=True, detail="medium", dry_run=False, log=print, genome=None):
+def generate(spec, out_root, history_path, threshold=0.82, formats=("A", "B"), previews=True, detail="medium", dry_run=False, log=print, genome=None, update_history=True):
     """genome != None: rebuild de um dino existente (sem checar unicidade, atualiza o histórico)."""
     hist = load_history(history_path)
     if genome is None:
@@ -224,8 +224,9 @@ def generate(spec, out_root, history_path, threshold=0.82, formats=("A", "B"), p
             palette=g["palette_name"], pattern=g["pattern"]["type"], eyes=g["eyes"]["style"],
             clips=", ".join(clips), ws=meta["walk_speed"] * s, rs=meta["run_speed"] * s))
 
-    add_to_history(hist, g, os.path.relpath(out_dir, ROOT) if out_dir.startswith(ROOT) else out_dir)
-    save_history(history_path, hist)
+    if update_history:
+        add_to_history(hist, g, os.path.relpath(out_dir, ROOT) if out_dir.startswith(ROOT) else out_dir)
+        save_history(history_path, hist)
     log("[dinomaker] pronto: %s" % out_dir)
     return g, out_dir
 

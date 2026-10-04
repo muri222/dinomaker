@@ -60,7 +60,20 @@ function Rig.findTarget(kit)
 	if p and p:IsA("Model") then
 		return p
 	end
-	-- vários dinos no mapa: escolhe o esqueleto que ENCAIXA melhor neste kit
+	-- 1º: modelo com o mesmo nome do FBX (o Importar 3D usa o nome do arquivo)
+	local id = kit:GetAttribute("DinoId")
+	if id then
+		for _, m in ipairs(workspace:GetDescendants()) do
+			if m:IsA("Model") and string.lower(m.Name) == string.lower(id) and not m:FindFirstChild("DinoKit") then
+				local _, n = Rig.findBones(m, kit)
+				if n >= 3 then
+					kit.Parent = m
+					return m
+				end
+			end
+		end
+	end
+	-- 2º: vários dinos no mapa: escolhe o esqueleto que ENCAIXA melhor neste kit
 	-- (proporções iguais às do gerador), ignorando modelos que já têm kit
 	local best, bestScore = nil, math.huge
 	for _, m in ipairs(workspace:GetDescendants()) do
