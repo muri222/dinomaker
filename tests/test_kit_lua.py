@@ -82,6 +82,28 @@ class TestKitLua(unittest.TestCase):
         base.Parent = ws
         model.Parent = ws
         kit.Parent = ws if loose else model
+        if loose:  # outro dino (espécie diferente) com ossos de mesmo nome
+            g2 = resolve({"species": "brachiosaurus", "seed": 9})
+            m2 = build_model(g2)
+            other = G.Instance.new("Model")
+            p2 = G.Instance.new("MeshPart")
+            p2.CFrame = G.CFrame.new(50, 0, 0)
+            p2.Parent = other
+            made = {}
+            for n, b in m2.bones.items():
+                Wb = np.eye(4)
+                Wb[:3, 3] = b["pos"] * g2["px_size"] + np.array([50, 0, 0])
+                pw = np.eye(4)
+                if b["parent"]:
+                    pw[:3, 3] = m2.bones[b["parent"]]["pos"] * g2["px_size"] + np.array([50, 0, 0])
+                else:
+                    pw[:3, 3] = [50, 0, 0]
+                bone = G.Instance.new("Bone")
+                bone.Name = n
+                bone.CFrame = G.CFrame.new(*comps(np.linalg.inv(pw) @ Wb))
+                bone.Parent = made[b["parent"]] if b["parent"] else p2
+                made[n] = bone
+            other.Parent = ws
         W, O, inst = {}, {}, {}
         for n, b in m.bones.items():
             O[n] = rand_rot(rng)

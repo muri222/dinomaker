@@ -60,16 +60,24 @@ function Rig.findTarget(kit)
 	if p and p:IsA("Model") then
 		return p
 	end
-	local best, bestN = nil, 0
+	-- vários dinos no mapa: escolhe o esqueleto que ENCAIXA melhor neste kit
+	-- (proporções iguais às do gerador), ignorando modelos que já têm kit
+	local best, bestScore = nil, math.huge
 	for _, m in ipairs((p or workspace):GetDescendants()) do
 		if m:IsA("Model") and not m:FindFirstChild("DinoKit") then
-			local _, n = Rig.findBones(m, kit)
-			if n > bestN then
-				best, bestN = m, n
+			local bones, n = Rig.findBones(m, kit)
+			if n >= 3 then
+				local fit = Rig.fit(bones)
+				if fit then
+					local score = fit.err + (#Data.bones - n) * 0.5
+					if score < bestScore then
+						best, bestScore = m, score
+					end
+				end
 			end
 		end
 	end
-	if best and bestN >= 3 then
+	if best and bestScore < 2 then
 		kit.Parent = best
 		return best
 	end
