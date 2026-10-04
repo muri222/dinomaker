@@ -2,7 +2,7 @@
 	DinoAPI (ModuleScript) — gerado pelo dinomaker.
 
 	local API = require(dino.DinoAPI)
-	API.Play(dino, "Attack")   -- "Attack" | "Roar" | "Hit" | "Eat"
+	API.Play(dino, "Attack")   -- "Attack" | "Roar" | "Hit" | "Eat" | "Flap" (asas)
 	API.Walk(dino, Vector3.new(10, 0, 0))
 	API.Run(dino, Vector3.new(50, 0, 0))
 	API.SetFlying(dino, true)  -- só dinos com asas

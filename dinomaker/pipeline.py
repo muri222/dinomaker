@@ -10,7 +10,7 @@ import numpy as np
 
 from .anims import bake
 from .export_rbx import export_rbxmx
-from .export_kit import export_kit
+from .export_kit import export_kit, export_kit_pack, write_nodes
 from .genome import resolve, check_unique, load_history, save_history, add_to_history, signature, most_similar
 from .model import build_model
 from .texture import paint_faces, build_atlas
@@ -228,3 +228,24 @@ def generate(spec, out_root, history_path, threshold=0.82, formats=("A", "B"), p
     save_history(history_path, hist)
     log("[dinomaker] pronto: %s" % out_dir)
     return g, out_dir
+
+
+def pack_kits(genomes, out_root, name="Lote", log=print):
+    """<name>_DinoKits.rbxmx (todos os kits) + DinoMaker_Plugin.rbxmx."""
+    from .export_rbx import Node, Ref, script_node, LUA_DIR
+    items = []
+    for g in genomes:
+        m = build_model(g)
+        clips, rig, meta = bake(m, g)
+        items.append((m, g, clips, meta))
+    os.makedirs(out_root, exist_ok=True)
+    path = os.path.join(out_root, "%s_DinoKits.rbxmx" % name)
+    export_kit_pack(path, items)
+    log("[dinomaker] %d kits em %s — %s" % (len(items), path, validate_rbxmx(path)))
+    with open(os.path.join(LUA_DIR, "DinoMakerPlugin.lua"), encoding="utf-8") as fh:
+        src = fh.read()
+    Ref.n = 0
+    ppath = os.path.join(out_root, "DinoMaker_Plugin.rbxmx")
+    write_nodes(ppath, [script_node("Script", "DinoMaker", src, run_context=0)])
+    log("[dinomaker] plugin: %s — %s" % (ppath, validate_rbxmx(ppath)))
+    return path, ppath

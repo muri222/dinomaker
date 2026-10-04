@@ -42,8 +42,39 @@ def rig_data_lua(model, genome, meta):
     return "\n".join(lines) + "\n"
 
 
+HEADER = ('<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+          'xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">'
+          "<External>null</External><External>nil</External>")
+
+
+def write_nodes(path, nodes):
+    out = [HEADER]
+    for n in nodes:
+        n.xml(out)
+    out.append("</roblox>")
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write("\n".join(out))
+
+
 def export_kit(path, model, genome, clips, meta):
     Ref.n = 0
+    kit, theme = kit_node(model, genome, clips, meta)
+    write_nodes(path, [kit])
+    return theme
+
+
+def export_kit_pack(path, items):
+    """Vários kits num arquivo só: pasta DinoKits com um DinoKit por dino.
+    items: [(model, genome, clips, meta)]"""
+    Ref.n = 0
+    pack = Node("Folder", "DinoKits")
+    for model, genome, clips, meta in items:
+        kit, _ = kit_node(model, genome, clips, meta)
+        pack.add(kit)
+    write_nodes(path, [pack])
+
+
+def kit_node(model, genome, clips, meta):
     s = genome["px_size"]
     kit = Node("Folder", "DinoKit")
     vfx = Node("Folder", "VFX")
@@ -65,11 +96,4 @@ def export_kit(path, model, genome, clips, meta):
         "Wander": False, "WanderRadius": 40.0, "Action": "", "ActionNonce": 0.0,
         "AttackStyle": genome["attack"], "Flying": False, "VFX": True, "VFXTheme": theme,
     }))
-    out = ['<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
-           'xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">',
-           "<External>null</External><External>nil</External>"]
-    kit.xml(out)
-    out.append("</roblox>")
-    with open(path, "w", encoding="utf-8") as fh:
-        fh.write("\n".join(out))
-    return theme
+    return kit, theme

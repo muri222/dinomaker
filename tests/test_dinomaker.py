@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 from dinomaker.anims import bake, Rig
 from dinomaker.export_rbx import export_rbxmx
 from dinomaker.genome import resolve, signature, similarity, check_unique, add_to_history
-from dinomaker.model import build_model
+from dinomaker.model import build_model, coplanar_conflicts
 from dinomaker.species import SPECIES, ARCHETYPES
 from dinomaker.texture import paint_faces, build_atlas
 
@@ -40,7 +40,8 @@ class TestBuild(unittest.TestCase):
             m = build_model(g)
             self.assertGreater(len(m.boxes), 10, sp)
             for b in m.boxes:
-                self.assertTrue(all(s >= 1 for s in b["size"]), sp)
+                self.assertTrue(all(s >= 0.5 for s in b["size"]), sp)
+            self.assertEqual(coplanar_conflicts(m), [], sp)  # sem z-fighting
             for lg in m.legs:
                 self.assertAlmostEqual(lg["ankle"][1], g["params"]["foot_h"], delta=1e-6, msg=sp)
             clips, rig, meta = bake(m, g)

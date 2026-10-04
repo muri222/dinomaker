@@ -255,7 +255,61 @@ def build_model(genome):
 
     # ---------------------------------------------------------- features
     _features(m, P, feats)
+    fix_coplanar(m, eps=min(0.15, max(0.05, 0.03 / float(genome.get("px_size", 0.14)))))
     return m
+
+
+def coplanar_conflicts(m, tol=1e-3):
+    """Pares de caixas (mesma rotação) com faces no mesmo plano, mesma direção e
+    área sobreposta -> z-fighting. Retorna (i, j, eixo, lado)."""
+    out = []
+    W = [m.box_world_frame(b) for b in m.boxes]
+    for i, a in enumerate(m.boxes):
+        ca, Ra = W[i]
+        ha = a["size"] / 2
+        for j in range(i + 1, len(m.boxes)):
+            b = m.boxes[j]
+            cb, Rb = W[j]
+            if not np.allclose(Ra, Rb, atol=1e-6):
+                continue
+            d = Ra.T @ (cb - ca)
+            hb = b["size"] / 2
+            for ax in range(3):
+                o = [k for k in range(3) if k != ax]
+                if not all(min(d[k] + hb[k], ha[k]) - max(d[k] - hb[k], -ha[k]) > tol for k in o):
+                    continue
+                for sgn in (1, -1):
+                    if abs((d[ax] + sgn * hb[ax]) - sgn * ha[ax]) < tol:
+                        out.append((i, j, ax, sgn))
+    return out
+
+
+def fix_coplanar(m, eps=0.2, passes=4):
+    """Recua a face da caixa menor (eps px) em cada conflito de z-fighting."""
+    for _ in range(passes):
+        conf = coplanar_conflicts(m)
+        if not conf:
+            return
+        done = set()
+        for i, j, ax, sgn in conf:
+            a, b = m.boxes[i], m.boxes[j]
+            cands = sorted([(i, a, sgn), (j, b, sgn)], key=lambda t: np.prod(t[1]["size"]))
+            pick = None
+            for k, box, sg in cands:
+                orig = box.setdefault("size0", box["size"].copy())
+                if box["size"][ax] - eps >= max(0.5, 0.6 * orig[ax]):
+                    pick = (k, box, sg)
+                    break
+            if pick is None:
+                continue
+            k, box, sgn = pick
+            if (k, ax, sgn) in done:
+                continue
+            done.add((k, ax, sgn))
+            box["size"] = box["size"].copy()
+            box["size"][ax] -= eps
+            # move o centro para a face oposta ficar no lugar (eixo local da caixa)
+            box["c"] = box["c"] - box["R"][:, ax] * (sgn * eps / 2)
 
 
 def _leg(m, side, s, parent, hip, knee, ankle, a1, a2, upper_wd, lower_wd, foot_whl, toes, names, group, sickle=False):
@@ -304,9 +358,9 @@ def _arms(m, P, feats, cw, chest_bot, ch, chest_front):
         big = "big_claws" in feats
         for x in ((-1, 0, 1) if aw + 1 >= 3 else (0,)):
             if big:
-                m.box_local("Hand" + side, (x * 0.8, -ha - 2.5, 0.5), (1, 5, 1), "claw", R=rx(math.radians(-20)), tag="claw")
+                m.box_local("Hand" + side, (x * 1.0, -ha - 2.5, 0.5), (1, 5, 1), "claw", R=rx(math.radians(-20)), tag="claw")
             else:
-                m.box_local("Hand" + side, (x * 0.8, -ha - 0.5, 0.5), (1, 2, 1), "claw", tag="claw")
+                m.box_local("Hand" + side, (x * 1.0, -ha - 0.5, 0.5), (1, 2, 1), "claw", tag="claw")
         if "thumb_spike" in feats:
             m.box_local("Hand" + side, (0, -1, -1.5), (1, 1, 3), "horn", tag="horn")
         if "feathers" in feats:

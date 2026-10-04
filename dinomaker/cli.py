@@ -49,6 +49,10 @@ def main(argv=None):
     rb.add_argument("--detail", choices=["high", "medium", "low", "none"], default="medium")
     rb.add_argument("--no-preview", action="store_true")
     rb.add_argument("--out", default=DEFAULT_OUT)
+    pk = sub.add_parser("pack", help="junta os DinoKits de vários dinos num arquivo só + gera o plugin do Studio")
+    pk.add_argument("ids", nargs="*", help="ids (vazio = todos os não-legados)")
+    pk.add_argument("--name", default="Lote")
+    pk.add_argument("--out", default=DEFAULT_OUT)
     r = sub.add_parser("forget", help="remove um dino do histórico")
     r.add_argument("id")
 
@@ -85,6 +89,13 @@ def main(argv=None):
             spec = {"vfx": {"theme": a.vfx}} if a.vfx else {}
             generate(spec, a.out, a.history, formats=tuple(x.strip().upper() for x in a.formats.split(",")),
                      previews=not a.no_preview, detail=a.detail, genome=g)
+        return 0
+
+    if a.cmd == "pack":
+        from .pipeline import pack_kits
+        h = load_history(a.history)
+        todo = [d for d in h["dinos"] if not d.get("legacy") and d.get("genome") and (not a.ids or d["id"] in a.ids)]
+        pack_kits([d["genome"] for d in todo], a.out, a.name)
         return 0
 
     if a.cmd == "forget":

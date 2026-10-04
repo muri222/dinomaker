@@ -29,6 +29,24 @@ local API = require(container:WaitForChild("DinoAPI"))
 
 hum.WalkSpeed = model:GetAttribute("WalkSpeed") or hum.WalkSpeed
 
+-- voo (dinos com asas): sobe o HipHeight enquanto Flying = true
+local anims = container:FindFirstChild("Animations")
+local canFly = anims and anims:FindFirstChild("Fly") ~= nil
+local baseHip = hum.HipHeight
+if model:GetAttribute("FlyHeight") == nil then
+	model:SetAttribute("FlyHeight", math.max(6, baseHip * 4))
+end
+local function applyFlying()
+	if canFly and model:GetAttribute("Flying") then
+		hum.HipHeight = baseHip + (model:GetAttribute("FlyHeight") or 8)
+		hum.WalkSpeed = model:GetAttribute("RunSpeed") or hum.WalkSpeed
+	else
+		hum.HipHeight = baseHip
+	end
+end
+model:GetAttributeChangedSignal("Flying"):Connect(applyFlying)
+applyFlying()
+
 pcall(function()
 	root:SetNetworkOwner(nil)
 end)
@@ -41,7 +59,11 @@ local function wander()
 		if model:GetAttribute("Wander") then
 			local r = model:GetAttribute("WanderRadius") or 40
 			local target = home + Vector3.new(rng:NextNumber(-r, r), 0, rng:NextNumber(-r, r))
-			if rng:NextNumber() < 0.25 then
+			local flying = canFly and rng:NextNumber() < 0.45
+			if flying then
+				API.SetFlying(model, true)
+				API.Run(model, target)
+			elseif rng:NextNumber() < 0.25 then
 				API.Run(model, target)
 			else
 				API.Walk(model, target)
@@ -56,9 +78,16 @@ local function wander()
 			end
 			conn:Disconnect()
 			hum:MoveTo(root.Position)
+			if flying then
+				API.SetFlying(model, false)
+				task.wait(1)
+			end
 			task.wait(rng:NextNumber(1.5, 4))
 			local roll = rng:NextNumber()
-			if roll < 0.3 then
+			if canFly and roll < 0.2 then
+				API.Play(model, "Flap")
+				task.wait(2)
+			elseif roll < 0.3 then
 				API.Play(model, "Roar")
 				task.wait(2)
 			elseif roll < 0.55 then

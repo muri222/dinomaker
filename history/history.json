@@ -434,7 +434,7 @@
     "crystals",
     "horns_brow"
    ],
-   "created": "2026-10-04T16:31:07",
+   "created": "2026-10-04T23:41:47",
    "output": "output/rex_magma",
    "signature": {
     "archetype": "theropod",
@@ -588,7 +588,7 @@
     "club",
     "gem"
    ],
-   "created": "2026-10-04T16:31:17",
+   "created": "2026-10-04T23:42:04",
    "output": "output/anquilo_rubi",
    "signature": {
     "archetype": "ankylosaur",
@@ -742,7 +742,7 @@
     "antlers",
     "mane"
    ],
-   "created": "2026-10-04T16:31:23",
+   "created": "2026-10-04T23:42:14",
    "output": "output/cervossauro",
    "signature": {
     "archetype": "hadrosaur",
@@ -894,7 +894,7 @@
     "sail",
     "glow_eyes"
    ],
-   "created": "2026-10-04T16:31:29",
+   "created": "2026-10-04T23:42:25",
    "output": "output/espino_galaxia",
    "signature": {
     "archetype": "spinosaur",
@@ -1047,7 +1047,7 @@
     "crest_head",
     "glow_eyes"
    ],
-   "created": "2026-10-04T16:31:34",
+   "created": "2026-10-04T23:42:35",
    "output": "output/ptero_trovao",
    "signature": {
     "archetype": "pterosaur",
@@ -1199,7 +1199,7 @@
     "sickle_claw",
     "feathers"
    ],
-   "created": "2026-10-04T16:31:40",
+   "created": "2026-10-04T23:42:45",
    "output": "output/raptor_neon",
    "signature": {
     "archetype": "raptor",
@@ -1349,7 +1349,7 @@
    "features": [
     "crystals"
    ],
-   "created": "2026-10-04T16:31:56",
+   "created": "2026-10-04T23:43:10",
    "output": "output/braqui_gelo",
    "signature": {
     "archetype": "sauropod",
@@ -1495,7 +1495,7 @@
     "plates",
     "thagomizer"
    ],
-   "created": "2026-10-04T16:32:01",
+   "created": "2026-10-04T23:43:19",
    "output": "output/estego_por_do_sol",
    "signature": {
     "archetype": "stegosaur",
@@ -1644,7 +1644,7 @@
     "beak",
     "dome"
    ],
-   "created": "2026-10-04T16:32:10",
+   "created": "2026-10-04T23:43:34",
    "output": "output/paqui_cabecudo",
    "signature": {
     "archetype": "pachycephalosaur",
@@ -1793,7 +1793,7 @@
     "beak",
     "crest_tube"
    ],
-   "created": "2026-10-04T16:32:16",
+   "created": "2026-10-04T23:43:44",
    "output": "output/parassauro_coral",
    "signature": {
     "archetype": "hadrosaur",
@@ -1944,7 +1944,7 @@
     "horns_long",
     "horn_nose"
    ],
-   "created": "2026-10-04T16:32:28",
+   "created": "2026-10-04T23:44:01",
    "output": "output/trici_menta",
    "signature": {
     "archetype": "ceratopsian",

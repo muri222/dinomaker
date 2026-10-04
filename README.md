@@ -36,6 +36,15 @@ Com o Claude Code, use a skill **`/dino`** (`.claude/skills/dino/SKILL.md`): o C
 conceito (nome, espécie real ou fantasia, paleta, gancho visual), checa o histórico,
 gera, revisa os previews e entrega.
 
+## Importação rápida da versão B (vários dinos)
+```bash
+python -m dinomaker pack --name Lote1      # output/Lote1_DinoKits.rbxm + output/DinoMaker_Plugin.rbxm
+```
+1. Uma vez: copie `tools/DinoMaker_Plugin.rbxm` para a Pasta de plugins do Studio.
+2. Importar 3D com **todos** os `.fbx` selecionados (textura embutida).
+3. Arraste `Lote1_DinoKits.rbxm` e clique **Instalar kits** (ou só dê Play): cada kit acha o seu dino
+   pelo encaixe do esqueleto e monta Humanoid, animações, VFX e scripts.
+
 ## Como funciona
 ```
 spec (parcial) ─► genome.resolve ─► checagem de similaridade com history/history.json

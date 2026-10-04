@@ -360,8 +360,32 @@ def clip_fly(c, t, T):
             rots[a] = rot(x=-55)
             rots[b] = rot(x=30)
             rots[f] = rot(x=-40)
-    root = (rot(x=-12), np.array([0, c.leg_len * (0.9 + 0.08 * math.sin(w)), 0]))
+    # a altura real do voo vem do Humanoid (HipHeight sobe no DinoBrain); aqui só o balanço
+    root = (rot(x=-12), np.array([0, c.leg_len * 0.12 * math.sin(w), 0]))
     return dict(root=root, rot=rots, feet={})
+
+
+def clip_flap(c, t, T):
+    """No chão: abre as asas e bate 3 vezes (exibição)."""
+    u = t / T
+    open_ = envelope(u, 0.0, 0.18, 0.82, 1.0)
+    w = 2 * math.pi * 3 * u
+    rots = merge(
+        {"Chest": rot(x=8 * open_)},
+        c.spread(c.necks, 10 * open_),
+        {"Head": rot(x=10 * open_), "Jaw": rot(x=-25 * envelope(u, 0.2, 0.3, 0.5, 0.6))},
+        c.tail_wave(t, T, 4),
+    )
+    for lg in c.m.legs:
+        a, b, f = lg["bones"]
+        if lg["group"] == "front":
+            sd = lg["side"]
+            spread = open_ * (75 + 20 * math.sin(w))
+            rots[a] = rot(x=-lg["a1"] * 57.3 * open_, z=sd * spread)
+            rots[b] = rot(x=-(lg["a2"] - lg["a1"]) * 57.3 * open_, z=sd * 8 * open_ * math.sin(w - 0.6))
+    feet = {i: c.planted(i) for i, lg in enumerate(c.m.legs) if lg["group"] == "hind"}
+    root = (rot(x=10 * open_), np.array([0, c.leg_len * 0.1 * open_, 0]))
+    return dict(root=root, rot=rots, feet=feet)
 
 
 # nome -> (função, duração(s) ou None p/ calculada, loop, prioridade Roblox)
@@ -375,6 +399,7 @@ CLIPS = {
     "Eat": (clip_eat, 2.4, True, "Action"),
     "Death": (clip_death, 1.8, False, "Action"),
     "Fly": (clip_fly, 0.9, True, "Movement"),
+    "Flap": (clip_flap, 1.6, False, "Action"),
 }
 
 
@@ -383,7 +408,7 @@ def bake(model, genome):
     c = Ctx(model, genome)
     clips = {}
     for name, (fn, dur, loop, prio) in CLIPS.items():
-        if name == "Fly" and not c.winged:
+        if name in ("Fly", "Flap") and not c.winged:
             continue
         if dur is None:
             dur = c.T_walk if name == "Walk" else c.T_run

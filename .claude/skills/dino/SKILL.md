@@ -85,6 +85,9 @@ O histórico é atualizado automaticamente.
 4. Se algo ficou ruim: `python -m dinomaker forget <id>`, ajuste o spec e gere de novo.
 
 ## 6. Entregar
+Para lotes: `python -m dinomaker pack --name <Lote>` gera o arquivo único de kits + plugin; entregue
+os `.fbx` + `<Lote>_DinoKits.rbxm` + `DinoMaker_Plugin.rbxm` (fluxo no README).
+
 Resuma para o usuário: nome, conceito, arquivos e como importar (está no README do dino).
 Faça commit de `specs/<id>.json` e `history/history.json` (os outputs ficam fora do git,
 salvo se o usuário pedir).
