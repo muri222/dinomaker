@@ -1,0 +1,12 @@
+{
+ "name": "Raptor Neon",
+ "species": "velociraptor",
+ "palette": "toxic",
+ "pattern": {
+  "type": "stripes",
+  "scale": 5,
+  "density": 0.8
+ },
+ "size": "small",
+ "description": "Velociraptor verde-limão com listras e penas roxas"
+}

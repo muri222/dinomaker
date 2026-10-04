@@ -1,0 +1,15 @@
+{
+ "name": "Espino Galáxia",
+ "species": "spinosaurus",
+ "fantasy": true,
+ "palette": "grape",
+ "pattern": {
+  "type": "galaxy",
+  "scale": 6,
+  "density": 0.7
+ },
+ "features": [
+  "glow_eyes"
+ ],
+ "description": "Espinossauro cósmico com vela roxa e pele de galáxia"
+}

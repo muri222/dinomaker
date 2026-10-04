@@ -1,0 +1,4 @@
+{"name": "Braqui Gelo", "species": "brachiosaurus", "fantasy": true,
+ "palette": {"primary": "#7fc4f0", "belly": "#e8f6ff", "accent": "#2f7fe0", "pattern": "#4f9fd8"},
+ "pattern": {"type": "spots", "scale": 6, "density": 0.7}, "features": ["crystals"], "eyes": {"style": "cute"},
+ "description": "Braquiossauro de gelo azul com manchas e cristais nas costas"}

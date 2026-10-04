@@ -1,0 +1,12 @@
+{
+ "name": "Paqui Cabeçudo",
+ "species": "pachycephalosaurus",
+ "palette": "bubblegum",
+ "chibi": true,
+ "pattern": {
+  "type": "spots",
+  "scale": 5,
+  "density": 0.7
+ },
+ "description": "Paquicefalossauro azul-bebê fofo de cabeça dura"
+}

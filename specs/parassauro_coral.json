@@ -1,0 +1,11 @@
+{
+ "name": "Parassauro Coral",
+ "species": "parasaurolophus",
+ "palette": "lagoon",
+ "pattern": {
+  "type": "tiger",
+  "scale": 6,
+  "density": 0.7
+ },
+ "description": "Parassaurolofo turquesa com listras de tigre"
+}

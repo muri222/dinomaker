@@ -473,6 +473,536 @@
     "size": "large",
     "chibi": false
    }
+  },
+  {
+   "id": "anquilo_rubi",
+   "name": "Anquilo Rubi",
+   "species": "ankylosaurus",
+   "archetype": "ankylosaur",
+   "fantasy": true,
+   "palette": "royal",
+   "pattern": "rosettes",
+   "features": [
+    "beak",
+    "armor",
+    "side_spikes",
+    "club",
+    "gem"
+   ],
+   "created": "2026-10-04T08:13:20",
+   "output": "output/anquilo_rubi",
+   "signature": {
+    "archetype": "ankylosaur",
+    "species": "ankylosaurus",
+    "ratios": [
+     0.09359190556492412,
+     0.8049465992130411,
+     1.3058053965658216,
+     0.39151208544125915,
+     0.7183811129848229
+    ],
+    "features": [
+     "armor",
+     "beak",
+     "club",
+     "gem",
+     "side_spikes"
+    ],
+    "hues": [
+     [
+      0.6296296296296297,
+      0.7539267015706806,
+      0.7490196078431373
+     ],
+     [
+      0.125,
+      0.8,
+      1.0
+     ],
+     [
+      0.13333333333333336,
+      0.40772532188841204,
+      0.9137254901960784
+     ]
+    ],
+    "pattern": "rosettes",
+    "eyes": "cute",
+    "size": "large",
+    "chibi": false
+   }
+  },
+  {
+   "id": "cervossauro",
+   "name": "Cervossauro",
+   "species": "custom",
+   "archetype": "hadrosaur",
+   "fantasy": true,
+   "palette": "forest",
+   "pattern": "mottled",
+   "features": [
+    "beak",
+    "antlers",
+    "mane"
+   ],
+   "created": "2026-10-04T08:13:36",
+   "output": "output/cervossauro",
+   "signature": {
+    "archetype": "hadrosaur",
+    "species": "custom",
+    "ratios": [
+     0.3510872990860385,
+     1.3753545540497951,
+     1.2761096605744127,
+     0.5036243302867949,
+     0.4825086668767728
+    ],
+    "features": [
+     "antlers",
+     "beak",
+     "mane"
+    ],
+    "hues": [
+     [
+      0.3638888888888889,
+      0.5607476635514018,
+      0.4196078431372549
+     ],
+     [
+      0.018162393162393153,
+      0.7289719626168225,
+      0.8392156862745098
+     ],
+     [
+      0.2777777777777777,
+      0.28125000000000006,
+      0.7529411764705882
+     ]
+    ],
+    "pattern": "mottled",
+    "eyes": "cute",
+    "size": "large",
+    "chibi": false
+   }
+  },
+  {
+   "id": "espino_galaxia",
+   "name": "Espino Galáxia",
+   "species": "spinosaurus",
+   "archetype": "spinosaur",
+   "fantasy": true,
+   "palette": "grape",
+   "pattern": "galaxy",
+   "features": [
+    "teeth",
+    "sail",
+    "glow_eyes"
+   ],
+   "created": "2026-10-04T08:13:44",
+   "output": "output/espino_galaxia",
+   "signature": {
+    "archetype": "spinosaur",
+    "species": "spinosaurus",
+    "ratios": [
+     0.37167199148029817,
+     1.148828541001065,
+     1.5754257907542577,
+     0.7571884984025558,
+     0.3245473908413205
+    ],
+    "features": [
+     "glow_eyes",
+     "sail",
+     "teeth"
+    ],
+    "hues": [
+     [
+      0.727920227920228,
+      0.5969387755102041,
+      0.7686274509803922
+     ],
+     [
+      0.4753086419753086,
+      0.7232142857142857,
+      0.8784313725490196
+     ],
+     [
+      0.7296296296296295,
+      0.18367346938775514,
+      0.9607843137254902
+     ]
+    ],
+    "pattern": "galaxy",
+    "eyes": "glow",
+    "size": "large",
+    "chibi": true
+   }
+  },
+  {
+   "id": "estego_por_do_sol",
+   "name": "Estego Pôr-do-Sol",
+   "species": "stegosaurus",
+   "archetype": "stegosaur",
+   "fantasy": false,
+   "palette": "sunset",
+   "pattern": "dorsal",
+   "features": [
+    "beak",
+    "plates",
+    "thagomizer"
+   ],
+   "created": "2026-10-04T08:13:51",
+   "output": "output/estego_por_do_sol",
+   "signature": {
+    "archetype": "stegosaur",
+    "species": "stegosaurus",
+    "ratios": [
+     0.2886928628708902,
+     1.0809943865276663,
+     1.1690991444388525,
+     0.3742314889067095,
+     0.39668537824111205
+    ],
+    "features": [
+     "beak",
+     "plates",
+     "thagomizer"
+    ],
+    "hues": [
+     [
+      0.05240549828178696,
+      0.7607843137254902,
+      1.0
+     ],
+     [
+      0.7568493150684931,
+      0.6985645933014354,
+      0.8196078431372549
+     ],
+     [
+      0.0924092409240924,
+      0.39607843137254906,
+      1.0
+     ]
+    ],
+    "pattern": "dorsal",
+    "eyes": "cute",
+    "size": "large",
+    "chibi": false
+   }
+  },
+  {
+   "id": "paqui_cabecudo",
+   "name": "Paqui Cabeçudo",
+   "species": "pachycephalosaurus",
+   "archetype": "pachycephalosaur",
+   "fantasy": false,
+   "palette": "bubblegum",
+   "pattern": "spots",
+   "features": [
+    "beak",
+    "dome"
+   ],
+   "created": "2026-10-04T08:14:02",
+   "output": "output/paqui_cabecudo",
+   "signature": {
+    "archetype": "pachycephalosaur",
+    "species": "pachycephalosaurus",
+    "ratios": [
+     0.4135338345864662,
+     1.7650375939849625,
+     2.0589390962671907,
+     0.8312969924812028,
+     0.5465225563909775
+    ],
+    "features": [
+     "beak",
+     "dome"
+    ],
+    "hues": [
+     [
+      0.5533854166666666,
+      0.5019607843137255,
+      1.0
+     ],
+     [
+      0.9236111111111112,
+      0.5647058823529412,
+      1.0
+     ],
+     [
+      0.888888888888889,
+      0.05882352941176472,
+      1.0
+     ]
+    ],
+    "pattern": "spots",
+    "eyes": "cute",
+    "size": "medium",
+    "chibi": true
+   }
+  },
+  {
+   "id": "parassauro_coral",
+   "name": "Parassauro Coral",
+   "species": "parasaurolophus",
+   "archetype": "hadrosaur",
+   "fantasy": false,
+   "palette": "lagoon",
+   "pattern": "tiger",
+   "features": [
+    "beak",
+    "crest_tube"
+   ],
+   "created": "2026-10-04T08:14:10",
+   "output": "output/parassauro_coral",
+   "signature": {
+    "archetype": "hadrosaur",
+    "species": "parasaurolophus",
+    "ratios": [
+     0.47690728703386936,
+     1.6572015053027713,
+     2.0871722182849046,
+     0.6767020184741704,
+     0.4786178583646939
+    ],
+    "features": [
+     "beak",
+     "crest_tube"
+    ],
+    "hues": [
+     [
+      0.5132924335378323,
+      0.8402061855670103,
+      0.7607843137254902
+     ],
+     [
+      0.545751633986928,
+      0.8360655737704918,
+      0.47843137254901963
+     ],
+     [
+      0.47959183673469385,
+      0.20416666666666666,
+      0.9411764705882353
+     ]
+    ],
+    "pattern": "tiger",
+    "eyes": "cute",
+    "size": "large",
+    "chibi": false
+   }
+  },
+  {
+   "id": "ptero_trovao",
+   "name": "Ptero Trovão",
+   "species": "pteranodon",
+   "archetype": "pterosaur",
+   "fantasy": false,
+   "palette": "midnight",
+   "pattern": "zigzag",
+   "features": [
+    "beak",
+    "wings",
+    "crest_head",
+    "glow_eyes"
+   ],
+   "created": "2026-10-04T08:14:16",
+   "output": "output/ptero_trovao",
+   "signature": {
+    "archetype": "pterosaur",
+    "species": "pteranodon",
+    "ratios": [
+     0.6400951814396193,
+     0.2778108268887567,
+     2.0642570281124497,
+     1.124330755502677,
+     0.48839976204640106
+    ],
+    "features": [
+     "beak",
+     "crest_head",
+     "glow_eyes",
+     "wings"
+    ],
+    "hues": [
+     [
+      0.6383647798742138,
+      0.5463917525773195,
+      0.3803921568627451
+     ],
+     [
+      0.5134575569358178,
+      0.6313725490196078,
+      1.0
+     ],
+     [
+      0.6388888888888888,
+      0.37113402061855666,
+      0.7607843137254902
+     ]
+    ],
+    "pattern": "zigzag",
+    "eyes": "glow",
+    "size": "large",
+    "chibi": false
+   }
+  },
+  {
+   "id": "raptor_neon",
+   "name": "Raptor Neon",
+   "species": "velociraptor",
+   "archetype": "raptor",
+   "fantasy": false,
+   "palette": "toxic",
+   "pattern": "stripes",
+   "features": [
+    "teeth",
+    "sickle_claw",
+    "feathers"
+   ],
+   "created": "2026-10-04T08:14:23",
+   "output": "output/raptor_neon",
+   "signature": {
+    "archetype": "raptor",
+    "species": "velociraptor",
+    "ratios": [
+     0.4210526315789474,
+     2.0623781676413255,
+     2.684869169510808,
+     0.783625730994152,
+     0.44152046783625737
+    ],
+    "features": [
+     "feathers",
+     "sickle_claw",
+     "teeth"
+    ],
+    "hues": [
+     [
+      0.22985347985347984,
+      0.8125,
+      0.8784313725490196
+     ],
+     [
+      0.7441860465116279,
+      0.8037383177570094,
+      0.8392156862745098
+     ],
+     [
+      0.19473684210526318,
+      0.37254901960784315,
+      1.0
+     ]
+    ],
+    "pattern": "stripes",
+    "eyes": "fierce",
+    "size": "small",
+    "chibi": false
+   }
+  },
+  {
+   "id": "trici_menta",
+   "name": "Trici Menta",
+   "species": "triceratops",
+   "archetype": "ceratopsian",
+   "fantasy": false,
+   "palette": "custom",
+   "pattern": "spots",
+   "features": [
+    "beak",
+    "frill",
+    "horns_long",
+    "horn_nose"
+   ],
+   "created": "2026-10-04T08:14:37",
+   "output": "output/trici_menta",
+   "signature": {
+    "archetype": "ceratopsian",
+    "species": "triceratops",
+    "ratios": [
+     0.153028692879915,
+     1.028692879914984,
+     0.9794156706507304,
+     1.0591569252568191,
+     0.6645412681544457
+    ],
+    "features": [
+     "beak",
+     "frill",
+     "horn_nose",
+     "horns_long"
+    ],
+    "hues": [
+     [
+      0.4238095238095238,
+      0.4861111111111111,
+      0.8470588235294118
+     ],
+     [
+      0.9151785714285714,
+      0.4392156862745098,
+      1.0
+     ],
+     [
+      0.12195121951219516,
+      0.16078431372549018,
+      1.0
+     ]
+    ],
+    "pattern": "spots",
+    "eyes": "cute",
+    "size": "medium",
+    "chibi": true
+   }
+  },
+  {
+   "id": "braqui_gelo",
+   "name": "Braqui Gelo",
+   "species": "brachiosaurus",
+   "archetype": "sauropod",
+   "fantasy": true,
+   "palette": "custom",
+   "pattern": "spots",
+   "features": [
+    "crystals"
+   ],
+   "created": "2026-10-04T08:15:13",
+   "output": "output/braqui_gelo",
+   "signature": {
+    "archetype": "sauropod",
+    "species": "brachiosaurus",
+    "ratios": [
+     1.1703910614525141,
+     1.3921787709497209,
+     1.5784198113207546,
+     0.33379888268156427,
+     0.5435754189944135
+    ],
+    "features": [
+     "crystals"
+    ],
+    "hues": [
+     [
+      0.5648967551622418,
+      0.4708333333333333,
+      0.9411764705882353
+     ],
+     [
+      0.591337099811676,
+      0.7901785714285714,
+      0.8784313725490196
+     ],
+     [
+      0.5652173913043478,
+      0.09019607843137256,
+      1.0
+     ]
+    ],
+    "pattern": "spots",
+    "eyes": "cute",
+    "size": "giant",
+    "chibi": false
+   }
   }
  ]
 }

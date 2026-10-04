@@ -1,0 +1,20 @@
+{
+ "name": "Cervossauro",
+ "archetype": "hadrosaur",
+ "fantasy": true,
+ "palette": "forest",
+ "pattern": {
+  "type": "mottled",
+  "scale": 6,
+  "density": 0.6
+ },
+ "features": [
+  "antlers",
+  "mane",
+  "-crest_fan"
+ ],
+ "eyes": {
+  "style": "cute"
+ },
+ "description": "Dino-cervo da floresta com galhada e juba vermelha"
+}

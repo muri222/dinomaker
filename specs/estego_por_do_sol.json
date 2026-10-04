@@ -1,0 +1,11 @@
+{
+ "name": "Estego Pôr-do-Sol",
+ "species": "stegosaurus",
+ "palette": "sunset",
+ "pattern": {
+  "type": "dorsal",
+  "scale": 6,
+  "density": 0.7
+ },
+ "description": "Estegossauro laranja com placas roxas"
+}

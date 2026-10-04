@@ -1,0 +1,15 @@
+{
+ "name": "Ptero Trovão",
+ "species": "pteranodon",
+ "palette": "midnight",
+ "pattern": {
+  "type": "zigzag",
+  "scale": 6,
+  "density": 0.8
+ },
+ "features": [
+  "glow_eyes"
+ ],
+ "size": "large",
+ "description": "Pteranodonte noturno com raios ciano e olhos brilhantes"
+}
