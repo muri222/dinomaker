@@ -63,6 +63,54 @@ for _, kfs in ipairs(folder:GetChildren()) do
 	end
 end
 
+-- VFX (atributo VFX liga/desliga; tema em VFXTheme)
+local fx = { aura = {}, breath = {}, dust = {}, burst = {}, glow = {} }
+for _, d in ipairs(model:GetDescendants()) do
+	if d:IsA("ParticleEmitter") then
+		local list = fx[string.lower(d.Name)]
+		if list then
+			table.insert(list, d)
+		end
+	elseif d:IsA("PointLight") and d.Name == "Glow" then
+		table.insert(fx.glow, d)
+	end
+end
+local function fxOn()
+	return model:GetAttribute("VFX") ~= false
+end
+local deadFx = false
+local function applyAura()
+	local on = fxOn() and not deadFx
+	for _, e in ipairs(fx.aura) do
+		e.Enabled = on
+	end
+	for _, l in ipairs(fx.glow) do
+		l.Enabled = on
+	end
+	if not on then
+		for _, e in ipairs(fx.dust) do
+			e.Rate = 0
+		end
+	end
+end
+local function burst(list, n, delay)
+	if not fxOn() then
+		return
+	end
+	task.delay(delay or 0, function()
+		for _, e in ipairs(list) do
+			e:Emit(n)
+		end
+	end)
+end
+model:GetAttributeChangedSignal("VFX"):Connect(applyAura)
+applyAura()
+local FX_ON_ACTION = {
+	Roar = function() burst(fx.breath, 45, 0.45) end,
+	Attack = function() burst(fx.breath, 18, 0.4) end,
+	Hit = function() burst(fx.burst, 14, 0) end,
+}
+
 local function sample(clip, t, out)
 	local keys = clip.keys
 	local n = #keys
@@ -128,6 +176,9 @@ local function startAction(name)
 	action = name
 	actionT = 0
 	actionPlays = (name == "Eat") and 2 or 1
+	if FX_ON_ACTION[name] then
+		FX_ON_ACTION[name]()
+	end
 end
 
 model:GetAttributeChangedSignal("ActionNonce"):Connect(function()
@@ -141,6 +192,9 @@ hum.Died:Connect(function()
 	dead = true
 	action = nil
 	play("Death")
+	burst(fx.burst, 30, 0.6)
+	deadFx = true
+	applyAura()
 end)
 
 local function chooseBase()
@@ -188,6 +242,19 @@ RunService.PreSimulation:Connect(function(dt)
 		play(base)
 	end
 	speedScale = rate
+	local dustRate = 0
+	if fxOn() and not dead then
+		if base == "Run" then
+			dustRate = 18
+		elseif base == "Walk" then
+			dustRate = 4
+		end
+	end
+	for _, e in ipairs(fx.dust) do
+		if e.Rate ~= dustRate then
+			e.Rate = dustRate
+		end
+	end
 	currentT = currentT + step * speedScale
 	fadeT = fadeT + step
 

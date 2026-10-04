@@ -52,6 +52,7 @@ Formato do spec (tudo opcional — o que faltar é sorteado; no arquivo real nã
   "chibi": false,
   "studs": false,                       // superfície com studs estilo LEGO
   "attack": "bite",                     // bite | claw | headbutt | tailswipe | stomp | peck
+  "vfx": {"theme": "fire"},             // fire | ice | electric | magic | toxic | nature | water | none (auto se omitido)
   "description": "T-Rex com rachaduras de lava brilhando"
 }
 ```
@@ -80,7 +81,8 @@ O histórico é atualizado automaticamente.
 2. Versão A simulada exatamente como o Roblox (Motor6D + KeyframeSequence):
    `python tools/preview_rbx.py output/<id>/A_roblox_parts/<id>.rbxmx /tmp/a.png Attack 0.5`
    (precisa de `bpy`; rode com o Python do Blender: `blender -b -P tools/preview_rbx.py -- ...`).
-3. Se algo ficou ruim: `python -m dinomaker forget <id>`, ajuste o spec e gere de novo.
+3. Se o gerador mudou e quiser atualizar dinos antigos: `python -m dinomaker rebuild [ids]`.
+4. Se algo ficou ruim: `python -m dinomaker forget <id>`, ajuste o spec e gere de novo.
 
 ## 6. Entregar
 Resuma para o usuário: nome, conceito, arquivos e como importar (está no README do dino).

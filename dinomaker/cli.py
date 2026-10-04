@@ -42,6 +42,13 @@ def main(argv=None):
     sub.add_parser("species", help="lista espécies, arquétipos, paletas, padrões e features")
     c = sub.add_parser("check", help="checa um spec contra o histórico sem gerar")
     c.add_argument("spec")
+    rb = sub.add_parser("rebuild", help="regera dino(s) existentes com a versão atual do gerador")
+    rb.add_argument("ids", nargs="*", help="ids (vazio = todos os não-legados)")
+    rb.add_argument("--vfx", help="força um tema de VFX: fire, ice, electric, magic, toxic, nature, none")
+    rb.add_argument("--formats", default="A,B")
+    rb.add_argument("--detail", choices=["high", "medium", "low", "none"], default="medium")
+    rb.add_argument("--no-preview", action="store_true")
+    rb.add_argument("--out", default=DEFAULT_OUT)
     r = sub.add_parser("forget", help="remove um dino do histórico")
     r.add_argument("id")
 
@@ -61,6 +68,23 @@ def main(argv=None):
         for d in h["dinos"]:
             print("%-28s %-18s %-16s %-9s %-9s %s" % (d["id"], d["species"], d["archetype"], d["palette"], d["pattern"], ",".join(d["features"])))
         print("total:", len(h["dinos"]))
+        return 0
+
+    if a.cmd == "rebuild":
+        h = load_history(a.history)
+        todo = [d for d in h["dinos"] if not d.get("legacy") and (not a.ids or d["id"] in a.ids)]
+        for d in todo:
+            g = d.get("genome")
+            gp = os.path.join(a.out, d["id"], "genome.json")
+            if g is None and os.path.exists(gp):
+                with open(gp, encoding="utf-8") as f:
+                    g = json.load(f)
+            if g is None:
+                print("sem genoma salvo para", d["id"])
+                continue
+            spec = {"vfx": {"theme": a.vfx}} if a.vfx else {}
+            generate(spec, a.out, a.history, formats=tuple(x.strip().upper() for x in a.formats.split(",")),
+                     previews=not a.no_preview, detail=a.detail, genome=g)
         return 0
 
     if a.cmd == "forget":

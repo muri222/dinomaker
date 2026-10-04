@@ -69,3 +69,12 @@ API.SetFlying(dino, true)           -- pterossauros
 API.Kill(dino)                      -- toca Death
 ```
 Atributo `Wander = true` no Model faz o dino passear sozinho (bom para testar).
+
+## VFX (versão A)
+Partículas com texturas nativas do Roblox (sem upload): **aura** no corpo e na cauda (+ luz),
+**bafo** saindo da boca no Roar/Attack, **poeira** nos pés ao andar/correr, **faíscas** no Hit e no Death.
+Temas: `fire`, `ice`, `electric`, `magic`, `toxic`, `nature`, `water`, `none` — escolhido automaticamente
+pela paleta/padrão, ou forçado no spec com `"vfx": {"theme": "ice"}`.
+- Atributo `VFX` (bool) no Model liga/desliga tudo; `VFXTheme` mostra o tema.
+- Para editar cores/tamanhos: Model > Chest/Head/... > Attachment `FX_*` > ParticleEmitter.
+- `python -m dinomaker rebuild [ids] [--vfx tema]` regera dinos existentes com o gerador atual.

@@ -182,6 +182,7 @@ def resolve(spec, history=None, seed=None):
         "variation": var,
         "params": P,
         "description": spec.get("description", ""),
+        "vfx": spec.get("vfx", {}),
     }
 
 
@@ -273,5 +274,5 @@ def add_to_history(hist, g, out_dir):
         "id": g["id"], "name": g["name"], "species": g["species"], "archetype": g["archetype"],
         "fantasy": g["fantasy"], "palette": g["palette_name"], "pattern": g["pattern"]["type"],
         "features": g["features"], "created": datetime.datetime.now().isoformat(timespec="seconds"),
-        "output": out_dir, "signature": signature(g),
+        "output": out_dir, "signature": signature(g), "genome": g,
     })

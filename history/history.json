@@ -434,7 +434,7 @@
     "crystals",
     "horns_brow"
    ],
-   "created": "2026-10-04T07:37:02",
+   "created": "2026-10-04T16:09:24",
    "output": "output/rex_magma",
    "signature": {
     "archetype": "theropod",
@@ -472,6 +472,105 @@
     "eyes": "glow",
     "size": "large",
     "chibi": false
+   },
+   "genome": {
+    "version": 1,
+    "name": "Rex Magma",
+    "id": "rex_magma",
+    "species": "tyrannosaurus",
+    "archetype": "theropod",
+    "fantasy": true,
+    "chibi": false,
+    "seed": 2116841416,
+    "size": "large",
+    "px_size": 0.2,
+    "palette_name": "volcano",
+    "palette": {
+     "primary": "#c2401f",
+     "belly": "#f2a541",
+     "accent": "#2b2b2b",
+     "pattern": "#ffcf3a",
+     "claw": "#3a3333",
+     "mouth": "#a8323a",
+     "tooth": "#f5f0e0",
+     "eye": "#ffd23a"
+    },
+    "pattern": {
+     "type": "lava",
+     "scale": 6,
+     "density": 0.8
+    },
+    "eyes": {
+     "style": "glow",
+     "size": 3
+    },
+    "features": [
+     "teeth",
+     "crystals",
+     "horns_brow"
+    ],
+    "attack": "bite",
+    "studs": false,
+    "variation": {
+     "head": 1.121,
+     "neck": 1.104,
+     "tail": 1.067,
+     "legs": 0.849,
+     "body": 1.065,
+     "bulk": 0.997,
+     "arms": 0.964
+    },
+    "params": {
+     "stance": "biped",
+     "diet": "carnivore",
+     "attack": "bite",
+     "hips_len": 17.04,
+     "chest_len": 17.04,
+     "body_w": 15.95,
+     "body_h": 17.04,
+     "chest_h": 19.17,
+     "chest_w": 15.95,
+     "chest_dy": 1,
+     "thigh": 13.58,
+     "thigh_w": 7.98,
+     "thigh_d": 9.97,
+     "shin": 11.89,
+     "shin_w": 5.98,
+     "knee_ang": 20,
+     "shin_ang": -30,
+     "foot_len": 10.19,
+     "foot_h": 4,
+     "foot_w": 7.98,
+     "toes": 3,
+     "arm": 5.78,
+     "fore": 4.82,
+     "hand": 2.89,
+     "arm_w": 2.99,
+     "arm_style": "tiny",
+     "neck_segs": 1,
+     "neck_len": 8.83,
+     "neck_w": 13.21,
+     "neck_h": 13.25,
+     "neck_rise": 4.42,
+     "neck_taper": 0.1,
+     "skull_len": 17.94,
+     "skull_h": 15.69,
+     "skull_w": 15.69,
+     "snout_len": 12.33,
+     "snout_h": 10.09,
+     "snout_w": 13.45,
+     "jaw_h": 5.61,
+     "tail_segs": 4,
+     "tail_len": 12.8,
+     "tail_w": 12.76,
+     "tail_h": 12.8,
+     "tail_taper": 0.78,
+     "tail_rise": 3,
+     "eye": 3,
+     "seed": 2116841416
+    },
+    "description": "T-Rex de pedra vulcânica com rachaduras de lava e cristais nas costas",
+    "vfx": {}
    }
   },
   {
@@ -489,7 +588,7 @@
     "club",
     "gem"
    ],
-   "created": "2026-10-04T08:13:20",
+   "created": "2026-10-04T16:09:36",
    "output": "output/anquilo_rubi",
    "signature": {
     "archetype": "ankylosaur",
@@ -529,6 +628,105 @@
     "eyes": "cute",
     "size": "large",
     "chibi": false
+   },
+   "genome": {
+    "version": 1,
+    "name": "Anquilo Rubi",
+    "id": "anquilo_rubi",
+    "species": "ankylosaurus",
+    "archetype": "ankylosaur",
+    "fantasy": true,
+    "chibi": false,
+    "seed": 670990633,
+    "size": "large",
+    "px_size": 0.2,
+    "palette_name": "royal",
+    "palette": {
+     "primary": "#2f4fbf",
+     "belly": "#e9d68a",
+     "accent": "#ffcc33",
+     "pattern": "#1d2f7a",
+     "claw": "#efe3c2",
+     "mouth": "#a8323a",
+     "tooth": "#f5f0e0",
+     "eye": "#ffffff"
+    },
+    "pattern": {
+     "type": "rosettes",
+     "scale": 7,
+     "density": 0.6
+    },
+    "eyes": {
+     "style": "cute",
+     "size": 2
+    },
+    "features": [
+     "beak",
+     "armor",
+     "side_spikes",
+     "club",
+     "gem"
+    ],
+    "attack": "tailswipe",
+    "studs": false,
+    "variation": {
+     "head": 0.995,
+     "neck": 0.832,
+     "tail": 0.796,
+     "legs": 1.228,
+     "body": 1.112,
+     "bulk": 1.162,
+     "arms": 1.193
+    },
+    "params": {
+     "stance": "quad",
+     "diet": "herbivore",
+     "attack": "tailswipe",
+     "hips_len": 17.79,
+     "chest_len": 17.79,
+     "body_w": 25.56,
+     "body_h": 12.23,
+     "chest_h": 12.23,
+     "chest_w": 24.4,
+     "chest_dy": 0,
+     "thigh": 8.6,
+     "thigh_w": 8.13,
+     "thigh_d": 8.13,
+     "shin": 7.37,
+     "shin_w": 6.97,
+     "knee_ang": 5,
+     "shin_ang": -5,
+     "foot_len": 7.37,
+     "foot_h": 3,
+     "foot_w": 8.13,
+     "toes": 3,
+     "front_w": 6.97,
+     "front_ang1": 0,
+     "front_ang2": 0,
+     "neck_segs": 1,
+     "neck_len": 3.33,
+     "neck_w": 9.67,
+     "neck_h": 6.66,
+     "neck_rise": -0.83,
+     "neck_taper": 0.0,
+     "skull_len": 9.95,
+     "skull_h": 7.96,
+     "skull_w": 11.94,
+     "snout_len": 3.98,
+     "snout_h": 5.97,
+     "snout_w": 9.95,
+     "jaw_h": 1.99,
+     "tail_segs": 4,
+     "tail_len": 7.16,
+     "tail_w": 6.47,
+     "tail_h": 3.98,
+     "tail_taper": 0.8,
+     "tail_rise": 0,
+     "eye": 2,
+     "seed": 670990633
+    },
+    "description": "Anquilossauro azul-real com armadura dourada e gema na testa",
+    "vfx": {}
    }
   },
   {
@@ -544,7 +742,7 @@
     "antlers",
     "mane"
    ],
-   "created": "2026-10-04T08:13:36",
+   "created": "2026-10-04T16:09:43",
    "output": "output/cervossauro",
    "signature": {
     "archetype": "hadrosaur",
@@ -582,6 +780,105 @@
     "eyes": "cute",
     "size": "large",
     "chibi": false
+   },
+   "genome": {
+    "version": 1,
+    "name": "Cervossauro",
+    "id": "cervossauro",
+    "species": "custom",
+    "archetype": "hadrosaur",
+    "fantasy": true,
+    "chibi": false,
+    "seed": 412856179,
+    "size": "large",
+    "px_size": 0.2,
+    "palette_name": "forest",
+    "palette": {
+     "primary": "#2f6b3a",
+     "belly": "#9cc08a",
+     "accent": "#d64b3a",
+     "pattern": "#1d4426",
+     "claw": "#f5f0e6",
+     "mouth": "#a8323a",
+     "tooth": "#f5f0e0",
+     "eye": "#ffffff"
+    },
+    "pattern": {
+     "type": "mottled",
+     "scale": 6,
+     "density": 0.6
+    },
+    "eyes": {
+     "style": "cute",
+     "size": 3
+    },
+    "features": [
+     "beak",
+     "antlers",
+     "mane"
+    ],
+    "attack": "tailswipe",
+    "studs": false,
+    "variation": {
+     "head": 0.888,
+     "neck": 0.929,
+     "tail": 0.992,
+     "legs": 0.782,
+     "body": 1.094,
+     "bulk": 1.178,
+     "arms": 1.006
+    },
+    "params": {
+     "stance": "biped",
+     "diet": "herbivore",
+     "attack": "tailswipe",
+     "hips_len": 16.41,
+     "chest_len": 15.32,
+     "body_w": 15.31,
+     "body_h": 15.32,
+     "chest_h": 15.32,
+     "chest_w": 15.31,
+     "chest_dy": 0,
+     "thigh": 10.17,
+     "thigh_w": 8.25,
+     "thigh_d": 9.42,
+     "shin": 9.38,
+     "shin_w": 5.89,
+     "knee_ang": 18,
+     "shin_ang": -25,
+     "foot_len": 7.04,
+     "foot_h": 3,
+     "foot_w": 8.25,
+     "toes": 3,
+     "arm": 8.05,
+     "fore": 8.05,
+     "hand": 3.02,
+     "arm_w": 3.53,
+     "arm_style": "medium",
+     "neck_segs": 2,
+     "neck_len": 5.57,
+     "neck_w": 8.75,
+     "neck_h": 7.43,
+     "neck_rise": 3.72,
+     "neck_taper": 0.1,
+     "skull_len": 7.99,
+     "skull_h": 7.1,
+     "skull_w": 7.1,
+     "snout_len": 7.99,
+     "snout_h": 4.44,
+     "snout_w": 7.1,
+     "jaw_h": 1.78,
+     "tail_segs": 4,
+     "tail_len": 10.91,
+     "tail_w": 11.69,
+     "tail_h": 10.91,
+     "tail_taper": 0.75,
+     "tail_rise": 1,
+     "eye": 3,
+     "seed": 412856179
+    },
+    "description": "Dino-cervo da floresta com galhada e juba vermelha",
+    "vfx": {}
    }
   },
   {
@@ -597,7 +894,7 @@
     "sail",
     "glow_eyes"
    ],
-   "created": "2026-10-04T08:13:44",
+   "created": "2026-10-04T16:09:51",
    "output": "output/espino_galaxia",
    "signature": {
     "archetype": "spinosaur",
@@ -635,161 +932,105 @@
     "eyes": "glow",
     "size": "large",
     "chibi": true
-   }
-  },
-  {
-   "id": "estego_por_do_sol",
-   "name": "Estego Pôr-do-Sol",
-   "species": "stegosaurus",
-   "archetype": "stegosaur",
-   "fantasy": false,
-   "palette": "sunset",
-   "pattern": "dorsal",
-   "features": [
-    "beak",
-    "plates",
-    "thagomizer"
-   ],
-   "created": "2026-10-04T08:13:51",
-   "output": "output/estego_por_do_sol",
-   "signature": {
-    "archetype": "stegosaur",
-    "species": "stegosaurus",
-    "ratios": [
-     0.2886928628708902,
-     1.0809943865276663,
-     1.1690991444388525,
-     0.3742314889067095,
-     0.39668537824111205
-    ],
-    "features": [
-     "beak",
-     "plates",
-     "thagomizer"
-    ],
-    "hues": [
-     [
-      0.05240549828178696,
-      0.7607843137254902,
-      1.0
-     ],
-     [
-      0.7568493150684931,
-      0.6985645933014354,
-      0.8196078431372549
-     ],
-     [
-      0.0924092409240924,
-      0.39607843137254906,
-      1.0
-     ]
-    ],
-    "pattern": "dorsal",
-    "eyes": "cute",
+   },
+   "genome": {
+    "version": 1,
+    "name": "Espino Galáxia",
+    "id": "espino_galaxia",
+    "species": "spinosaurus",
+    "archetype": "spinosaur",
+    "fantasy": true,
+    "chibi": true,
+    "seed": 19839586,
     "size": "large",
-    "chibi": false
-   }
-  },
-  {
-   "id": "paqui_cabecudo",
-   "name": "Paqui Cabeçudo",
-   "species": "pachycephalosaurus",
-   "archetype": "pachycephalosaur",
-   "fantasy": false,
-   "palette": "bubblegum",
-   "pattern": "spots",
-   "features": [
-    "beak",
-    "dome"
-   ],
-   "created": "2026-10-04T08:14:02",
-   "output": "output/paqui_cabecudo",
-   "signature": {
-    "archetype": "pachycephalosaur",
-    "species": "pachycephalosaurus",
-    "ratios": [
-     0.4135338345864662,
-     1.7650375939849625,
-     2.0589390962671907,
-     0.8312969924812028,
-     0.5465225563909775
-    ],
+    "px_size": 0.2,
+    "palette_name": "grape",
+    "palette": {
+     "primary": "#7a4fc4",
+     "belly": "#d9c8f5",
+     "accent": "#3ee0c8",
+     "pattern": "#4f2f96",
+     "claw": "#3a3333",
+     "mouth": "#a8323a",
+     "tooth": "#f5f0e0",
+     "eye": "#ffd23a"
+    },
+    "pattern": {
+     "type": "galaxy",
+     "scale": 6,
+     "density": 0.7
+    },
+    "eyes": {
+     "style": "glow",
+     "size": 4
+    },
     "features": [
-     "beak",
-     "dome"
+     "teeth",
+     "sail",
+     "glow_eyes"
     ],
-    "hues": [
-     [
-      0.5533854166666666,
-      0.5019607843137255,
-      1.0
-     ],
-     [
-      0.9236111111111112,
-      0.5647058823529412,
-      1.0
-     ],
-     [
-      0.888888888888889,
-      0.05882352941176472,
-      1.0
-     ]
-    ],
-    "pattern": "spots",
-    "eyes": "cute",
-    "size": "medium",
-    "chibi": true
-   }
-  },
-  {
-   "id": "parassauro_coral",
-   "name": "Parassauro Coral",
-   "species": "parasaurolophus",
-   "archetype": "hadrosaur",
-   "fantasy": false,
-   "palette": "lagoon",
-   "pattern": "tiger",
-   "features": [
-    "beak",
-    "crest_tube"
-   ],
-   "created": "2026-10-04T08:14:10",
-   "output": "output/parassauro_coral",
-   "signature": {
-    "archetype": "hadrosaur",
-    "species": "parasaurolophus",
-    "ratios": [
-     0.47690728703386936,
-     1.6572015053027713,
-     2.0871722182849046,
-     0.6767020184741704,
-     0.4786178583646939
-    ],
-    "features": [
-     "beak",
-     "crest_tube"
-    ],
-    "hues": [
-     [
-      0.5132924335378323,
-      0.8402061855670103,
-      0.7607843137254902
-     ],
-     [
-      0.545751633986928,
-      0.8360655737704918,
-      0.47843137254901963
-     ],
-     [
-      0.47959183673469385,
-      0.20416666666666666,
-      0.9411764705882353
-     ]
-    ],
-    "pattern": "tiger",
-    "eyes": "cute",
-    "size": "large",
-    "chibi": false
+    "attack": "bite",
+    "studs": false,
+    "variation": {
+     "head": 1.094,
+     "neck": 1.164,
+     "tail": 0.785,
+     "legs": 1.079,
+     "body": 1.174,
+     "bulk": 0.871,
+     "arms": 1.032
+    },
+    "params": {
+     "stance": "biped",
+     "diet": "carnivore",
+     "attack": "bite",
+     "hips_len": 18.78,
+     "chest_len": 18.78,
+     "body_w": 12.19,
+     "body_h": 16.44,
+     "chest_h": 18.78,
+     "chest_w": 12.19,
+     "chest_dy": 2,
+     "thigh": 14.03,
+     "thigh_w": 6.1,
+     "thigh_d": 7.84,
+     "shin": 11.87,
+     "shin_w": 4.36,
+     "knee_ang": 20,
+     "shin_ang": -28,
+     "foot_len": 10.79,
+     "foot_h": 3,
+     "foot_w": 6.1,
+     "toes": 3,
+     "arm": 8.26,
+     "fore": 8.26,
+     "hand": 4.13,
+     "arm_w": 2.61,
+     "arm_style": "medium",
+     "neck_segs": 2,
+     "neck_len": 6.98,
+     "neck_w": 9.13,
+     "neck_h": 10.48,
+     "neck_rise": 4.66,
+     "neck_taper": 0.1,
+     "skull_len": 10.94,
+     "skull_h": 9.85,
+     "skull_w": 10.94,
+     "snout_len": 17.5,
+     "snout_h": 5.47,
+     "snout_w": 7.66,
+     "jaw_h": 3.28,
+     "tail_segs": 5,
+     "tail_len": 8.63,
+     "tail_w": 6.84,
+     "tail_h": 9.42,
+     "tail_taper": 0.8,
+     "tail_rise": 1,
+     "eye": 4,
+     "seed": 19839586
+    },
+    "description": "Espinossauro cósmico com vela roxa e pele de galáxia",
+    "vfx": {}
    }
   },
   {
@@ -806,7 +1047,7 @@
     "crest_head",
     "glow_eyes"
    ],
-   "created": "2026-10-04T08:14:16",
+   "created": "2026-10-04T16:10:20",
    "output": "output/ptero_trovao",
    "signature": {
     "archetype": "pterosaur",
@@ -845,6 +1086,104 @@
     "eyes": "glow",
     "size": "large",
     "chibi": false
+   },
+   "genome": {
+    "version": 1,
+    "name": "Ptero Trovão",
+    "id": "ptero_trovao",
+    "species": "pteranodon",
+    "archetype": "pterosaur",
+    "fantasy": false,
+    "chibi": false,
+    "seed": 615148472,
+    "size": "large",
+    "px_size": 0.2,
+    "palette_name": "midnight",
+    "palette": {
+     "primary": "#2c3561",
+     "belly": "#7a86c2",
+     "accent": "#5ef2ff",
+     "pattern": "#151a38",
+     "claw": "#d9c9a3",
+     "mouth": "#a8323a",
+     "tooth": "#f5f0e0",
+     "eye": "#ffd23a"
+    },
+    "pattern": {
+     "type": "zigzag",
+     "scale": 6,
+     "density": 0.8
+    },
+    "eyes": {
+     "style": "glow",
+     "size": 2
+    },
+    "features": [
+     "beak",
+     "wings",
+     "crest_head",
+     "glow_eyes"
+    ],
+    "attack": "peck",
+    "studs": false,
+    "variation": {
+     "head": 0.9,
+     "neck": 1.077,
+     "tail": 0.934,
+     "legs": 1.102,
+     "body": 0.934,
+     "bulk": 1.026,
+     "arms": 1.093
+    },
+    "params": {
+     "stance": "quad",
+     "diet": "carnivore",
+     "attack": "peck",
+     "hips_len": 7.47,
+     "chest_len": 9.34,
+     "body_w": 8.21,
+     "body_h": 7.47,
+     "chest_h": 8.41,
+     "chest_w": 9.23,
+     "chest_dy": 3,
+     "thigh": 7.71,
+     "thigh_w": 3.08,
+     "thigh_d": 3.08,
+     "shin": 7.71,
+     "shin_w": 2.05,
+     "knee_ang": 15,
+     "shin_ang": -15,
+     "foot_len": 4.41,
+     "foot_h": 2,
+     "foot_w": 3.08,
+     "toes": 3,
+     "front_w": 3.08,
+     "front_ang1": -15,
+     "front_ang2": 20,
+     "neck_segs": 2,
+     "neck_len": 5.38,
+     "neck_w": 5.52,
+     "neck_h": 5.38,
+     "neck_rise": 4.31,
+     "neck_taper": 0.1,
+     "skull_len": 6.3,
+     "skull_h": 5.4,
+     "skull_w": 5.4,
+     "snout_len": 12.6,
+     "snout_h": 2.7,
+     "snout_w": 3.6,
+     "jaw_h": 1.8,
+     "tail_segs": 1,
+     "tail_len": 4.67,
+     "tail_w": 2.87,
+     "tail_h": 2.8,
+     "tail_taper": 0.7,
+     "tail_rise": 0,
+     "eye": 2,
+     "seed": 615148472
+    },
+    "description": "Pteranodonte noturno com raios ciano e olhos brilhantes",
+    "vfx": {}
    }
   },
   {
@@ -860,7 +1199,7 @@
     "sickle_claw",
     "feathers"
    ],
-   "created": "2026-10-04T08:14:23",
+   "created": "2026-10-04T16:10:26",
    "output": "output/raptor_neon",
    "signature": {
     "archetype": "raptor",
@@ -898,6 +1237,697 @@
     "eyes": "fierce",
     "size": "small",
     "chibi": false
+   },
+   "genome": {
+    "version": 1,
+    "name": "Raptor Neon",
+    "id": "raptor_neon",
+    "species": "velociraptor",
+    "archetype": "raptor",
+    "fantasy": false,
+    "chibi": false,
+    "seed": 1166478083,
+    "size": "small",
+    "px_size": 0.1,
+    "palette_name": "toxic",
+    "palette": {
+     "primary": "#9be02a",
+     "belly": "#efffa0",
+     "accent": "#7a2ad6",
+     "pattern": "#2f6b10",
+     "claw": "#f5f0e6",
+     "mouth": "#a8323a",
+     "tooth": "#f5f0e0",
+     "eye": "#ffd23a"
+    },
+    "pattern": {
+     "type": "stripes",
+     "scale": 5,
+     "density": 0.8
+    },
+    "eyes": {
+     "style": "fierce",
+     "size": 2
+    },
+    "features": [
+     "teeth",
+     "sickle_claw",
+     "feathers"
+    ],
+    "attack": "claw",
+    "studs": false,
+    "variation": {
+     "head": 1.072,
+     "neck": 1.08,
+     "tail": 1.176,
+     "legs": 1.124,
+     "body": 0.977,
+     "bulk": 1.007,
+     "arms": 1.097
+    },
+    "params": {
+     "stance": "biped",
+     "diet": "carnivore",
+     "attack": "claw",
+     "hips_len": 10.75,
+     "chest_len": 9.77,
+     "body_w": 9.06,
+     "body_h": 8.79,
+     "chest_h": 9.77,
+     "chest_w": 9.06,
+     "chest_dy": 1,
+     "thigh": 11.24,
+     "thigh_w": 5.03,
+     "thigh_d": 6.04,
+     "shin": 12.36,
+     "shin_w": 3.02,
+     "knee_ang": 25,
+     "shin_ang": -35,
+     "foot_len": 7.87,
+     "foot_h": 2,
+     "foot_w": 5.03,
+     "toes": 3,
+     "arm": 6.58,
+     "fore": 6.58,
+     "hand": 4.39,
+     "arm_w": 2.01,
+     "arm_style": "long",
+     "neck_segs": 2,
+     "neck_len": 4.32,
+     "neck_w": 5.44,
+     "neck_h": 6.48,
+     "neck_rise": 3.24,
+     "neck_taper": 0.1,
+     "skull_len": 8.58,
+     "skull_h": 7.5,
+     "skull_w": 7.5,
+     "snout_len": 7.5,
+     "snout_h": 4.29,
+     "snout_w": 5.36,
+     "jaw_h": 2.14,
+     "tail_segs": 4,
+     "tail_len": 10.58,
+     "tail_w": 7.11,
+     "tail_h": 5.88,
+     "tail_taper": 0.78,
+     "tail_rise": 1,
+     "eye": 2,
+     "seed": 1166478083
+    },
+    "description": "Velociraptor verde-limão com listras e penas roxas",
+    "vfx": {}
+   }
+  },
+  {
+   "id": "braqui_gelo",
+   "name": "Braqui Gelo",
+   "species": "brachiosaurus",
+   "archetype": "sauropod",
+   "fantasy": true,
+   "palette": "custom",
+   "pattern": "spots",
+   "features": [
+    "crystals"
+   ],
+   "created": "2026-10-04T16:10:55",
+   "output": "output/braqui_gelo",
+   "signature": {
+    "archetype": "sauropod",
+    "species": "brachiosaurus",
+    "ratios": [
+     1.1703910614525141,
+     1.3921787709497209,
+     1.5784198113207546,
+     0.33379888268156427,
+     0.5435754189944135
+    ],
+    "features": [
+     "crystals"
+    ],
+    "hues": [
+     [
+      0.5648967551622418,
+      0.4708333333333333,
+      0.9411764705882353
+     ],
+     [
+      0.591337099811676,
+      0.7901785714285714,
+      0.8784313725490196
+     ],
+     [
+      0.5652173913043478,
+      0.09019607843137256,
+      1.0
+     ]
+    ],
+    "pattern": "spots",
+    "eyes": "cute",
+    "size": "giant",
+    "chibi": false
+   },
+   "genome": {
+    "version": 1,
+    "name": "Braqui Gelo",
+    "id": "braqui_gelo",
+    "species": "brachiosaurus",
+    "archetype": "sauropod",
+    "fantasy": true,
+    "chibi": false,
+    "seed": 251647164,
+    "size": "giant",
+    "px_size": 0.28,
+    "palette_name": "custom",
+    "palette": {
+     "primary": "#7fc4f0",
+     "belly": "#e8f6ff",
+     "accent": "#2f7fe0",
+     "pattern": "#4f9fd8",
+     "claw": "#d9c9a3",
+     "mouth": "#a8323a",
+     "tooth": "#f5f0e0",
+     "eye": "#ffffff"
+    },
+    "pattern": {
+     "type": "spots",
+     "scale": 6,
+     "density": 0.7
+    },
+    "eyes": {
+     "style": "cute",
+     "size": 2
+    },
+    "features": [
+     "crystals"
+    ],
+    "attack": "stomp",
+    "studs": false,
+    "variation": {
+     "head": 0.919,
+     "neck": 1.048,
+     "tail": 1.246,
+     "legs": 1.071,
+     "body": 0.942,
+     "bulk": 1.081,
+     "arms": 0.848
+    },
+    "params": {
+     "stance": "quad",
+     "diet": "herbivore",
+     "attack": "stomp",
+     "hips_len": 16.96,
+     "chest_len": 18.84,
+     "body_w": 19.46,
+     "body_h": 16.96,
+     "chest_h": 18.84,
+     "chest_w": 19.46,
+     "chest_dy": 6,
+     "thigh": 13.92,
+     "thigh_w": 8.65,
+     "thigh_d": 8.65,
+     "shin": 12.85,
+     "shin_w": 7.57,
+     "knee_ang": 0,
+     "shin_ang": 0,
+     "foot_len": 6.43,
+     "foot_h": 3,
+     "foot_w": 9.73,
+     "toes": 3,
+     "front_w": 7.57,
+     "front_ang1": 0,
+     "front_ang2": 0,
+     "neck_segs": 5,
+     "neck_len": 8.38,
+     "neck_w": 10.19,
+     "neck_h": 9.43,
+     "neck_rise": 8.38,
+     "neck_taper": 0.07,
+     "skull_len": 7.35,
+     "skull_h": 5.51,
+     "skull_w": 6.43,
+     "snout_len": 4.6,
+     "snout_h": 3.68,
+     "snout_w": 5.51,
+     "jaw_h": 1.84,
+     "tail_segs": 4,
+     "tail_len": 12.46,
+     "tail_w": 14.82,
+     "tail_h": 13.71,
+     "tail_taper": 0.8,
+     "tail_rise": -1,
+     "eye": 2,
+     "seed": 251647164
+    },
+    "description": "Braquiossauro de gelo azul com manchas e cristais nas costas",
+    "vfx": {}
+   }
+  },
+  {
+   "id": "estego_por_do_sol",
+   "name": "Estego Pôr-do-Sol",
+   "species": "stegosaurus",
+   "archetype": "stegosaur",
+   "fantasy": false,
+   "palette": "sunset",
+   "pattern": "dorsal",
+   "features": [
+    "beak",
+    "plates",
+    "thagomizer"
+   ],
+   "created": "2026-10-04T16:11:27",
+   "output": "output/estego_por_do_sol",
+   "signature": {
+    "archetype": "stegosaur",
+    "species": "stegosaurus",
+    "ratios": [
+     0.2886928628708902,
+     1.0809943865276663,
+     1.1690991444388525,
+     0.3742314889067095,
+     0.39668537824111205
+    ],
+    "features": [
+     "beak",
+     "plates",
+     "thagomizer"
+    ],
+    "hues": [
+     [
+      0.05240549828178696,
+      0.7607843137254902,
+      1.0
+     ],
+     [
+      0.7568493150684931,
+      0.6985645933014354,
+      0.8196078431372549
+     ],
+     [
+      0.0924092409240924,
+      0.39607843137254906,
+      1.0
+     ]
+    ],
+    "pattern": "dorsal",
+    "eyes": "cute",
+    "size": "large",
+    "chibi": false
+   },
+   "genome": {
+    "version": 1,
+    "name": "Estego Pôr-do-Sol",
+    "id": "estego_por_do_sol",
+    "species": "stegosaurus",
+    "archetype": "stegosaur",
+    "fantasy": false,
+    "chibi": false,
+    "seed": 181917956,
+    "size": "large",
+    "px_size": 0.2,
+    "palette_name": "sunset",
+    "palette": {
+     "primary": "#ff7a3d",
+     "belly": "#ffd29a",
+     "accent": "#8e3fd1",
+     "pattern": "#d9482b",
+     "claw": "#3a3333",
+     "mouth": "#a8323a",
+     "tooth": "#f5f0e0",
+     "eye": "#ffffff"
+    },
+    "pattern": {
+     "type": "dorsal",
+     "scale": 6,
+     "density": 0.7
+    },
+    "eyes": {
+     "style": "cute",
+     "size": 2
+    },
+    "features": [
+     "beak",
+     "plates",
+     "thagomizer"
+    ],
+    "attack": "tailswipe",
+    "studs": false,
+    "variation": {
+     "head": 1.167,
+     "neck": 1.081,
+     "tail": 1.011,
+     "legs": 0.929,
+     "body": 1.169,
+     "bulk": 1.06,
+     "arms": 1.173
+    },
+    "params": {
+     "stance": "quad",
+     "diet": "herbivore",
+     "attack": "tailswipe",
+     "hips_len": 21.04,
+     "chest_len": 16.37,
+     "body_w": 14.84,
+     "body_h": 19.87,
+     "chest_h": 16.37,
+     "chest_w": 13.78,
+     "chest_dy": -3,
+     "thigh": 12.08,
+     "thigh_w": 7.42,
+     "thigh_d": 8.48,
+     "shin": 11.15,
+     "shin_w": 6.36,
+     "knee_ang": 10,
+     "shin_ang": -10,
+     "foot_len": 5.57,
+     "foot_h": 3,
+     "foot_w": 7.42,
+     "toes": 3,
+     "front_w": 5.3,
+     "front_ang1": 0,
+     "front_ang2": 0,
+     "neck_segs": 2,
+     "neck_len": 5.4,
+     "neck_w": 8.02,
+     "neck_h": 7.57,
+     "neck_rise": -2.16,
+     "neck_taper": 0.1,
+     "skull_len": 8.17,
+     "skull_h": 7.0,
+     "skull_w": 7.0,
+     "snout_len": 5.83,
+     "snout_h": 4.67,
+     "snout_w": 5.83,
+     "jaw_h": 2.33,
+     "tail_segs": 4,
+     "tail_len": 10.11,
+     "tail_w": 9.65,
+     "tail_h": 9.1,
+     "tail_taper": 0.72,
+     "tail_rise": 1,
+     "eye": 2,
+     "seed": 181917956
+    },
+    "description": "Estegossauro laranja com placas roxas",
+    "vfx": {}
+   }
+  },
+  {
+   "id": "paqui_cabecudo",
+   "name": "Paqui Cabeçudo",
+   "species": "pachycephalosaurus",
+   "archetype": "pachycephalosaur",
+   "fantasy": false,
+   "palette": "bubblegum",
+   "pattern": "spots",
+   "features": [
+    "beak",
+    "dome"
+   ],
+   "created": "2026-10-04T16:11:36",
+   "output": "output/paqui_cabecudo",
+   "signature": {
+    "archetype": "pachycephalosaur",
+    "species": "pachycephalosaurus",
+    "ratios": [
+     0.4135338345864662,
+     1.7650375939849625,
+     2.0589390962671907,
+     0.8312969924812028,
+     0.5465225563909775
+    ],
+    "features": [
+     "beak",
+     "dome"
+    ],
+    "hues": [
+     [
+      0.5533854166666666,
+      0.5019607843137255,
+      1.0
+     ],
+     [
+      0.9236111111111112,
+      0.5647058823529412,
+      1.0
+     ],
+     [
+      0.888888888888889,
+      0.05882352941176472,
+      1.0
+     ]
+    ],
+    "pattern": "spots",
+    "eyes": "cute",
+    "size": "medium",
+    "chibi": true
+   },
+   "genome": {
+    "version": 1,
+    "name": "Paqui Cabeçudo",
+    "id": "paqui_cabecudo",
+    "species": "pachycephalosaurus",
+    "archetype": "pachycephalosaur",
+    "fantasy": false,
+    "chibi": true,
+    "seed": 642690065,
+    "size": "medium",
+    "px_size": 0.14,
+    "palette_name": "bubblegum",
+    "palette": {
+     "primary": "#7fd6ff",
+     "belly": "#fff0fa",
+     "accent": "#ff6fb1",
+     "pattern": "#4fb0e0",
+     "claw": "#d9c9a3",
+     "mouth": "#a8323a",
+     "tooth": "#f5f0e0",
+     "eye": "#ffffff"
+    },
+    "pattern": {
+     "type": "spots",
+     "scale": 5,
+     "density": 0.7
+    },
+    "eyes": {
+     "style": "cute",
+     "size": 4
+    },
+    "features": [
+     "beak",
+     "dome"
+    ],
+    "attack": "headbutt",
+    "studs": false,
+    "variation": {
+     "head": 1.179,
+     "neck": 1.101,
+     "tail": 1.043,
+     "legs": 0.998,
+     "body": 0.925,
+     "bulk": 1.057,
+     "arms": 0.957
+    },
+    "params": {
+     "stance": "biped",
+     "diet": "herbivore",
+     "attack": "headbutt",
+     "hips_len": 11.1,
+     "chest_len": 10.18,
+     "body_w": 11.63,
+     "body_h": 10.18,
+     "chest_h": 10.18,
+     "chest_w": 11.63,
+     "chest_dy": 0,
+     "thigh": 10.98,
+     "thigh_w": 6.34,
+     "thigh_d": 7.4,
+     "shin": 9.98,
+     "shin_w": 4.23,
+     "knee_ang": 20,
+     "shin_ang": -28,
+     "foot_len": 6.99,
+     "foot_h": 3,
+     "foot_w": 6.34,
+     "toes": 3,
+     "arm": 4.79,
+     "fore": 4.79,
+     "hand": 1.91,
+     "arm_w": 2.11,
+     "arm_style": "tiny",
+     "neck_segs": 2,
+     "neck_len": 4.4,
+     "neck_w": 8.15,
+     "neck_h": 7.71,
+     "neck_rise": 3.3,
+     "neck_taper": 0.1,
+     "skull_len": 11.79,
+     "skull_h": 10.61,
+     "skull_w": 11.79,
+     "snout_len": 5.9,
+     "snout_h": 5.9,
+     "snout_w": 7.07,
+     "jaw_h": 2.36,
+     "tail_segs": 4,
+     "tail_len": 9.39,
+     "tail_w": 8.82,
+     "tail_h": 8.34,
+     "tail_taper": 0.75,
+     "tail_rise": 1,
+     "eye": 4,
+     "seed": 642690065
+    },
+    "description": "Paquicefalossauro azul-bebê fofo de cabeça dura",
+    "vfx": {}
+   }
+  },
+  {
+   "id": "parassauro_coral",
+   "name": "Parassauro Coral",
+   "species": "parasaurolophus",
+   "archetype": "hadrosaur",
+   "fantasy": false,
+   "palette": "lagoon",
+   "pattern": "tiger",
+   "features": [
+    "beak",
+    "crest_tube"
+   ],
+   "created": "2026-10-04T16:11:42",
+   "output": "output/parassauro_coral",
+   "signature": {
+    "archetype": "hadrosaur",
+    "species": "parasaurolophus",
+    "ratios": [
+     0.47690728703386936,
+     1.6572015053027713,
+     2.0871722182849046,
+     0.6767020184741704,
+     0.4786178583646939
+    ],
+    "features": [
+     "beak",
+     "crest_tube"
+    ],
+    "hues": [
+     [
+      0.5132924335378323,
+      0.8402061855670103,
+      0.7607843137254902
+     ],
+     [
+      0.545751633986928,
+      0.8360655737704918,
+      0.47843137254901963
+     ],
+     [
+      0.47959183673469385,
+      0.20416666666666666,
+      0.9411764705882353
+     ]
+    ],
+    "pattern": "tiger",
+    "eyes": "cute",
+    "size": "large",
+    "chibi": false
+   },
+   "genome": {
+    "version": 1,
+    "name": "Parassauro Coral",
+    "id": "parassauro_coral",
+    "species": "parasaurolophus",
+    "archetype": "hadrosaur",
+    "fantasy": false,
+    "chibi": false,
+    "seed": 2142288509,
+    "size": "large",
+    "px_size": 0.2,
+    "palette_name": "lagoon",
+    "palette": {
+     "primary": "#1fb5c2",
+     "belly": "#bff0ea",
+     "accent": "#145e7a",
+     "pattern": "#127f8c",
+     "claw": "#3a3333",
+     "mouth": "#a8323a",
+     "tooth": "#f5f0e0",
+     "eye": "#ffffff"
+    },
+    "pattern": {
+     "type": "tiger",
+     "scale": 6,
+     "density": 0.7
+    },
+    "eyes": {
+     "style": "cute",
+     "size": 3
+    },
+    "features": [
+     "beak",
+     "crest_tube"
+    ],
+    "attack": "tailswipe",
+    "studs": false,
+    "variation": {
+     "head": 1.099,
+     "neck": 1.162,
+     "tail": 1.101,
+     "legs": 1.178,
+     "body": 1.008,
+     "bulk": 1.076,
+     "arms": 0.881
+    },
+    "params": {
+     "stance": "biped",
+     "diet": "herbivore",
+     "attack": "tailswipe",
+     "hips_len": 15.12,
+     "chest_len": 14.11,
+     "body_w": 13.99,
+     "body_h": 14.11,
+     "chest_h": 14.11,
+     "chest_w": 13.99,
+     "chest_dy": 0,
+     "thigh": 15.31,
+     "thigh_w": 7.53,
+     "thigh_d": 8.61,
+     "shin": 14.14,
+     "shin_w": 5.38,
+     "knee_ang": 18,
+     "shin_ang": -25,
+     "foot_len": 10.6,
+     "foot_h": 3,
+     "foot_w": 7.53,
+     "toes": 3,
+     "arm": 7.05,
+     "fore": 7.05,
+     "hand": 2.64,
+     "arm_w": 3.23,
+     "arm_style": "medium",
+     "neck_segs": 2,
+     "neck_len": 6.97,
+     "neck_w": 10.01,
+     "neck_h": 9.3,
+     "neck_rise": 4.65,
+     "neck_taper": 0.1,
+     "skull_len": 9.89,
+     "skull_h": 8.79,
+     "skull_w": 8.79,
+     "snout_len": 9.89,
+     "snout_h": 5.5,
+     "snout_w": 8.79,
+     "jaw_h": 2.2,
+     "tail_segs": 4,
+     "tail_len": 12.11,
+     "tail_w": 11.85,
+     "tail_h": 12.11,
+     "tail_taper": 0.75,
+     "tail_rise": 1,
+     "eye": 3,
+     "seed": 2142288509
+    },
+    "description": "Parassaurolofo turquesa com listras de tigre",
+    "vfx": {}
    }
   },
   {
@@ -914,7 +1944,7 @@
     "horns_long",
     "horn_nose"
    ],
-   "created": "2026-10-04T08:14:37",
+   "created": "2026-10-04T16:11:53",
    "output": "output/trici_menta",
    "signature": {
     "archetype": "ceratopsian",
@@ -953,55 +1983,104 @@
     "eyes": "cute",
     "size": "medium",
     "chibi": true
-   }
-  },
-  {
-   "id": "braqui_gelo",
-   "name": "Braqui Gelo",
-   "species": "brachiosaurus",
-   "archetype": "sauropod",
-   "fantasy": true,
-   "palette": "custom",
-   "pattern": "spots",
-   "features": [
-    "crystals"
-   ],
-   "created": "2026-10-04T08:15:13",
-   "output": "output/braqui_gelo",
-   "signature": {
-    "archetype": "sauropod",
-    "species": "brachiosaurus",
-    "ratios": [
-     1.1703910614525141,
-     1.3921787709497209,
-     1.5784198113207546,
-     0.33379888268156427,
-     0.5435754189944135
-    ],
+   },
+   "genome": {
+    "version": 1,
+    "name": "Trici Menta",
+    "id": "trici_menta",
+    "species": "triceratops",
+    "archetype": "ceratopsian",
+    "fantasy": false,
+    "chibi": true,
+    "seed": 641239913,
+    "size": "medium",
+    "px_size": 0.14,
+    "palette_name": "custom",
+    "palette": {
+     "primary": "#6fd8a8",
+     "belly": "#fff4d6",
+     "accent": "#ff8fc8",
+     "pattern": "#3fae7e",
+     "claw": "#efe3c2",
+     "mouth": "#a8323a",
+     "tooth": "#f5f0e0",
+     "eye": "#ffffff"
+    },
+    "pattern": {
+     "type": "spots",
+     "scale": 6,
+     "density": 0.6
+    },
+    "eyes": {
+     "style": "cute",
+     "size": 4
+    },
     "features": [
-     "crystals"
+     "beak",
+     "frill",
+     "horns_long",
+     "horn_nose"
     ],
-    "hues": [
-     [
-      0.5648967551622418,
-      0.4708333333333333,
-      0.9411764705882353
-     ],
-     [
-      0.591337099811676,
-      0.7901785714285714,
-      0.8784313725490196
-     ],
-     [
-      0.5652173913043478,
-      0.09019607843137256,
-      1.0
-     ]
-    ],
-    "pattern": "spots",
-    "eyes": "cute",
-    "size": "giant",
-    "chibi": false
+    "attack": "headbutt",
+    "studs": false,
+    "variation": {
+     "head": 1.424,
+     "neck": 1.081,
+     "tail": 1.076,
+     "legs": 0.868,
+     "body": 0.941,
+     "bulk": 1.042,
+     "arms": 0.963
+    },
+    "params": {
+     "stance": "quad",
+     "diet": "herbivore",
+     "attack": "headbutt",
+     "hips_len": 15.06,
+     "chest_len": 13.17,
+     "body_w": 18.76,
+     "body_h": 15.06,
+     "chest_h": 14.11,
+     "chest_w": 17.71,
+     "chest_dy": -1,
+     "thigh": 7.81,
+     "thigh_w": 7.29,
+     "thigh_d": 8.34,
+     "shin": 6.94,
+     "shin_w": 6.25,
+     "knee_ang": 10,
+     "shin_ang": -10,
+     "foot_len": 5.21,
+     "foot_h": 3,
+     "foot_w": 7.29,
+     "toes": 3,
+     "front_w": 6.25,
+     "front_ang1": -10,
+     "front_ang2": 10,
+     "neck_segs": 1,
+     "neck_len": 4.32,
+     "neck_w": 13.51,
+     "neck_h": 11.89,
+     "neck_rise": 0.0,
+     "neck_taper": 0.0,
+     "skull_len": 18.51,
+     "skull_h": 17.09,
+     "skull_w": 17.09,
+     "snout_len": 11.39,
+     "snout_h": 11.39,
+     "snout_w": 11.39,
+     "jaw_h": 4.27,
+     "tail_segs": 3,
+     "tail_len": 9.68,
+     "tail_w": 11.21,
+     "tail_h": 9.68,
+     "tail_taper": 0.72,
+     "tail_rise": -1,
+     "eye": 4,
+     "seed": 641239913
+    },
+    "description": "Triceratops fofinho verde-menta com frill rosa",
+    "vfx": {}
    }
   }
  ]

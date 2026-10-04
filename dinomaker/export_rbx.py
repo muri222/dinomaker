@@ -258,6 +258,9 @@ def export_rbxmx(path, model, genome, faces, clips, meta, detail="medium"):
             mname = "Root"
         pn.add(joint_node("Motor6D", mname, p0, pn, S(inv4(P0M) @ J), S(inv4(PM) @ J)))
 
+    from .vfx import add_vfx
+    theme = add_vfx(Node, model, genome, main_part, s)
+
     for _, pn in parts_out:
         root.add(pn)
 
@@ -325,6 +328,7 @@ def export_rbxmx(path, model, genome, faces, clips, meta, detail="medium"):
         "WalkSpeed": round(meta["walk_speed"] * s, 3), "RunSpeed": round(meta["run_speed"] * s, 3),
         "Wander": False, "WanderRadius": 40.0, "Action": "", "ActionNonce": 0.0,
         "AttackStyle": genome["attack"], "Flying": False,
+        "VFX": True, "VFXTheme": theme,
     }))
 
     out = ['<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
@@ -335,4 +339,4 @@ def export_rbxmx(path, model, genome, faces, clips, meta, detail="medium"):
     with open(path, "w", encoding="utf-8") as fh:
         fh.write("\n".join(out))
     nparts = sum(1 for _ in parts_out) + 1
-    return dict(parts=nparts, bones=len(model.bones))
+    return dict(parts=nparts, bones=len(model.bones), vfx=theme)

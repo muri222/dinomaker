@@ -148,9 +148,17 @@ animações embutidas e scripts. Para testar: marque o atributo `Wander` do Mode
 """
 
 
-def generate(spec, out_root, history_path, threshold=0.82, formats=("A", "B"), previews=True, detail="medium", dry_run=False, log=print):
+def generate(spec, out_root, history_path, threshold=0.82, formats=("A", "B"), previews=True, detail="medium", dry_run=False, log=print, genome=None):
+    """genome != None: rebuild de um dino existente (sem checar unicidade, atualiza o histórico)."""
     hist = load_history(history_path)
-    g, why = unique_genome(spec, hist, threshold)
+    if genome is None:
+        g, why = unique_genome(spec, hist, threshold)
+    else:
+        g, why = genome, "rebuild"
+        g.setdefault("vfx", {})
+        if "vfx" in spec:
+            g["vfx"] = spec["vfx"]
+        hist["dinos"] = [d for d in hist["dinos"] if d["id"] != g["id"]]
     log("[dinomaker] %s (%s) — %s" % (g["name"], g["species"], why))
     if dry_run:
         return g, None
