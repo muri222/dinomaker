@@ -1,0 +1,3 @@
+numpy>=1.23
+pillow>=9.0
+# Blender 4.2+ precisa estar instalado (ou: pip install bpy, em Python compatível)

@@ -1,0 +1,12 @@
+{
+  "name": "Rex Magma",
+  "species": "tyrannosaurus",
+  "fantasy": true,
+  "size": "large",
+  "palette": "volcano",
+  "pattern": {"type": "lava", "scale": 6, "density": 0.8},
+  "eyes": {"style": "glow", "size": 3},
+  "features": ["crystals", "horns_brow"],
+  "attack": "bite",
+  "description": "T-Rex de pedra vulcânica com rachaduras de lava e cristais nas costas"
+}

@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+output/
+tools/node_modules/
+tools/package-lock.json
+*.blend1

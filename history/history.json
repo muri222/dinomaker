@@ -1,0 +1,478 @@
+{
+ "version": 1,
+ "dinos": [
+  {
+   "id": "t_rex_verde_legado",
+   "name": "T-Rex Verde (legado)",
+   "species": "tyrannosaurus",
+   "archetype": "theropod",
+   "fantasy": false,
+   "palette": "custom",
+   "pattern": "mottled",
+   "features": [
+    "teeth"
+   ],
+   "created": "2026-10-04T07:35:30",
+   "output": "legado:dino_envio_1.blend",
+   "signature": {
+    "archetype": "theropod",
+    "species": "tyrannosaurus",
+    "ratios": [
+     0.265779702970297,
+     1.324257425742574,
+     1.8063118811881187,
+     0.9263613861386137,
+     0.510519801980198
+    ],
+    "features": [
+     "teeth"
+    ],
+    "hues": [
+     [
+      0.3013468013468013,
+      0.6923076923076923,
+      0.5607843137254902
+     ],
+     [
+      0.1176470588235294,
+      0.45535714285714285,
+      0.8784313725490196
+     ],
+     [
+      0.15789473684210528,
+      0.47263681592039797,
+      0.788235294117647
+     ]
+    ],
+    "pattern": "mottled",
+    "eyes": "fierce",
+    "size": "large",
+    "chibi": false
+   },
+   "legacy": true
+  },
+  {
+   "id": "indominus_legado",
+   "name": "Indominus (legado)",
+   "species": "custom",
+   "archetype": "theropod",
+   "fantasy": false,
+   "palette": "custom",
+   "pattern": "stripes",
+   "features": [
+    "teeth",
+    "back_spikes",
+    "horns_brow"
+   ],
+   "created": "2026-10-04T07:35:30",
+   "output": "legado:dino_envio_1.blend",
+   "signature": {
+    "archetype": "theropod",
+    "species": "custom",
+    "ratios": [
+     0.24718706047819972,
+     1.8621659634317862,
+     2.3966244725738393,
+     0.9803094233473979,
+     0.6462728551336145
+    ],
+    "features": [
+     "back_spikes",
+     "horns_brow",
+     "teeth"
+    ],
+    "hues": [
+     [
+      0.11111111111111101,
+      0.0869565217391304,
+      0.8117647058823529
+     ],
+     [
+      0.0,
+      0.0,
+      0.35294117647058826
+     ],
+     [
+      0.11403508771929816,
+      0.07949790794979075,
+      0.9372549019607843
+     ]
+    ],
+    "pattern": "stripes",
+    "eyes": "fierce",
+    "size": "large",
+    "chibi": false
+   },
+   "legacy": true
+  },
+  {
+   "id": "dino_azul_de_chifres_legado",
+   "name": "Dino Azul de Chifres (legado)",
+   "species": "custom",
+   "archetype": "theropod",
+   "fantasy": false,
+   "palette": "custom",
+   "pattern": "mottled",
+   "features": [
+    "teeth",
+    "horns_brow",
+    "back_spikes"
+   ],
+   "created": "2026-10-04T07:35:30",
+   "output": "legado:dino_envio_1.blend",
+   "signature": {
+    "archetype": "theropod",
+    "species": "custom",
+    "ratios": [
+     0.2450738916256158,
+     1.375615763546798,
+     1.6662561576354682,
+     0.79064039408867,
+     0.5221674876847291
+    ],
+    "features": [
+     "back_spikes",
+     "horns_brow",
+     "teeth"
+    ],
+    "hues": [
+     [
+      0.5918079096045198,
+      0.6145833333333333,
+      0.7529411764705882
+     ],
+     [
+      0.13986013986013987,
+      0.6589861751152074,
+      0.8509803921568627
+     ],
+     [
+      0.5855855855855857,
+      0.3217391304347826,
+      0.9019607843137255
+     ]
+    ],
+    "pattern": "mottled",
+    "eyes": "fierce",
+    "size": "large",
+    "chibi": false
+   },
+   "legacy": true
+  },
+  {
+   "id": "dino_laranja_legado",
+   "name": "Dino Laranja (legado)",
+   "species": "custom",
+   "archetype": "theropod",
+   "fantasy": false,
+   "palette": "custom",
+   "pattern": "mottled",
+   "features": [
+    "teeth"
+   ],
+   "created": "2026-10-04T07:35:30",
+   "output": "legado:dino_envio_1.blend",
+   "signature": {
+    "archetype": "theropod",
+    "species": "custom",
+    "ratios": [
+     0.24253731343283585,
+     1.6281094527363185,
+     1.871268656716418,
+     0.7922885572139304,
+     0.43190298507462693
+    ],
+    "features": [
+     "teeth"
+    ],
+    "hues": [
+     [
+      0.09465020576131684,
+      0.7788461538461539,
+      0.8156862745098039
+     ],
+     [
+      0.07971014492753625,
+      0.7540983606557378,
+      0.47843137254901963
+     ],
+     [
+      0.09722222222222221,
+      0.4,
+      0.9411764705882353
+     ]
+    ],
+    "pattern": "mottled",
+    "eyes": "fierce",
+    "size": "large",
+    "chibi": false
+   },
+   "legacy": true
+  },
+  {
+   "id": "dino_rosa_legado",
+   "name": "Dino Rosa (legado)",
+   "species": "custom",
+   "archetype": "ceratopsian",
+   "fantasy": false,
+   "palette": "custom",
+   "pattern": "spots",
+   "features": [
+    "beak",
+    "horn_nose"
+   ],
+   "created": "2026-10-04T07:35:30",
+   "output": "legado:dino_envio_1.blend",
+   "signature": {
+    "archetype": "ceratopsian",
+    "species": "custom",
+    "ratios": [
+     0.15281850765721733,
+     0.9286412512218963,
+     1.12400733048259,
+     0.6810035842293906,
+     0.5395894428152492
+    ],
+    "features": [
+     "beak",
+     "horn_nose"
+    ],
+    "hues": [
+     [
+      0.9042553191489362,
+      0.40343347639484983,
+      0.9137254901960784
+     ],
+     [
+      0.1488095238095238,
+      0.6942148760330578,
+      0.9490196078431372
+     ],
+     [
+      0.9139784946236559,
+      0.1215686274509804,
+      1.0
+     ]
+    ],
+    "pattern": "spots",
+    "eyes": "cute",
+    "size": "large",
+    "chibi": false
+   },
+   "legacy": true
+  },
+  {
+   "id": "raptor_laranja_de_crista_legado",
+   "name": "Raptor Laranja de Crista (legado)",
+   "species": "custom",
+   "archetype": "raptor",
+   "fantasy": false,
+   "palette": "custom",
+   "pattern": "none",
+   "features": [
+    "teeth",
+    "sickle_claw",
+    "crest_fan"
+   ],
+   "created": "2026-10-04T07:35:30",
+   "output": "legado:dino_envio_1.blend",
+   "signature": {
+    "archetype": "raptor",
+    "species": "custom",
+    "ratios": [
+     0.4200913242009132,
+     1.6968036529680366,
+     2.5495207667731625,
+     0.6949771689497717,
+     0.4840182648401827
+    ],
+    "features": [
+     "crest_fan",
+     "sickle_claw",
+     "teeth"
+    ],
+    "hues": [
+     [
+      0.059006211180124224,
+      0.8385416666666666,
+      0.7529411764705882
+     ],
+     [
+      0.12698412698412698,
+      0.7241379310344828,
+      0.9098039215686274
+     ],
+     [
+      0.0784313725490196,
+      0.5862068965517241,
+      0.9098039215686274
+     ]
+    ],
+    "pattern": "none",
+    "eyes": "fierce",
+    "size": "small",
+    "chibi": false
+   },
+   "legacy": true
+  },
+  {
+   "id": "dino_turquesa_legado",
+   "name": "Dino Turquesa (legado)",
+   "species": "custom",
+   "archetype": "spinosaur",
+   "fantasy": false,
+   "palette": "custom",
+   "pattern": "stripes",
+   "features": [
+    "teeth"
+   ],
+   "created": "2026-10-04T07:35:30",
+   "output": "legado:dino_envio_1.blend",
+   "signature": {
+    "archetype": "spinosaur",
+    "species": "custom",
+    "ratios": [
+     0.36340038935755997,
+     1.5412070084360805,
+     2.0615727002967357,
+     0.8192731992212848,
+     0.390655418559377
+    ],
+    "features": [
+     "teeth"
+    ],
+    "hues": [
+     [
+      0.5261437908496732,
+      0.765,
+      0.7843137254901961
+     ],
+     [
+      0.5286195286195285,
+      0.7734375,
+      0.5019607843137255
+     ],
+     [
+      0.5253968253968254,
+      0.4525862068965517,
+      0.9098039215686274
+     ]
+    ],
+    "pattern": "stripes",
+    "eyes": "fierce",
+    "size": "large",
+    "chibi": false
+   },
+   "legacy": true
+  },
+  {
+   "id": "anquilo_verde_de_clava_legado",
+   "name": "Anquilo Verde de Clava (legado)",
+   "species": "custom",
+   "archetype": "ankylosaur",
+   "fantasy": false,
+   "palette": "custom",
+   "pattern": "mottled",
+   "features": [
+    "beak",
+    "armor",
+    "side_spikes",
+    "club"
+   ],
+   "created": "2026-10-04T07:35:30",
+   "output": "legado:dino_envio_1.blend",
+   "signature": {
+    "archetype": "ankylosaur",
+    "species": "custom",
+    "ratios": [
+     0.12706552706552707,
+     1.0769230769230769,
+     1.231980115990058,
+     0.4524216524216524,
+     0.7014245014245014
+    ],
+    "features": [
+     "armor",
+     "beak",
+     "club",
+     "side_spikes"
+    ],
+    "hues": [
+     [
+      0.27227722772277224,
+      0.7062937062937064,
+      0.5607843137254902
+     ],
+     [
+      0.08791208791208789,
+      0.8125,
+      0.8784313725490196
+     ],
+     [
+      0.21751412429378533,
+      0.6145833333333333,
+      0.7529411764705882
+     ]
+    ],
+    "pattern": "mottled",
+    "eyes": "cute",
+    "size": "large",
+    "chibi": false
+   },
+   "legacy": true
+  },
+  {
+   "id": "rex_magma",
+   "name": "Rex Magma",
+   "species": "tyrannosaurus",
+   "archetype": "theropod",
+   "fantasy": true,
+   "palette": "volcano",
+   "pattern": "lava",
+   "features": [
+    "teeth",
+    "crystals",
+    "horns_brow"
+   ],
+   "created": "2026-10-04T07:37:02",
+   "output": "output/rex_magma",
+   "signature": {
+    "archetype": "theropod",
+    "species": "tyrannosaurus",
+    "ratios": [
+     0.25909624413145543,
+     1.5023474178403757,
+     1.494718309859155,
+     0.8882042253521129,
+     0.4680164319248826
+    ],
+    "features": [
+     "crystals",
+     "horns_brow",
+     "teeth"
+    ],
+    "hues": [
+     [
+      0.03374233128834355,
+      0.8402061855670103,
+      0.7607843137254902
+     ],
+     [
+      0.0,
+      0.0,
+      0.16862745098039217
+     ],
+     [
+      0.09416195856873825,
+      0.731404958677686,
+      0.9490196078431372
+     ]
+    ],
+    "pattern": "lava",
+    "eyes": "glow",
+    "size": "large",
+    "chibi": false
+   }
+  }
+ ]
+}

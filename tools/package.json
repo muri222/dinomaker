@@ -1,0 +1,8 @@
+{
+  "name": "dinomaker-tools",
+  "private": true,
+  "description": "Validação/conversão de arquivos Roblox (rbxmx -> rbxm) usando rbx-dom",
+  "dependencies": {
+    "rbx-dom": "^0.3.0"
+  }
+}
