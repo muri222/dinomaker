@@ -9,10 +9,18 @@
 	  Flying (bool)         toca a animação Fly (dinos com asas)
 ]]
 
-local model = script.Parent
+-- Versão A: dentro do Model. Versão B: dentro da pasta DinoKit (monta o rig no Play).
+local container = script.Parent
+local model = container:IsA("Model") and container or container.Parent
+if not container:IsA("Model") then
+	local Rig = require(container:WaitForChild("DinoRig"))
+	if not Rig.setup(model, container) then
+		return
+	end
+end
 local hum = model:WaitForChild("Humanoid")
 local root = model:WaitForChild("HumanoidRootPart")
-local API = require(model:WaitForChild("DinoAPI"))
+local API = require(container:WaitForChild("DinoAPI"))
 
 hum.WalkSpeed = model:GetAttribute("WalkSpeed") or hum.WalkSpeed
 

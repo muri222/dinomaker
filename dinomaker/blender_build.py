@@ -185,7 +185,8 @@ def export(data, arm, obj, actions):
         arm.animation_data.action = None
         for pb in arm.pose.bones:
             pb.matrix_basis = Matrix.Identity(4)
-        bpy.ops.export_scene.fbx(filepath=out["fbx"], bake_anim=False, **fbx_common)
+        main = dict(fbx_common, path_mode="COPY", embed_textures=True)
+        bpy.ops.export_scene.fbx(filepath=out["fbx"], bake_anim=False, **main)
     if out.get("fbx_anims"):
         os.makedirs(out["fbx_anims"], exist_ok=True)
         for cname, act in actions.items():

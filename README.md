@@ -5,10 +5,10 @@ histórico para nunca repetir um dino. Cada geração sai em dois formatos:
 
 | | Versão A — Parts (`.rbxmx`/`.rbxm`) | Versão B — Mesh (`.fbx` + PBR) |
 |---|---|---|
-| Uso no Studio | Insert from File / arrastar — **pronto** | Import 3D + SurfaceAppearance + importar animações |
+| Uso no Studio | Insert from File / arrastar — **pronto** | Import 3D do `.fbx` (textura embutida) + arrastar a pasta `DinoKit` para dentro |
 | Visual | Parts coloridas + placas pixel art (Neon nos brilhos) | Textura pixel art 1024px com normal/roughness |
-| Animações | Embutidas (KeyframeSequence) e tocadas por script, sem publicar nada | FBX por animação para o Animation Editor |
-| Extras | Humanoid, DinoAnimator (cliente), DinoBrain (servidor), DinoAPI | `.blend` e `.glb` para editar/visualizar |
+| Animações | Embutidas (KeyframeSequence) e tocadas por script, sem publicar nada | Mesmas, pelo `DinoKit` (encaixe automático nos Bones importados) + FBX por animação |
+| Extras | Humanoid, DinoAnimator (cliente), DinoBrain (servidor), DinoAPI, VFX | Igual à A via `DinoKit` + `.blend`/`.glb` |
 
 Animações: **Idle, Walk, Run, Attack, Roar, Hit, Eat, Death** (+ **Fly** para pterossauros).
 Andar/correr usam IK nas pernas e `WalkSpeed`/`RunSpeed` calculados para o pé não escorregar.

@@ -16,22 +16,50 @@
 
 local RunService = game:GetService("RunService")
 
-local model = script.Parent
+-- Versão A: script dentro do Model. Versão B: dentro da pasta DinoKit do modelo importado.
+local container = script.Parent
+local isKit = not container:IsA("Model")
+local model = isKit and container.Parent or container
+if isKit then
+	local t0 = os.clock()
+	while not model:GetAttribute("DinoReady") and os.clock() - t0 < 30 do
+		task.wait(0.1)
+	end
+end
 local hum = model:WaitForChild("Humanoid", 15)
 local root = model:WaitForChild("HumanoidRootPart", 15)
-local folder = model:WaitForChild("Animations", 15)
+local folder = container:WaitForChild("Animations", 15)
 if not (hum and root and folder) then
 	return
 end
 
 local FADE = 0.18
 
--- Motor6D por nome da parte filha (Part1)
-local motors = {}
-for _, d in ipairs(model:GetDescendants()) do
-	if d:IsA("Motor6D") and d.Part1 then
-		motors[d.Part1.Name] = d
+-- driver: aplica a pose (nome -> CFrame) no rig
+local driver
+if isKit then
+	local Rig = require(container:WaitForChild("DinoRig"))
+	driver = Rig.newDriver(model, root, container)
+else
+	local motors = {}
+	for _, d in ipairs(model:GetDescendants()) do
+		if d:IsA("Motor6D") and d.Part1 then
+			motors[d.Part1.Name] = d
+		end
 	end
+	driver = {
+		has = function(name)
+			return motors[name] ~= nil
+		end,
+		apply = function(pose)
+			for name, cf in pairs(pose) do
+				local m = motors[name]
+				if m then
+					m.Transform = cf
+				end
+			end
+		end,
+	}
 end
 
 -- KeyframeSequence -> lista ordenada de {t, poses}
@@ -42,7 +70,7 @@ local function loadClip(kfs)
 		if kf:IsA("Keyframe") then
 			local poses = {}
 			for _, p in ipairs(kf:GetDescendants()) do
-				if p:IsA("Pose") and p.Weight > 0 and motors[p.Name] then
+				if p:IsA("Pose") and p.Weight > 0 and driver.has(p.Name) then
 					poses[p.Name] = p.CFrame
 				end
 			end
@@ -284,15 +312,14 @@ RunService.PreSimulation:Connect(function(dt)
 	end
 
 	local w = math.clamp(fadeT / FADE, 0, 1)
+	local out = {}
 	for name, cf in pairs(pose) do
-		local m = motors[name]
-		if m then
-			local final = cf
-			if prevPose and w < 1 and prevPose[name] then
-				final = prevPose[name]:Lerp(cf, w)
-			end
-			m.Transform = final
-			lastPose[name] = final
+		local final = cf
+		if prevPose and w < 1 and prevPose[name] then
+			final = prevPose[name]:Lerp(cf, w)
 		end
+		out[name] = final
+		lastPose[name] = final
 	end
+	driver.apply(out)
 end)

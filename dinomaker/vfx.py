@@ -122,8 +122,10 @@ def _cf(M):
     return cf_xml("CFrame", M)
 
 
-def add_vfx(Node, model, genome, main_part, s):
-    """Cria Attachments com emissores nas partes principais. Retorna o tema."""
+def add_vfx(Node, model, genome, main_part, s, kit_folder=None):
+    """Cria Attachments com emissores nas partes principais. Retorna o tema.
+    kit_folder != None (versão B): os Attachments vão para essa pasta com CFrame no
+    espaço do modelo (studs) + atributo Bone; o DinoRig os move para os ossos importados."""
     theme = genome.get("vfx", {}).get("theme") or auto_theme(genome)
     T = THEMES.get(theme, THEMES["none"])
     mn, mx = model.bbox()
@@ -131,6 +133,12 @@ def add_vfx(Node, model, genome, main_part, s):
     accent = genome["palette"]["accent"]
 
     def attach(bone, world_pt, R=np.eye(3), name="FX"):
+        if kit_folder is not None:
+            from .export_rbx import attrs_xml
+            W = mat4(R, np.array(world_pt, float) * s)
+            att = Node("Attachment", name, [_cf(W), attrs_xml({"Bone": bone})])
+            kit_folder.add(att)
+            return att
         pn, PM = main_part[bone]
         L = inv4(PM) @ mat4(R, world_pt)
         L[:3, 3] *= s

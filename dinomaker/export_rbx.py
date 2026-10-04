@@ -149,6 +149,42 @@ def _face_hidden(model, bi, f):
     return True
 
 
+def animations_folder(model, clips, s, step=2):
+    """Folder 'Animations' com uma KeyframeSequence por clipe (Pose = nome do osso)."""
+    folder = Node("Folder", "Animations")
+    children = {n: [c for c, b in model.bones.items() if b["parent"] == n] for n in model.bones}
+    root_bone = next(n for n, b in model.bones.items() if not b["parent"])
+
+    def pose(name, M, w=1):
+        return Node("Pose", name, [cf_xml("CFrame", M), '<float name="Weight">%g</float>' % w,
+                                   '<token name="EasingStyle">0</token>', '<token name="EasingDirection">0</token>'])
+
+    for cname, clip in clips.items():
+        kfs = Node("KeyframeSequence", cname, [
+            '<bool name="Loop">%s</bool>' % ("true" if clip["loop"] else "false"),
+            '<token name="Priority">%d</token>' % PRIORITY[clip["priority"]],
+        ])
+        nfr = len(clip["local"])
+        idx = list(range(0, nfr, step))
+        if idx[-1] != nfr - 1:
+            idx.append(nfr - 1)
+        for fi in idx:
+            loc = clip["local"][fi]
+            kf = Node("Keyframe", "Keyframe", ['<float name="Time">%.4f</float>' % (fi / 30.0)])
+            rootpose = kf.add(pose("HumanoidRootPart", np.eye(4), 0))
+
+            def rec(parent_node, bname):
+                Rl, tl = loc[bname]
+                pn = parent_node.add(pose(bname, mat4(Rl, tl * s)))
+                for ch in children[bname]:
+                    rec(pn, ch)
+
+            rec(rootpose, root_bone)
+            kfs.add(kf)
+        folder.add(kfs)
+    return folder
+
+
 # ---------------------------------------------------------------- export
 def export_rbxmx(path, model, genome, faces, clips, meta, detail="medium"):
     Ref.n = 0
@@ -277,40 +313,7 @@ def export_rbxmx(path, model, genome, faces, clips, meta, detail="medium"):
     root.add(hum)
 
     # ---------------- animações
-    folder = root.add(Node("Folder", "Animations"))
-    children = {n: [c for c, b in model.bones.items() if b["parent"] == n] for n in model.bones}
-
-    def pose_tree(local, name, M):
-        node = Node("Pose", name, [cf_xml("CFrame", M), '<float name="Weight">1</float>',
-                                   '<token name="EasingStyle">0</token>', '<token name="EasingDirection">0</token>'])
-        return node
-
-    step = 2  # 15 keyframes/s
-    for cname, clip in clips.items():
-        kfs = Node("KeyframeSequence", cname, [
-            '<bool name="Loop">%s</bool>' % ("true" if clip["loop"] else "false"),
-            '<token name="Priority">%d</token>' % PRIORITY[clip["priority"]],
-        ])
-        nfr = len(clip["local"])
-        idx = list(range(0, nfr, step))
-        if idx[-1] != nfr - 1:
-            idx.append(nfr - 1)
-        for fi in idx:
-            loc = clip["local"][fi]
-            kf = Node("Keyframe", "Keyframe", ['<float name="Time">%.4f</float>' % (fi / 30.0)])
-            rootpose = kf.add(Node("Pose", "HumanoidRootPart", [cf_xml("CFrame", np.eye(4)), '<float name="Weight">0</float>',
-                                                                   '<token name="EasingStyle">0</token>', '<token name="EasingDirection">0</token>']))
-
-            def rec(parent_node, bname):
-                Rl, tl = loc[bname]
-                M = mat4(Rl, tl * s)
-                pn = parent_node.add(pose_tree(loc, main_part[bname][0].name, M))
-                for ch in children[bname]:
-                    rec(pn, ch)
-
-            rec(rootpose, "Hips")
-            kfs.add(kf)
-        folder.add(kfs)
+    root.add(animations_folder(model, clips, s))
 
     # ---------------- scripts
     with open(os.path.join(LUA_DIR, "DinoAnimator.lua"), encoding="utf-8") as fh:

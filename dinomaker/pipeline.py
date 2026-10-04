@@ -10,6 +10,7 @@ import numpy as np
 
 from .anims import bake
 from .export_rbx import export_rbxmx
+from .export_kit import export_kit
 from .genome import resolve, check_unique, load_history, save_history, add_to_history, signature, most_similar
 from .model import build_model
 from .texture import paint_faces, build_atlas
@@ -138,13 +139,14 @@ Studio > Model > (botão direito no Workspace) **Insert from File...** e escolha
 (ou arraste o arquivo para a janela do Studio). Já vem com Humanoid, rig Motor6D,
 animações embutidas e scripts. Para testar: marque o atributo `Wander` do Model e dê Play.
 
-## B) Mesh + textura PBR (`B_mesh/`)
-1. Studio > Avatar/Model > **Import 3D** > `{id}.fbx` (Rig: General, File Dimensions: Studs).
-2. No MeshPart importado, adicione **SurfaceAppearance** com `textures/{id}_albedo.png` (ColorMap),
-   `_normal.png` (NormalMap), `_roughness.png` (RoughnessMap), `_metalness.png` (MetalnessMap).
-3. Animações: Animation Editor > ... > **Import > From FBX Animation** com cada arquivo de `anims/`.
-   Depois publique (Publish to Roblox) para obter os AnimationIds.
-`{id}.blend` e `{id}.glb` servem para editar/visualizar.
+## B) Mesh com a textura pixel art (`B_mesh/`) — visual igual ao preview
+1. Studio > Avatar/Modelo > **Importar 3D** > `{id}.fbx` (textura já vem embutida). Insira no Workspace.
+2. Insira também `{id}_DinoKit.rbxm` (ou `.rbxmx`) e **arraste a pasta `DinoKit` para dentro do modelo importado**.
+3. Dê Play: o kit encaixa sozinho no rig importado (qualquer escala/rotação), cria HumanoidRootPart +
+   Humanoid, liga animações, VFX e scripts. Mesma API/atributos da versão A
+   (`require(modelo.DinoKit.DinoAPI)`).
+Extras: `anims/*.fbx` (para o Animation Editor, se quiser publicar as animações), `textures/` (PBR para
+SurfaceAppearance), `{id}.blend` e `{id}.glb`.
 """
 
 
@@ -208,6 +210,10 @@ def generate(spec, out_root, history_path, threshold=0.82, formats=("A", "B"), p
         json.dump(data, f)
     if "B" in formats or previews:
         run_blender(bj)
+    if "B" in formats:
+        kit_path = os.path.join(b_dir, g["id"] + "_DinoKit.rbxmx")
+        export_kit(kit_path, model, g, clips, meta)
+        log("[dinomaker] B: kit " + validate_rbxmx(kit_path))
     os.remove(bj)
 
     with open(os.path.join(out_dir, "README.md"), "w", encoding="utf-8") as f:
