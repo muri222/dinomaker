@@ -635,13 +635,17 @@ function matches(d, q) {
   q = q.trim().toLowerCase();
   return !q || [d.name, d.id, d.species, d.archetype, d.palette, d.pattern, PT.arch[d.archetype]].join(" ").toLowerCase().includes(q);
 }
-function renderLibrary() {
+const PAGE = 120;
+let libShown = PAGE;
+function renderLibrary(more = false) {
   const q = $("#lib-search").value;
   const grid = $("#lib-grid");
   grid.innerHTML = "";
+  libShown = more ? libShown + PAGE : PAGE;
   const list = LIB.filter((d) => matches(d, q));
   $("#lib-count").textContent = `${list.length} de ${LIB.length}`;
-  for (const d of list) {
+  $("#lib-more").hidden = list.length <= libShown;
+  for (const d of list.slice(0, libShown)) {
     const img = d.thumb ? el("img", { src: d.thumb, loading: "lazy", alt: "" }) : el("div", { class: "noimg" }, d.legacy ? "feito à mão" : "sem miniatura");
     const del = el("button", { class: "del", title: "Remover", onclick: async (ev) => {
       ev.stopPropagation();
@@ -741,18 +745,8 @@ function showTab(name) {
 }
 async function boot() {
   $$("[data-tab]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); showTab(a.dataset.tab); }));
-  $("#lib-search").oninput = renderLibrary;
-  $("#lib-fill").onclick = async () => {
-    const falta = LIB.filter((d) => d.editable && !d.built).length;
-    if (!falta) return toast("Todos os dinos já têm arquivos gerados.");
-    if (!confirm(`Gerar ${falta} dino(s) no Blender? (uns 5–15 s cada, em paralelo)`)) return;
-    $("#lib-fill").disabled = true;
-    const job = await api("/api/fill", {});
-    watchJob(job, (j) => {
-      if (j.progress) $("#lib-fill-st").textContent = `${j.progress.done}/${j.progress.total}`;
-      if (j.progress && j.progress.done % 5 === 0) loadLibrary();
-    }, () => { $("#lib-fill").disabled = false; $("#lib-fill-st").textContent = "pronto"; loadLibrary(); });
-  };
+  $("#lib-search").oninput = () => renderLibrary();
+  $("#lib-more").onclick = () => renderLibrary(true);
   $("#f-name").addEventListener("input", (e) => change(() => (spec.name = e.target.value), true));
   $("#b-random").onclick = () => { showTab("editor"); newDino(Math.random() < 0.5 ? { fantasy: true } : {}); };
   $("#b-save-new").onclick = () => save("new");

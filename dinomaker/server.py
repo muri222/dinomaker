@@ -346,7 +346,16 @@ class Handler(BaseHTTPRequestHandler):
                 spec = {k: v for k, v in b.items() if v not in (None, "", [])}
                 h = load_history(Ctx.history)
                 from .pipeline import unique_genome
-                g, why = unique_genome(spec, h, Ctx.threshold, max_tries=10)
+                tries = [spec] if spec.get("species") or spec.get("archetype") else [spec, dict(spec, fantasy=True)]
+                g = why = None
+                for sp in tries:
+                    try:
+                        g, why = unique_genome(sp, h, Ctx.threshold, max_tries=60)
+                        break
+                    except RuntimeError as e:
+                        why = str(e)
+                if g is None:  # espaço lotado para esse corpo: entrega mesmo assim, o medidor mostra
+                    g = resolve(spec, h)
                 return self._json({"spec": genome_to_spec(g), "why": why})
             if p == "/api/save":
                 spec, mode, rid = b["spec"], b.get("mode", "new"), b.get("replace_id")

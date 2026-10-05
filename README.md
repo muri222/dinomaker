@@ -49,9 +49,10 @@ Abre `http://localhost:8765` no navegador:
   VFX (tema, cor, intensidade, tamanho, brilho, liga/desliga aura/bafo/poeira/faíscas/luz).
   Desfazer/refazer (Ctrl+Z / Ctrl+Y), mutar formas, mutar cores. **Medidor de originalidade**
   contra todo o histórico. "Salvar como novo" (precisa ser original) ou "Salvar por cima".
-- **Biblioteca**: todos os dinos (os 100 do Kit100 já vêm no `history/history.json` com miniatura em
-  `library/thumbs/`); clique para editar. "Gerar arquivos que faltam" recria FBX/kit/previews no Blender
-  (necessário antes de exportar dinos que vieram só pelo git).
+- **Biblioteca**: ~1.100 dinos prontos (os 100 do Kit100 + 1.000 sorteados únicos), todos em
+  `history/history.json` com miniatura em `library/thumbs/`; busca e clique para editar.
+  FBX/kit de cada um são gerados no Blender na hora de exportar (só os escolhidos).
+  Mais dinos na biblioteca: `python tools/seed_library.py --count 500`.
 - **Lote**: N dinos novos e únicos (reais, fantasia ou misto; filtra por corpo e tema).
 - **Exportar**: escolha os dinos e baixe o zip pronto (FBX + arquivo único de kits + plugin).
 

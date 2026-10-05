@@ -191,6 +191,8 @@ main{position:relative;z-index:1;height:100%;padding-top:calc(var(--nav-h) + 24p
 .dcard:hover{border-color:var(--accent-line);transform:translateY(-2px)}
 .dcard img,.dcard .noimg{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#12161b}
 .dcard .noimg{display:grid;place-items:center;color:var(--text-3);font-size:.75rem}
+.row-center{display:flex;justify-content:center;margin:26px 0 10px}
+.dcard{content-visibility:auto;contain-intrinsic-size:auto 260px}
 .dcard .info{padding:10px 12px 12px}
 .dcard .info b{display:block;font-weight:560;font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dcard .info small{color:var(--text-3);font-size:.75rem}
