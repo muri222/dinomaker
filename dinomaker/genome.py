@@ -232,7 +232,11 @@ def similarity(sa, sb):
     d += 0.20 * hd
     d += 0.07 * (0.0 if sa["pattern"] == sb["pattern"] else 1.0)
     d += 0.03 * (0.0 if sa["eyes"] == sb["eyes"] else 1.0)
-    return round(1.0 - min(d, 1.0), 4)
+    sim = 1.0 - min(d, 1.0)
+    # mesmo corpo + mesma cor principal já parece repetido aos olhos: pesa mais
+    if sa["archetype"] == sb["archetype"] and _hdist(sa["hues"][0], sb["hues"][0]) < 0.12:
+        sim = min(1.0, sim + 0.08)
+    return round(sim, 4)
 
 
 # ---------------------------------------------------------------- histórico

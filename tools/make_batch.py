@@ -71,7 +71,7 @@ THEMES = {
     "Abissal": dict(palette={"primary": "#13406e", "belly": "#5fd0f0", "accent": "#3effd8", "pattern": "#0a2647"}, pattern={"type": "bands"}, features=["tusks", "glow_eyes"], vfx={"theme": "water"}),
     "Doce": dict(palette="candy", pattern={"type": "spots"}, chibi=True, vfx={"theme": "magic"}),
     "Dourado": dict(palette="gold", pattern={"type": "rosettes"}, features=["gem"], vfx={"theme": "magic"}),
-    "Sombrio": dict(palette="shadow", pattern={"type": "dorsal"}, features=["glow_eyes", "back_spikes"], vfx={"theme": "magic"}),
+    "Sombrio": dict(palette={"primary": "#3a2a55", "belly": "#8a6ab0", "accent": "#ff3355", "pattern": "#c9a8ff"}, pattern={"type": "dorsal"}, features=["glow_eyes", "back_spikes"], vfx={"theme": "magic"}),
     "Arco-Íris": dict(palette={"primary": "#7a5cff", "belly": "#fff4d6", "accent": "#ff5fa2", "pattern": "#3fe0a0"}, pattern={"type": "stripes"}, chibi=True, vfx={"theme": "magic"}),
     "Zumbi": dict(palette={"primary": "#7a9a6a", "belly": "#b8c8a0", "accent": "#5aff5a", "pattern": "#4a5a40"}, pattern={"type": "mottled"}, features=["glow_eyes"], vfx={"theme": "toxic"}),
 }

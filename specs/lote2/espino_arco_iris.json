@@ -1,0 +1,19 @@
+{
+ "name": "Espino Arco-Íris",
+ "archetype": "spinosaur",
+ "fantasy": true,
+ "seed": 9104,
+ "palette": {
+  "primary": "#7a5cff",
+  "belly": "#fff4d6",
+  "accent": "#ff5fa2",
+  "pattern": "#3fe0a0"
+ },
+ "pattern": {
+  "type": "stripes"
+ },
+ "chibi": true,
+ "vfx": {
+  "theme": "magic"
+ }
+}

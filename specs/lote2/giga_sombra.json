@@ -1,7 +1,12 @@
 {
  "name": "Giga Sombra",
  "species": "giganotosaurus",
- "palette": "shadow",
+ "palette": {
+  "primary": "#4a2433",
+  "belly": "#a86a7a",
+  "accent": "#ff3355",
+  "pattern": "#ffb3c1"
+ },
  "pattern": {
   "type": "dorsal"
  },

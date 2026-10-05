@@ -3,7 +3,12 @@
  "archetype": "ankylosaur",
  "fantasy": true,
  "seed": 7036,
- "palette": "shadow",
+ "palette": {
+  "primary": "#3a2a55",
+  "belly": "#8a6ab0",
+  "accent": "#ff3355",
+  "pattern": "#c9a8ff"
+ },
  "pattern": {
   "type": "dorsal"
  },

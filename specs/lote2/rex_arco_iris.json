@@ -1,0 +1,19 @@
+{
+ "name": "Rex Arco-Íris",
+ "archetype": "theropod",
+ "fantasy": true,
+ "seed": 9100,
+ "palette": {
+  "primary": "#7a5cff",
+  "belly": "#fff4d6",
+  "accent": "#ff5fa2",
+  "pattern": "#3fe0a0"
+ },
+ "pattern": {
+  "type": "stripes"
+ },
+ "chibi": true,
+ "vfx": {
+  "theme": "magic"
+ }
+}
