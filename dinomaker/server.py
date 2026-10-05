@@ -7,6 +7,7 @@ import io
 import json
 import os
 import shutil
+import tempfile
 import threading
 import time
 import traceback
@@ -33,6 +34,7 @@ from .vfx import THEMES as VFX_THEMES, VFX_DEFAULTS, effective_vfx
 UI = os.path.join(os.path.dirname(__file__), "ui")
 OUT = os.path.join(ROOT, "output")
 LIBDIR = os.path.join(ROOT, "library")
+EXPORTS = os.path.join(ROOT, "exportados")
 LOCK = threading.Lock()
 JOBS = {}
 POOL = ThreadPoolExecutor(2)
@@ -179,46 +181,72 @@ LEIA = """{name} - dinomaker (versao B, mesh com textura pixel art)
 
 UMA VEZ SO: Studio > Plugins > Pasta de plugins > copie DinoMaker_Plugin.rbxm. Reabra o Studio.
 1. Importar 3D > selecione TODOS os .fbx da pasta FBX (textura ja vem dentro).
-2. Arraste {name}_DinoKits.rbxm para o Studio.
+2. Arraste {kits} para o Studio.
 3. Barra DinoMaker > "Instalar kits" (ou so de Play). "Passear" liga o passeio.
 Lista dos dinos: lista_dinos.csv | fotos: previews/
 """
 
 
+def open_folder(path):
+    import subprocess
+    import sys
+    if sys.platform.startswith("win"):
+        os.startfile(path)  # noqa: S606
+    elif sys.platform == "darwin":
+        subprocess.Popen(["open", path])
+    else:
+        subprocess.Popen(["xdg-open", path])
+
+
 def job_export(job, ids, name):
+    """Monta exportados/<nome>/ (pronto para o Studio) + exportados/<nome>.zip."""
     h = load_history(Ctx.history)
     by = {d["id"]: d for d in h["dinos"] if d.get("genome")}
     gens = [by[i]["genome"] for i in ids if i in by]
     if not gens:
         raise RuntimeError("nenhum dino válido selecionado")
-    name = slug(name or "Pacote") or "pacote"
+    base = slug(name or "Pacote") or "pacote"
+    name, k = base, 2
+    while os.path.exists(os.path.join(EXPORTS, name)) or os.path.exists(os.path.join(EXPORTS, name + ".zip")):
+        name, k = "%s_%d" % (base, k), k + 1
     for i, g in enumerate(gens):
         fbx = os.path.join(OUT, g["id"], "B_mesh", g["id"] + ".fbx")
         if not os.path.exists(fbx):
-            job["log"].append("gerando %s que faltava..." % g["id"])
+            job["log"].append("[%d/%d] gerando %s no Blender..." % (i + 1, len(gens), g["name"]))
             generate({}, OUT, Ctx.history, genome=g, update_history=False, log=lambda *a: None)
         job["progress"] = {"done": i + 1, "total": len(gens)}
-    exp = os.path.join(OUT, "exports", name)
-    shutil.rmtree(exp, ignore_errors=True)
-    os.makedirs(exp)
     job["log"].append("empacotando %d kits..." % len(gens))
-    pack_kits(gens, exp, name, log=job["log"].append)
-    zpath = os.path.join(OUT, "exports", name + ".zip")
+    final = os.path.join(EXPORTS, name)
+    os.makedirs(os.path.join(final, "FBX"))
+    with tempfile.TemporaryDirectory() as tmp:
+        kits, plug = pack_kits(gens, tmp, name, log=lambda *a: None)
+        kb = kits[:-1]  # .rbxm (binário) quando o Node/rbx-dom está instalado; senão o .rbxmx serve igual
+        shutil.copy(kb if os.path.exists(kb) else kits, final)
+        pre = os.path.join(ROOT, "tools", "DinoMaker_Plugin.rbxm")
+        shutil.copy(pre if os.path.exists(pre) else plug, final)
+    for g in gens:
+        shutil.copy(os.path.join(OUT, g["id"], "B_mesh", g["id"] + ".fbx"), os.path.join(final, "FBX", g["id"] + ".fbx"))
+        pv = os.path.join(OUT, g["id"], "preview", "idle_front34.png")
+        if os.path.exists(pv):
+            os.makedirs(os.path.join(final, "previews"), exist_ok=True)
+            shutil.copy(pv, os.path.join(final, "previews", g["id"] + ".png"))
+    rows = ["nome;id;especie;arquetipo;fantasia;paleta;padrao;features"]
+    for g in gens:
+        rows.append(";".join([g["name"], g["id"], g["species"], g["archetype"], "sim" if g["fantasy"] else "nao",
+                              g["palette_name"], g["pattern"]["type"], ",".join(g["features"])]))
+    with open(os.path.join(final, "lista_dinos.csv"), "w", encoding="utf-8-sig") as f:
+        f.write("\n".join(rows))
+    kits_fn = next(f for f in os.listdir(final) if "_DinoKits." in f)
+    with open(os.path.join(final, "LEIA-ME.txt"), "w", encoding="utf-8") as f:
+        f.write(LEIA.format(name=name, kits=kits_fn))
+    zpath = os.path.join(EXPORTS, name + ".zip")
     with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as z:
-        for g in gens:
-            z.write(os.path.join(OUT, g["id"], "B_mesh", g["id"] + ".fbx"), "FBX/%s.fbx" % g["id"])
-            pv = os.path.join(OUT, g["id"], "preview", "idle_front34.png")
-            if os.path.exists(pv):
-                z.write(pv, "previews/%s.png" % g["id"])
-        for fn in (name + "_DinoKits.rbxm", "DinoMaker_Plugin.rbxm"):
-            z.write(os.path.join(exp, fn), fn)
-        rows = ["nome;id;especie;arquetipo;fantasia;paleta;padrao;features"]
-        for g in gens:
-            rows.append(";".join([g["name"], g["id"], g["species"], g["archetype"], "sim" if g["fantasy"] else "nao",
-                                  g["palette_name"], g["pattern"]["type"], ",".join(g["features"])]))
-        z.writestr("lista_dinos.csv", "﻿" + "\n".join(rows))
-        z.writestr("LEIA-ME.txt", LEIA.format(name=name))
-    return {"zip": "/files/output/exports/%s.zip" % name, "count": len(gens)}
+        for dp, _, fns in os.walk(final):
+            for fn in fns:
+                full = os.path.join(dp, fn)
+                z.write(full, os.path.relpath(full, final))
+    job["log"].append("pronto: %s" % final)
+    return {"zip": "/files/exportados/%s.zip" % name, "count": len(gens), "folder": final, "name": name}
 
 
 def job_fill(job):
@@ -312,9 +340,9 @@ class Handler(BaseHTTPRequestHandler):
                 return self._file(os.path.join(UI, "index.html"))
             if p.startswith("/ui/"):
                 return self._file(os.path.normpath(os.path.join(UI, p[4:])) if ".." not in p else "")
-            if p.startswith("/files/output/") or p.startswith("/files/library/"):
+            if p.startswith(("/files/output/", "/files/library/", "/files/exportados/")):
                 full = os.path.normpath(os.path.join(ROOT, p[len("/files/"):]))
-                if not (full.startswith(OUT + os.sep) or full.startswith(LIBDIR + os.sep)) or ".." in p:
+                if not any(full.startswith(d + os.sep) for d in (OUT, LIBDIR, EXPORTS)) or ".." in p:
                     return self._json({"erro": "proibido"}, 403)
                 return self._file(full)
             if p == "/api/meta":
@@ -371,6 +399,12 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json(new_job("exportar", job_export, b.get("ids", []), b.get("name")))
             if p == "/api/fill":
                 return self._json(new_job("miniaturas", job_fill))
+            if p == "/api/open":  # abre a pasta exportada no Explorer/Finder
+                full = os.path.normpath(os.path.join(EXPORTS, os.path.basename(b.get("name", ""))))
+                if not full.startswith(EXPORTS + os.sep) or not os.path.isdir(full):
+                    return self._json({"erro": "pasta não encontrada"}, 404)
+                open_folder(full)
+                return self._json({"ok": True})
             if p == "/api/forget":
                 with LOCK:
                     h = load_history(Ctx.history)

@@ -54,7 +54,11 @@ Abre `http://localhost:8765` no navegador:
   FBX/kit de cada um são gerados no Blender na hora de exportar (só os escolhidos).
   Mais dinos na biblioteca: `python tools/seed_library.py --count 500`.
 - **Lote**: N dinos novos e únicos (reais, fantasia ou misto; filtra por corpo e tema).
-- **Exportar**: escolha os dinos e baixe o zip pronto (FBX + arquivo único de kits + plugin).
+- **Exportar**: também direto no editor, no resultado do lote e no ícone de cada card.
+
+**Pastas:** `exportados/<nome>/` = pacotes prontos para o Studio (FBX/, `<nome>_DinoKits`, plugin, previews,
+LEIA-ME) + o `.zip` igual; a pasta abre sozinha ao terminar. `output/` é só cache interno do gerador
+(pode apagar quando quiser; é recriado sob demanda). `library/thumbs/` = miniaturas da biblioteca.
 
 ### Quantos dinos diferentes dá para criar?
 Medido com o próprio bloqueio de originalidade (limiar 0.82, `tools/estimate_capacity.py`):

@@ -620,9 +620,9 @@ function exportIds(ids, name, bar, log, done) {
       if (bar && j.progress) bar.style.width = (100 * j.progress.done / j.progress.total) + "%";
     }, (j) => {
       if (bar) bar.style.width = "100%";
-      if (log) log.innerHTML += `\n${j.result.count} dinos · <a href="${j.result.zip}">baixar zip</a>`;
-      toast(`Zip pronto: ${j.result.count} dino(s).`);
-      window.location.href = j.result.zip;
+      if (log) log.innerHTML += `\n${j.result.count} dinos · <a href="${j.result.zip}">baixar zip de novo</a>`;
+      toast(`Pronto: ${j.result.count} dino(s) em exportados/${j.result.name}`);
+      api("/api/open", { name: j.result.name }).catch(() => (window.location.href = j.result.zip));
       if (done) done(j);
     });
   }).catch((e) => toast("Erro ao exportar: " + e.message, true));
