@@ -487,6 +487,17 @@ function showTab(name) {
 async function boot() {
   document.querySelectorAll("nav button").forEach((b) => (b.onclick = () => showTab(b.dataset.tab)));
   $("#lib-search").oninput = renderLibrary;
+  $("#lib-fill").onclick = async () => {
+    const falta = LIB.filter((d) => d.editable && !d.thumb).length;
+    if (!falta) return toast("Todas as miniaturas já existem.");
+    if (!confirm(`Gerar ${falta} dino(s) no Blender? (uns 5–15 s cada, em paralelo)`)) return;
+    $("#lib-fill").disabled = true;
+    const job = await api("/api/fill", {});
+    watchJob(job, (j) => {
+      if (j.progress) $("#lib-fill-st").textContent = `${j.progress.done}/${j.progress.total}`;
+      if (j.progress && j.progress.done % 5 === 0) loadLibrary();
+    }, () => { $("#lib-fill").disabled = false; $("#lib-fill-st").textContent = "✓"; loadLibrary(); });
+  };
   META = await api("/api/meta");
   initViewer();
   buildEditorControls();

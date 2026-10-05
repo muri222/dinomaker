@@ -193,6 +193,23 @@ def job_export(job, ids, name):
     return {"zip": "/files/output/exports/%s.zip" % name, "count": len(gens)}
 
 
+def job_fill(job):
+    """Gera (Blender) os dinos do histórico que ainda não têm arquivos/miniatura."""
+    h = load_history(Ctx.history)
+    todo = [d["genome"] for d in h["dinos"] if d.get("genome") and not
+            os.path.exists(os.path.join(OUT, d["id"], "preview", "idle_front34.png"))]
+    if not todo:
+        job["log"].append("nada faltando")
+        return {"count": 0}
+    from concurrent.futures import ProcessPoolExecutor
+    from .batch import _build_one
+    with ProcessPoolExecutor(max(1, min(4, (os.cpu_count() or 2) - 1))) as ex:
+        for i, (gid, err) in enumerate(ex.map(_build_one, [(g, OUT, Ctx.history) for g in todo])):
+            job["progress"] = {"done": i + 1, "total": len(todo)}
+            job["log"].append("[%d/%d] %s %s" % (i + 1, len(todo), gid, "ERRO" if err else "ok"))
+    return {"count": len(todo)}
+
+
 def meta():
     arch_species = {}
     for k, (a, disp, _, _) in SPECIES.items():
@@ -309,6 +326,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json(new_job("lote", job_batch, b))
             if p == "/api/export":
                 return self._json(new_job("exportar", job_export, b.get("ids", []), b.get("name")))
+            if p == "/api/fill":
+                return self._json(new_job("miniaturas", job_fill))
             if p == "/api/forget":
                 with LOCK:
                     h = load_history(Ctx.history)
