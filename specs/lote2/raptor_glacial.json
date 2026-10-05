@@ -1,0 +1,16 @@
+{
+ "name": "Raptor Glacial",
+ "archetype": "raptor",
+ "fantasy": true,
+ "seed": 7001,
+ "palette": "frost",
+ "pattern": {
+  "type": "spots"
+ },
+ "features": [
+  "crystals"
+ ],
+ "vfx": {
+  "theme": "ice"
+ }
+}

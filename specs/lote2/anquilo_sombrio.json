@@ -1,0 +1,17 @@
+{
+ "name": "Anquilo Sombrio",
+ "archetype": "ankylosaur",
+ "fantasy": true,
+ "seed": 7036,
+ "palette": "shadow",
+ "pattern": {
+  "type": "dorsal"
+ },
+ "features": [
+  "glow_eyes",
+  "back_spikes"
+ ],
+ "vfx": {
+  "theme": "magic"
+ }
+}

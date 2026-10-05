@@ -1,0 +1,11 @@
+{
+ "name": "Diplo Bolinha",
+ "species": "diplodocus",
+ "palette": "bubblegum",
+ "pattern": {
+  "type": "spots"
+ },
+ "features": [],
+ "seed": 5036,
+ "chibi": true
+}

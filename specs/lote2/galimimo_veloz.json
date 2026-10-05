@@ -1,0 +1,10 @@
+{
+ "name": "Galimimo Veloz",
+ "species": "gallimimus",
+ "palette": "desert",
+ "pattern": {
+  "type": "stripes"
+ },
+ "features": [],
+ "seed": 5011
+}

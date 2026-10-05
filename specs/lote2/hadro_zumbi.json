@@ -1,0 +1,21 @@
+{
+ "name": "Hadro Zumbi",
+ "archetype": "hadrosaur",
+ "fantasy": true,
+ "seed": 7047,
+ "palette": {
+  "primary": "#7a9a6a",
+  "belly": "#b8c8a0",
+  "accent": "#5aff5a",
+  "pattern": "#4a5a40"
+ },
+ "pattern": {
+  "type": "mottled"
+ },
+ "features": [
+  "glow_eyes"
+ ],
+ "vfx": {
+  "theme": "toxic"
+ }
+}

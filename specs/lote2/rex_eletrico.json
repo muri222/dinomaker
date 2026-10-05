@@ -1,0 +1,21 @@
+{
+ "name": "Rex Elétrico",
+ "archetype": "theropod",
+ "fantasy": true,
+ "seed": 7020,
+ "palette": {
+  "primary": "#ffd23a",
+  "belly": "#fff6c0",
+  "accent": "#2b2b2b",
+  "pattern": "#2b2b2b"
+ },
+ "pattern": {
+  "type": "zigzag"
+ },
+ "features": [
+  "glow_eyes"
+ ],
+ "vfx": {
+  "theme": "electric"
+ }
+}

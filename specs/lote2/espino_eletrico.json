@@ -1,0 +1,21 @@
+{
+ "name": "Espino Elétrico",
+ "archetype": "spinosaur",
+ "fantasy": true,
+ "seed": 7002,
+ "palette": {
+  "primary": "#ffd23a",
+  "belly": "#fff6c0",
+  "accent": "#2b2b2b",
+  "pattern": "#2b2b2b"
+ },
+ "pattern": {
+  "type": "zigzag"
+ },
+ "features": [
+  "glow_eyes"
+ ],
+ "vfx": {
+  "theme": "electric"
+ }
+}

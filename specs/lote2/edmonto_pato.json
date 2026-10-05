@@ -1,0 +1,10 @@
+{
+ "name": "Edmonto Pato",
+ "species": "edmontosaurus",
+ "palette": "lime",
+ "pattern": {
+  "type": "mottled"
+ },
+ "features": [],
+ "seed": 5023
+}

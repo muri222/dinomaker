@@ -1,0 +1,10 @@
+{
+ "name": "Diplo Gigante",
+ "species": "diplodocus",
+ "palette": "slate",
+ "pattern": {
+  "type": "bands"
+ },
+ "features": [],
+ "seed": 5016
+}

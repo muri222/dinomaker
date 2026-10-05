@@ -1,0 +1,16 @@
+{
+ "name": "Estego Dourado",
+ "archetype": "stegosaur",
+ "fantasy": true,
+ "seed": 7035,
+ "palette": "gold",
+ "pattern": {
+  "type": "rosettes"
+ },
+ "features": [
+  "gem"
+ ],
+ "vfx": {
+  "theme": "magic"
+ }
+}

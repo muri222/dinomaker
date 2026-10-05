@@ -1,0 +1,17 @@
+{
+ "name": "Raptor Musgo",
+ "archetype": "raptor",
+ "fantasy": true,
+ "seed": 7041,
+ "palette": "forest",
+ "pattern": {
+  "type": "mottled"
+ },
+ "features": [
+  "antlers",
+  "mane"
+ ],
+ "vfx": {
+  "theme": "nature"
+ }
+}

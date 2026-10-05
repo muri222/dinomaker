@@ -1,0 +1,17 @@
+{
+ "name": "Trici Musgo",
+ "archetype": "ceratopsian",
+ "fantasy": true,
+ "seed": 7014,
+ "palette": "forest",
+ "pattern": {
+  "type": "mottled"
+ },
+ "features": [
+  "antlers",
+  "mane"
+ ],
+ "vfx": {
+  "theme": "nature"
+ }
+}

@@ -1,0 +1,10 @@
+{
+ "name": "Coritos Trompete",
+ "species": "corythosaurus",
+ "palette": "grape",
+ "pattern": {
+  "type": "spots"
+ },
+ "features": [],
+ "seed": 5022
+}

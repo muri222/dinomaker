@@ -1,0 +1,16 @@
+{
+ "name": "Trici Tóxico",
+ "archetype": "ceratopsian",
+ "fantasy": true,
+ "seed": 7004,
+ "palette": "toxic",
+ "pattern": {
+  "type": "mottled"
+ },
+ "features": [
+  "back_spikes"
+ ],
+ "vfx": {
+  "theme": "toxic"
+ }
+}

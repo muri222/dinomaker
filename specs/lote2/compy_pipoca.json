@@ -1,0 +1,11 @@
+{
+ "name": "Compy Pipoca",
+ "species": "compsognathus",
+ "palette": "gold",
+ "pattern": {
+  "type": "spots"
+ },
+ "features": [],
+ "seed": 5010,
+ "chibi": true
+}

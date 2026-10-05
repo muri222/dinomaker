@@ -1,0 +1,16 @@
+{
+ "name": "Anquilo Dourado",
+ "archetype": "ankylosaur",
+ "fantasy": true,
+ "seed": 7026,
+ "palette": "gold",
+ "pattern": {
+  "type": "rosettes"
+ },
+ "features": [
+  "gem"
+ ],
+ "vfx": {
+  "theme": "magic"
+ }
+}

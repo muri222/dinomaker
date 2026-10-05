@@ -1,0 +1,10 @@
+{
+ "name": "Cerato Pirata",
+ "species": "ceratosaurus",
+ "palette": "royal",
+ "pattern": {
+  "type": "bands"
+ },
+ "features": [],
+ "seed": 5005
+}

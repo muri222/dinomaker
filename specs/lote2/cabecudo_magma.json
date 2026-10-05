@@ -1,0 +1,19 @@
+{
+ "name": "Cabeçudo Magma",
+ "archetype": "pachycephalosaur",
+ "fantasy": true,
+ "seed": 7048,
+ "palette": "volcano",
+ "pattern": {
+  "type": "lava"
+ },
+ "features": [
+  "crystals"
+ ],
+ "eyes": {
+  "style": "glow"
+ },
+ "vfx": {
+  "theme": "fire"
+ }
+}

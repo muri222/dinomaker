@@ -1,0 +1,12 @@
+{
+ "name": "Deino Ninja",
+ "species": "deinonychus",
+ "palette": "shadow",
+ "pattern": {
+  "type": "stripes"
+ },
+ "features": [
+  "glow_eyes"
+ ],
+ "seed": 5007
+}

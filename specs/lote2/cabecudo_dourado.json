@@ -1,0 +1,16 @@
+{
+ "name": "Cabeçudo Dourado",
+ "archetype": "pachycephalosaur",
+ "fantasy": true,
+ "seed": 7008,
+ "palette": "gold",
+ "pattern": {
+  "type": "rosettes"
+ },
+ "features": [
+  "gem"
+ ],
+ "vfx": {
+  "theme": "magic"
+ }
+}

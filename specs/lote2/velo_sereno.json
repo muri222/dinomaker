@@ -1,0 +1,10 @@
+{
+ "name": "Velo Sereno",
+ "species": "velociraptor",
+ "palette": "frost",
+ "pattern": {
+  "type": "spots"
+ },
+ "features": [],
+ "seed": 5034
+}

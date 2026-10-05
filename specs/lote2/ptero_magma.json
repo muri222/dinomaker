@@ -1,0 +1,19 @@
+{
+ "name": "Ptero Magma",
+ "archetype": "pterosaur",
+ "fantasy": true,
+ "seed": 7039,
+ "palette": "volcano",
+ "pattern": {
+  "type": "lava"
+ },
+ "features": [
+  "crystals"
+ ],
+ "eyes": {
+  "style": "glow"
+ },
+ "vfx": {
+  "theme": "fire"
+ }
+}

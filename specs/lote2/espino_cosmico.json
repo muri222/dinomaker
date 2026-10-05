@@ -1,0 +1,17 @@
+{
+ "name": "Espino Cósmico",
+ "archetype": "spinosaur",
+ "fantasy": true,
+ "seed": 7012,
+ "palette": "grape",
+ "pattern": {
+  "type": "galaxy"
+ },
+ "features": [
+  "gem",
+  "glow_eyes"
+ ],
+ "vfx": {
+  "theme": "magic"
+ }
+}

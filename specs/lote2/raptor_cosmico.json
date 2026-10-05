@@ -1,0 +1,17 @@
+{
+ "name": "Raptor Cósmico",
+ "archetype": "raptor",
+ "fantasy": true,
+ "seed": 7021,
+ "palette": "grape",
+ "pattern": {
+  "type": "galaxy"
+ },
+ "features": [
+  "gem",
+  "glow_eyes"
+ ],
+ "vfx": {
+  "theme": "magic"
+ }
+}

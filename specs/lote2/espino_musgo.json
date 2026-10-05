@@ -1,0 +1,17 @@
+{
+ "name": "Espino Musgo",
+ "archetype": "spinosaur",
+ "fantasy": true,
+ "seed": 7032,
+ "palette": "forest",
+ "pattern": {
+  "type": "mottled"
+ },
+ "features": [
+  "antlers",
+  "mane"
+ ],
+ "vfx": {
+  "theme": "nature"
+ }
+}

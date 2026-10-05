@@ -1,0 +1,10 @@
+{
+ "name": "Utah Turbo",
+ "species": "utahraptor",
+ "palette": "volcano",
+ "pattern": {
+  "type": "dorsal"
+ },
+ "features": [],
+ "seed": 5008
+}

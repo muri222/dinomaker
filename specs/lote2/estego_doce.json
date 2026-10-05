@@ -1,0 +1,14 @@
+{
+ "name": "Estego Doce",
+ "archetype": "stegosaur",
+ "fantasy": true,
+ "seed": 7025,
+ "palette": "candy",
+ "pattern": {
+  "type": "spots"
+ },
+ "chibi": true,
+ "vfx": {
+  "theme": "magic"
+ }
+}

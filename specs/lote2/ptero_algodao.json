@@ -1,0 +1,11 @@
+{
+ "name": "Ptero Algodão",
+ "species": "pteranodon",
+ "palette": "candy",
+ "pattern": {
+  "type": "spots"
+ },
+ "features": [],
+ "seed": 5033,
+ "chibi": true
+}

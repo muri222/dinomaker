@@ -1,0 +1,10 @@
+{
+ "name": "Sino Rei",
+ "species": "sinoceratops",
+ "palette": "royal",
+ "pattern": {
+  "type": "bands"
+ },
+ "features": [],
+ "seed": 5020
+}

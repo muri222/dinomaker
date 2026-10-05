@@ -1,0 +1,14 @@
+{
+ "name": "Hadro Doce",
+ "archetype": "hadrosaur",
+ "fantasy": true,
+ "seed": 7007,
+ "palette": "candy",
+ "pattern": {
+  "type": "spots"
+ },
+ "chibi": true,
+ "vfx": {
+  "theme": "magic"
+ }
+}

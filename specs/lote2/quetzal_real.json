@@ -1,0 +1,10 @@
+{
+ "name": "Quetzal Real",
+ "species": "quetzalcoatlus",
+ "palette": "royal",
+ "pattern": {
+  "type": "dorsal"
+ },
+ "features": [],
+ "seed": 5039
+}

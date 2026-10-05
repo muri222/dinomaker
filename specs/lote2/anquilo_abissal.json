@@ -1,0 +1,22 @@
+{
+ "name": "Anquilo Abissal",
+ "archetype": "ankylosaur",
+ "fantasy": true,
+ "seed": 7006,
+ "palette": {
+  "primary": "#13406e",
+  "belly": "#5fd0f0",
+  "accent": "#3effd8",
+  "pattern": "#0a2647"
+ },
+ "pattern": {
+  "type": "bands"
+ },
+ "features": [
+  "tusks",
+  "glow_eyes"
+ ],
+ "vfx": {
+  "theme": "water"
+ }
+}

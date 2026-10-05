@@ -1,0 +1,10 @@
+{
+ "name": "Estego Neve",
+ "species": "stegosaurus",
+ "palette": "snow",
+ "pattern": {
+  "type": "spots"
+ },
+ "features": [],
+ "seed": 5029
+}

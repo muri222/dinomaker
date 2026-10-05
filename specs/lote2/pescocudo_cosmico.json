@@ -1,0 +1,17 @@
+{
+ "name": "Pescoçudo Cósmico",
+ "archetype": "sauropod",
+ "fantasy": true,
+ "seed": 7003,
+ "palette": "grape",
+ "pattern": {
+  "type": "galaxy"
+ },
+ "features": [
+  "gem",
+  "glow_eyes"
+ ],
+ "vfx": {
+  "theme": "magic"
+ }
+}

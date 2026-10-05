@@ -1,0 +1,10 @@
+{
+ "name": "Velo Relâmpago",
+ "species": "velociraptor",
+ "palette": "gold",
+ "pattern": {
+  "type": "zigzag"
+ },
+ "features": [],
+ "seed": 5006
+}

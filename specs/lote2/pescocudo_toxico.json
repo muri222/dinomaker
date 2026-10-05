@@ -1,0 +1,16 @@
+{
+ "name": "Pescoçudo Tóxico",
+ "archetype": "sauropod",
+ "fantasy": true,
+ "seed": 7013,
+ "palette": "toxic",
+ "pattern": {
+  "type": "mottled"
+ },
+ "features": [
+  "back_spikes"
+ ],
+ "vfx": {
+  "theme": "toxic"
+ }
+}

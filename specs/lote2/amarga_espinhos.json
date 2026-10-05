@@ -1,0 +1,10 @@
+{
+ "name": "Amarga Espinhos",
+ "species": "amargasaurus",
+ "palette": "sunset",
+ "pattern": {
+  "type": "dorsal"
+ },
+ "features": [],
+ "seed": 5017
+}

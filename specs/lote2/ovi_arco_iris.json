@@ -1,0 +1,15 @@
+{
+ "name": "Ovi Arco-Íris",
+ "species": "oviraptor",
+ "palette": {
+  "primary": "#ff5fa2",
+  "belly": "#fff0f6",
+  "accent": "#5fd0ff",
+  "pattern": "#ffd23a"
+ },
+ "pattern": {
+  "type": "spots"
+ },
+ "features": [],
+ "seed": 5012
+}

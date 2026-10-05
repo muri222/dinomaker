@@ -1,0 +1,17 @@
+{
+ "name": "Estego Musgo",
+ "archetype": "stegosaur",
+ "fantasy": true,
+ "seed": 7005,
+ "palette": "forest",
+ "pattern": {
+  "type": "mottled"
+ },
+ "features": [
+  "antlers",
+  "mane"
+ ],
+ "vfx": {
+  "theme": "nature"
+ }
+}

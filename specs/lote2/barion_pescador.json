@@ -1,0 +1,10 @@
+{
+ "name": "Barion Pescador",
+ "species": "baryonyx",
+ "palette": "lagoon",
+ "pattern": {
+  "type": "spots"
+ },
+ "features": [],
+ "seed": 5014
+}

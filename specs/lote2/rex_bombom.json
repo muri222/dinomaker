@@ -1,0 +1,11 @@
+{
+ "name": "Rex Bombom",
+ "species": "tyrannosaurus",
+ "palette": "candy",
+ "pattern": {
+  "type": "spots"
+ },
+ "features": [],
+ "seed": 5001,
+ "chibi": true
+}

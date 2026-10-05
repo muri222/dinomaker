@@ -1,0 +1,16 @@
+{
+ "name": "Raptor Tóxico",
+ "archetype": "raptor",
+ "fantasy": true,
+ "seed": 7031,
+ "palette": "toxic",
+ "pattern": {
+  "type": "mottled"
+ },
+ "features": [
+  "back_spikes"
+ ],
+ "vfx": {
+  "theme": "toxic"
+ }
+}

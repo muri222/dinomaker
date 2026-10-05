@@ -1,0 +1,12 @@
+{
+ "name": "Rex Tempestade",
+ "species": "tyrannosaurus",
+ "palette": "midnight",
+ "pattern": {
+  "type": "zigzag"
+ },
+ "features": [
+  "glow_eyes"
+ ],
+ "seed": 5000
+}

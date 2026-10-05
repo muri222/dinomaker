@@ -1,0 +1,12 @@
+{
+ "name": "Giga Sombra",
+ "species": "giganotosaurus",
+ "palette": "shadow",
+ "pattern": {
+  "type": "dorsal"
+ },
+ "features": [
+  "glow_eyes"
+ ],
+ "seed": 5002
+}

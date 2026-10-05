@@ -1,0 +1,10 @@
+{
+ "name": "Conca Corcunda",
+ "species": "concavenator",
+ "palette": "jungle",
+ "pattern": {
+  "type": "tiger"
+ },
+ "features": [],
+ "seed": 5015
+}

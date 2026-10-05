@@ -1,0 +1,17 @@
+{
+ "name": "Rex Cósmico",
+ "archetype": "theropod",
+ "fantasy": true,
+ "seed": 7030,
+ "palette": "grape",
+ "pattern": {
+  "type": "galaxy"
+ },
+ "features": [
+  "gem",
+  "glow_eyes"
+ ],
+ "vfx": {
+  "theme": "magic"
+ }
+}

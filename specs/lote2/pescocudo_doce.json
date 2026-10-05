@@ -1,0 +1,14 @@
+{
+ "name": "Pescoçudo Doce",
+ "archetype": "sauropod",
+ "fantasy": true,
+ "seed": 7043,
+ "palette": "candy",
+ "pattern": {
+  "type": "spots"
+ },
+ "chibi": true,
+ "vfx": {
+  "theme": "magic"
+ }
+}

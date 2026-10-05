@@ -1,0 +1,10 @@
+{
+ "name": "Rex Dourado",
+ "species": "tyrannosaurus",
+ "palette": "gold",
+ "pattern": {
+  "type": "rosettes"
+ },
+ "features": [],
+ "seed": 5035
+}

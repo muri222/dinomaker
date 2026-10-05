@@ -1,0 +1,10 @@
+{
+ "name": "Iguano Polegar",
+ "species": "iguanodon",
+ "palette": "forest",
+ "pattern": {
+  "type": "stripes"
+ },
+ "features": [],
+ "seed": 5024
+}

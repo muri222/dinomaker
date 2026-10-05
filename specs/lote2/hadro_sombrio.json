@@ -1,0 +1,17 @@
+{
+ "name": "Hadro Sombrio",
+ "archetype": "hadrosaur",
+ "fantasy": true,
+ "seed": 7027,
+ "palette": "shadow",
+ "pattern": {
+  "type": "dorsal"
+ },
+ "features": [
+  "glow_eyes",
+  "back_spikes"
+ ],
+ "vfx": {
+  "theme": "magic"
+ }
+}

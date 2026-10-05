@@ -1,0 +1,14 @@
+{
+ "name": "Trici Doce",
+ "archetype": "ceratopsian",
+ "fantasy": true,
+ "seed": 7034,
+ "palette": "candy",
+ "pattern": {
+  "type": "spots"
+ },
+ "chibi": true,
+ "vfx": {
+  "theme": "magic"
+ }
+}

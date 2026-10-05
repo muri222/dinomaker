@@ -1,0 +1,17 @@
+{
+ "name": "Estego Sombrio",
+ "archetype": "stegosaur",
+ "fantasy": true,
+ "seed": 7045,
+ "palette": "shadow",
+ "pattern": {
+  "type": "dorsal"
+ },
+ "features": [
+  "glow_eyes",
+  "back_spikes"
+ ],
+ "vfx": {
+  "theme": "magic"
+ }
+}

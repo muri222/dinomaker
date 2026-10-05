@@ -1,0 +1,10 @@
+{
+ "name": "Quetzal Céu",
+ "species": "quetzalcoatlus",
+ "palette": "sunset",
+ "pattern": {
+  "type": "zigzag"
+ },
+ "features": [],
+ "seed": 5025
+}

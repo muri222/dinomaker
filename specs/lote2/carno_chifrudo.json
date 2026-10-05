@@ -1,0 +1,10 @@
+{
+ "name": "Carno Chifrudo",
+ "species": "carnotaurus",
+ "palette": "sunset",
+ "pattern": {
+  "type": "tiger"
+ },
+ "features": [],
+ "seed": 5004
+}

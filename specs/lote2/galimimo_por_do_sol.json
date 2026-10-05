@@ -1,0 +1,10 @@
+{
+ "name": "Galimimo Pôr-do-Sol",
+ "species": "gallimimus",
+ "palette": "sunset",
+ "pattern": {
+  "type": "bands"
+ },
+ "features": [],
+ "seed": 5037
+}

@@ -1,0 +1,16 @@
+{
+ "name": "Espino Tóxico",
+ "archetype": "spinosaur",
+ "fantasy": true,
+ "seed": 7022,
+ "palette": "toxic",
+ "pattern": {
+  "type": "mottled"
+ },
+ "features": [
+  "back_spikes"
+ ],
+ "vfx": {
+  "theme": "toxic"
+ }
+}

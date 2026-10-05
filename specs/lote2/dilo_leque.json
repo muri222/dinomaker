@@ -1,0 +1,10 @@
+{
+ "name": "Dilo Leque",
+ "species": "dilophosaurus",
+ "palette": "toxic",
+ "pattern": {
+  "type": "spots"
+ },
+ "features": [],
+ "seed": 5009
+}

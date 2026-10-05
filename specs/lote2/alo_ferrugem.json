@@ -1,0 +1,10 @@
+{
+ "name": "Alo Ferrugem",
+ "species": "allosaurus",
+ "palette": "rust",
+ "pattern": {
+  "type": "stripes"
+ },
+ "features": [],
+ "seed": 5003
+}

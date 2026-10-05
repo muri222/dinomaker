@@ -1,0 +1,17 @@
+{
+ "name": "Cabeçudo Sombrio",
+ "archetype": "pachycephalosaur",
+ "fantasy": true,
+ "seed": 7018,
+ "palette": "shadow",
+ "pattern": {
+  "type": "dorsal"
+ },
+ "features": [
+  "glow_eyes",
+  "back_spikes"
+ ],
+ "vfx": {
+  "theme": "magic"
+ }
+}

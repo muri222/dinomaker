@@ -1,0 +1,10 @@
+{
+ "name": "Anquilo Martelo",
+ "species": "ankylosaurus",
+ "palette": "volcano",
+ "pattern": {
+  "type": "bands"
+ },
+ "features": [],
+ "seed": 5027
+}

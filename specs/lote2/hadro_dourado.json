@@ -1,0 +1,16 @@
+{
+ "name": "Hadro Dourado",
+ "archetype": "hadrosaur",
+ "fantasy": true,
+ "seed": 7017,
+ "palette": "gold",
+ "pattern": {
+  "type": "rosettes"
+ },
+ "features": [
+  "gem"
+ ],
+ "vfx": {
+  "theme": "magic"
+ }
+}

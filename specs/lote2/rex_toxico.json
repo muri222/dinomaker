@@ -1,0 +1,16 @@
+{
+ "name": "Rex Tóxico",
+ "archetype": "theropod",
+ "fantasy": true,
+ "seed": 7040,
+ "palette": "toxic",
+ "pattern": {
+  "type": "mottled"
+ },
+ "features": [
+  "back_spikes"
+ ],
+ "vfx": {
+  "theme": "toxic"
+ }
+}

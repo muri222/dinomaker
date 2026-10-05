@@ -1,0 +1,12 @@
+{
+ "name": "Trici Trovão",
+ "species": "triceratops",
+ "palette": "midnight",
+ "pattern": {
+  "type": "zigzag"
+ },
+ "features": [
+  "glow_eyes"
+ ],
+ "seed": 5028
+}

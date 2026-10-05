@@ -1,0 +1,10 @@
+{
+ "name": "Dimorfo Bicudo",
+ "species": "dimorphodon",
+ "palette": "candy",
+ "pattern": {
+  "type": "spots"
+ },
+ "features": [],
+ "seed": 5026
+}

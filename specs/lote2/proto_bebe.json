@@ -1,0 +1,11 @@
+{
+ "name": "Proto Bebê",
+ "species": "protoceratops",
+ "palette": "bubblegum",
+ "pattern": {
+  "type": "spots"
+ },
+ "features": [],
+ "seed": 5019,
+ "chibi": true
+}

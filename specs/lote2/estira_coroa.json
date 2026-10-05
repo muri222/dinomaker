@@ -1,0 +1,10 @@
+{
+ "name": "Estira Coroa",
+ "species": "styracosaurus",
+ "palette": "gold",
+ "pattern": {
+  "type": "rosettes"
+ },
+ "features": [],
+ "seed": 5018
+}

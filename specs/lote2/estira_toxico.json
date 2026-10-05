@@ -1,0 +1,10 @@
+{
+ "name": "Estira Tóxico",
+ "species": "styracosaurus",
+ "palette": "toxic",
+ "pattern": {
+  "type": "mottled"
+ },
+ "features": [],
+ "seed": 5038
+}

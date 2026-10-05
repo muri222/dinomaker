@@ -1,0 +1,14 @@
+{
+ "name": "Anquilo Doce",
+ "archetype": "ankylosaur",
+ "fantasy": true,
+ "seed": 7016,
+ "palette": "candy",
+ "pattern": {
+  "type": "spots"
+ },
+ "chibi": true,
+ "vfx": {
+  "theme": "magic"
+ }
+}
