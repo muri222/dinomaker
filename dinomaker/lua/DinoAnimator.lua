@@ -130,6 +130,7 @@ local function burst(list, n, delay)
 	if not fxOn() then
 		return
 	end
+	n = math.max(1, math.floor(n * (model:GetAttribute("VFXIntensity") or 1)))
 	task.delay(delay or 0, function()
 		for _, e in ipairs(list) do
 			e:Emit(n)

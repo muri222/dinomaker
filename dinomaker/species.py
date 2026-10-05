@@ -168,16 +168,68 @@ SPECIES = {
     "dimorphodon": ("pterosaur", "Dimorfodonte", ["teeth", "-beak", "-crest_head"], dict(size="small", snout_len=7, snout_h=4, tail_segs=3)),
 }
 
+# Partes por categoria (a ordem aqui é a ordem no painel)
+FEATURE_GROUPS = {
+    "Boca": ["teeth", "fangs", "beak", "tusks", "beard"],
+    "Cabeça": ["horns_brow", "horn_nose", "horns_long", "horn_unicorn", "horns_ram", "antlers", "ears",
+               "crown", "dome", "frill", "frill_spikes", "cheek_frills", "gem", "third_eye", "halo"],
+    "Cristas": ["crest_small", "crest_fan", "crest_tube", "crest_double", "crest_head"],
+    "Costas": ["plates", "sail", "hump", "back_spikes", "spines_long", "dorsal_fins", "crystals", "armor",
+               "shell", "side_spikes", "neck_spikes", "mane", "warts"],
+    "Cauda": ["thagomizer", "club", "tail_fan", "tail_fork", "tail_flame"],
+    "Membros": ["sickle_claw", "big_claws", "thumb_spike", "feathers", "leg_feathers", "arm_wings", "wings"],
+    "Olhos": ["glow_eyes"],
+}
+
 # Features "fantasia" (para criaturas que não existem mas chamam atenção)
-FANTASY_FEATURES = ["crystals", "antlers", "mane", "gem", "tusks", "glow_eyes", "back_spikes", "horns_brow", "feathers", "crest_fan"]
+FANTASY_FEATURES = ["crystals", "antlers", "mane", "gem", "tusks", "glow_eyes", "back_spikes", "horns_brow", "feathers",
+                    "crest_fan", "horn_unicorn", "horns_ram", "ears", "crown", "halo", "third_eye", "tail_flame",
+                    "tail_fan", "dorsal_fins", "spines_long", "shell", "cheek_frills", "fangs", "warts", "leg_feathers"]
 
-ALL_FEATURES = sorted(set(
-    ["teeth", "beak", "horns_brow", "horn_nose", "horns_long", "frill", "frill_spikes", "plates",
-     "thagomizer", "back_spikes", "sail", "hump", "armor", "side_spikes", "club", "crest_tube",
-     "crest_fan", "crest_double", "crest_small", "crest_head", "dome", "feathers", "sickle_claw",
-     "big_claws", "thumb_spike", "neck_spikes", "wings"] + FANTASY_FEATURES))
+ALL_FEATURES = sorted({f for g in FEATURE_GROUPS.values() for f in g})
 
-PATTERNS = ["none", "spots", "stripes", "tiger", "dorsal", "bands", "mottled", "rosettes", "lava", "zigzag", "galaxy"]
+PATTERNS = ["none", "spots", "stripes", "tiger", "dorsal", "bands", "mottled", "rosettes", "lava", "zigzag", "galaxy",
+            "checker", "gradient", "speckles", "camo", "hearts", "stars", "scales", "split"]
+
+# Limites seguros de cada medida (px) para o editor e para validação:
+# chave -> (rótulo, grupo, mín, máx, passo)
+PARAM_SPEC = {
+    "skull_len": ("Crânio: comprimento", "Cabeça", 4, 30, 0.5), "skull_h": ("Crânio: altura", "Cabeça", 3, 26, 0.5),
+    "skull_w": ("Crânio: largura", "Cabeça", 3, 26, 0.5), "snout_len": ("Focinho: comprimento", "Cabeça", 1, 30, 0.5),
+    "snout_h": ("Focinho: altura", "Cabeça", 2, 20, 0.5), "snout_w": ("Focinho: largura", "Cabeça", 2, 20, 0.5),
+    "jaw_h": ("Mandíbula: altura", "Cabeça", 1, 10, 0.5), "eye": ("Olho: tamanho", "Cabeça", 1, 6, 1),
+    "neck_segs": ("Pescoço: segmentos", "Pescoço", 1, 8, 1), "neck_len": ("Pescoço: comprimento", "Pescoço", 2, 16, 0.5),
+    "neck_w": ("Pescoço: largura", "Pescoço", 2, 24, 0.5), "neck_h": ("Pescoço: altura", "Pescoço", 2, 24, 0.5),
+    "neck_rise": ("Pescoço: inclinação", "Pescoço", -6, 12, 0.5), "neck_taper": ("Pescoço: afinamento", "Pescoço", 0, 0.2, 0.01),
+    "hips_len": ("Quadril: comprimento", "Corpo", 4, 32, 0.5), "chest_len": ("Peito: comprimento", "Corpo", 4, 32, 0.5),
+    "body_w": ("Quadril: largura", "Corpo", 4, 34, 0.5), "body_h": ("Quadril: altura", "Corpo", 4, 30, 0.5),
+    "chest_w": ("Peito: largura", "Corpo", 4, 34, 0.5), "chest_h": ("Peito: altura", "Corpo", 4, 32, 0.5),
+    "chest_dy": ("Peito: desnível", "Corpo", -8, 10, 0.5),
+    "thigh": ("Coxa: comprimento", "Pernas", 3, 26, 0.5), "thigh_w": ("Coxa: largura", "Pernas", 1.5, 14, 0.5),
+    "thigh_d": ("Coxa: profundidade", "Pernas", 1.5, 16, 0.5), "shin": ("Canela: comprimento", "Pernas", 3, 24, 0.5),
+    "shin_w": ("Canela: largura", "Pernas", 1, 12, 0.5), "knee_ang": ("Joelho: ângulo", "Pernas", -15, 45, 1),
+    "shin_ang": ("Canela: ângulo", "Pernas", -50, 15, 1), "foot_len": ("Pé: comprimento", "Pernas", 2, 18, 0.5),
+    "foot_h": ("Pé: altura", "Pernas", 1, 8, 0.5), "foot_w": ("Pé: largura", "Pernas", 2, 14, 0.5),
+    "toes": ("Dedos/garras", "Pernas", 1, 5, 1),
+    "arm": ("Braço: comprimento", "Braços", 2, 16, 0.5), "fore": ("Antebraço: comprimento", "Braços", 2, 16, 0.5),
+    "hand": ("Mão: comprimento", "Braços", 1, 8, 0.5), "arm_w": ("Braço: largura", "Braços", 1, 6, 0.5),
+    "front_w": ("Pata dianteira: largura", "Braços", 1.5, 12, 0.5),
+    "front_ang1": ("Pata dianteira: ombro", "Braços", -30, 30, 1), "front_ang2": ("Pata dianteira: cotovelo", "Braços", -30, 30, 1),
+    "tail_segs": ("Cauda: segmentos", "Cauda", 1, 10, 1), "tail_len": ("Cauda: comprimento do segmento", "Cauda", 3, 20, 0.5),
+    "tail_w": ("Cauda: largura", "Cauda", 2, 24, 0.5), "tail_h": ("Cauda: altura", "Cauda", 2, 24, 0.5),
+    "tail_taper": ("Cauda: afinamento", "Cauda", 0.55, 0.95, 0.01), "tail_rise": ("Cauda: inclinação", "Cauda", -5, 6, 0.5),
+    "sail_h": ("Vela: altura", "Extras", 2, 30, 0.5), "plate_scale": ("Placas: tamanho", "Extras", 0.4, 2.0, 0.05),
+}
+INT_PARAMS = {"eye", "neck_segs", "toes", "tail_segs"}
+
+
+def clamp_params(P):
+    """Mantém cada medida dentro dos limites (o modelo nunca quebra)."""
+    for k, (_, _, lo, hi, _) in PARAM_SPEC.items():
+        if k in P and isinstance(P[k], (int, float)):
+            v = min(max(float(P[k]), lo), hi)
+            P[k] = int(round(v)) if k in INT_PARAMS else round(v, 3)
+    return P
 
 EYE_STYLES = ["cute", "fierce", "glow"]
 

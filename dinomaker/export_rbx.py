@@ -331,7 +331,7 @@ def export_rbxmx(path, model, genome, faces, clips, meta, detail="medium"):
         "WalkSpeed": round(meta["walk_speed"] * s, 3), "RunSpeed": round(meta["run_speed"] * s, 3),
         "Wander": False, "WanderRadius": 40.0, "Action": "", "ActionNonce": 0.0,
         "AttackStyle": genome["attack"], "Flying": False,
-        "VFX": True, "VFXTheme": theme,
+        "VFX": True, "VFXTheme": theme, "VFXIntensity": float((genome.get("vfx") or {}).get("intensity", 1.0)),
     }))
 
     out = ['<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '

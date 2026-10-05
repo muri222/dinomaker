@@ -103,6 +103,8 @@ class Ctx:
         hind = [lg for lg in model.legs if lg["group"] == "hind"]
         self.leg_len = hind[0]["L1"] + hind[0]["L2"]
         self.hip_y = model.bones["Hips"]["pos"][1]
+        an = genome.get("anim") or {}
+        self.energy = float(an.get("energy", 1.0))  # calmo (0.4) .. agitado (1.8)
         self.necks = [b for b in model.bones if b.startswith("Neck")]
         self.tails = [b for b in model.bones if b.startswith("Tail")]
         self.arms = [a for a in model.arms]
@@ -127,6 +129,8 @@ class Ctx:
         return {b: rot(**{axis: total_deg / n}) for b in chain}
 
     def tail_wave(self, t, period, yaw_amp, pitch=0.0, delay=0.7, pitch_amp=0.0):
+        yaw_amp *= self.energy
+        pitch_amp *= self.energy
         out = {}
         for k, b in enumerate(self.tails):
             ph = 2 * math.pi * t / period - k * delay
@@ -145,10 +149,11 @@ def merge(*dicts):
 # ================================================================ clipes
 def clip_idle(c, t, T):
     w = 2 * math.pi * t / T
+    e = c.energy
     rots = merge(
         {"Chest": rot(x=1.5 * math.sin(w))},
         c.spread(c.necks, 3 * math.sin(w + 0.6)),
-        {"Head": rot(x=2 * math.sin(w + 1.0), y=10 * math.sin(w * 0.5))},
+        {"Head": rot(x=2 * e * math.sin(w + 1.0), y=10 * e * math.sin(w * 0.5))},
         {"Jaw": rot(x=-3 * max(0.0, math.sin(w)))},
         c.tail_wave(t, T, 5, pitch_amp=2),
     )

@@ -8,7 +8,7 @@ import math
 import numpy as np
 
 from .mathx import hash01, vnoise
-from .genome import hex2rgb
+from .genome import hex2rgb, adjust_rgb, rgb2hex
 
 # n, v (u = v x n)
 FACES = {
@@ -43,6 +43,10 @@ def _mul(a, f):
     return tuple(min(255.0, a[i] * f) for i in range(3))
 
 
+HEART = [".#.#.", "#####", "#####", ".###.", "..#.."]
+STAR = ["..#..", ".###.", "#####", ".###.", ".#.#."]
+
+
 class Painter:
     def __init__(self, model, genome, crisp=False):
         self.crisp = crisp
@@ -62,9 +66,31 @@ class Painter:
             h, s_, v = colorsys.rgb_to_hsv(*(x / 255.0 for x in c))
             return s_ * v + v * 0.3
         self.glow = max((self.C["accent"], self.C["pattern"], self.C["belly"]), key=vivid)
+        # cores opcionais (se o genoma definir, sobrescrevem as derivadas)
+        C = self.C
+        if "horn" in C:
+            self.horn = C["horn"]
+        if "glow" in C:
+            self.glow = C["glow"]
+        self.pupil = C.get("pupil")
+        self.pattern2 = C.get("pattern2", _mix(C["pattern"], C["accent"], 0.5))
+        tex = genome.get("texture") or {}
+        self.grain = float(tex.get("grain", 1.0))
+        self.belly_frac = float(tex.get("belly", 0.3))
+        self.pattern_legs = bool(tex.get("pattern_legs", False))
+        self.adj = genome.get("color_adjust") or {}
+        mn, mx = model.bbox()
+        self.y0, self.y1 = float(mn[1]), float(mx[1])
+
+    def effective_colors(self):
+        """Cores efetivas (hex) — o painel mostra estas nos seletores."""
+        out = {k: rgb2hex(v) for k, v in self.C.items()}
+        out.update(horn=rgb2hex(self.horn), glow=rgb2hex(self.glow), pattern2=rgb2hex(self.pattern2),
+                   pupil=rgb2hex(self.pupil or (20.0, 16.0, 16.0)))
+        return out
 
     # -------------------------------------------------------- padrão no mundo
-    def pattern_hit(self, p, up):
+    def pattern_hit(self, p, up, ij=None, key=0):
         t = self.pat["type"]
         sc = float(self.pat.get("scale", 6))
         den = float(self.pat.get("density", 0.6))
@@ -113,6 +139,32 @@ class Painter:
         if t == "zigzag":
             tri = abs(((z / sc) % 2) - 1) * sc * 0.8
             return "pattern" if abs((y % 30) - (12 + tri)) < 1.0 + den else None
+        if t == "checker":
+            return "pattern" if (math.floor(x / sc) + math.floor(y / sc) + math.floor(z / sc)) % 2 == 0 and up else None
+        if t == "gradient":
+            rel = (y - self.y0) / max(self.y1 - self.y0, 1)
+            return "pattern" if hash01(s, int(x * 2), int(y * 2), int(z * 2), 5) < (rel - 0.25) * 1.6 * (0.5 + den) else None
+        if t == "speckles":
+            return "pattern" if hash01(s, int(math.floor(x)), int(math.floor(y)), int(math.floor(z)), 11) < 0.06 + 0.18 * den else None
+        if t == "camo":
+            if vnoise(x + 31, y, z, sc * 0.9, s + 7) > 1 - den * 0.45:
+                return "pattern2"
+            return "pattern" if vnoise(x, y, z, sc * 1.1, s) > 1 - den * 0.5 else None
+        if t == "split":
+            return "pattern" if x > 0 else None
+        if t in ("hearts", "stars", "scales") and ij is not None:
+            i, j = ij
+            if t == "scales":
+                return "shade" if (j % 3 == 0 and (i + (j // 3) % 2 * 2) % 4 != 0) else None
+            cell = max(6, int(sc) + 1)
+            ci, cj = i // cell, j // cell
+            if hash01(s, key, ci, cj, 21) > 0.25 + den * 0.6:
+                return None
+            bi, bj = i % cell - (cell - 5) // 2, j % cell - (cell - 5) // 2
+            bmp = HEART if t == "hearts" else STAR
+            if 0 <= bi < 5 and 0 <= bj < 5 and bmp[4 - bj][bi] == "#":
+                return "pattern"
+            return None
         if t == "galaxy":
             if hash01(s, int(x * 2), int(y * 2), int(z * 2), 9) > 0.985:
                 return "star"
@@ -148,6 +200,10 @@ class Painter:
                     return self.eye_px(dy, dz, hs), 1.0, "eye"
                 if self.eyes["style"] == "fierce" and abs(dz) < hs + 1 and hs <= dy < hs + 1:
                     return _mul(self.C["primary"], 0.55), 1.0, "skin"
+            elif d["kind"] == "eye3":
+                dx, dy = q[0] - dp[0], q[1] - dp[1]
+                if abs(dx) < hs and abs(dy) < hs:
+                    return self.eye_px(dy, dx, hs), 1.0, "eye"
             elif d["kind"] == "nostril":
                 if abs(q[0] - dp[0]) < 0.5 and abs(q[2] - dp[2]) < 0.5:
                     return _mul(self.C["primary"], 0.35), 1.0, "nostril"
@@ -158,17 +214,23 @@ class Painter:
             ymin, ymax = boxinfo
             tag = box["tag"]
             belly = False
-            if tag in ("body", "neck", "tail", "head"):
+            bf = self.belly_frac
+            if tag in ("body", "neck", "tail", "head") and bf > 0:
                 rel = (pw[1] - ymin) / max(ymax - ymin, 1)
-                thr = 0.3 if self.crisp else 0.3 + (hash01(self.seed, int(pw[0]), int(pw[2]), 3) - 0.5) * 0.12
+                thr = bf if self.crisp else bf + (hash01(self.seed, int(pw[0]), int(pw[2]), 3) - 0.5) * 0.12
                 if fname == "-Y" or (fname not in ("+Y",) and rel < thr):
                     belly = True
             if belly:
                 col = C["belly"]
-            else:
-                hit = self.pattern_hit(pw, fname != "-Y")
+            elif tag in ("body", "neck", "tail", "head") or self.pattern_legs:
+                fkey = int(hash01(int(box["c"][0] * 10), int(box["c"][1] * 10), int(box["c"][2] * 10), list(FACES).index(fname)) * 9973)
+                hit = self.pattern_hit(pw, fname != "-Y", ij, fkey)
                 if hit == "pattern":
                     col = C["pattern"]
+                elif hit == "pattern2":
+                    col = self.pattern2
+                elif hit == "shade":
+                    col = _mul(col, 0.82)
                 elif hit == "glow":
                     return self.glow, 1.0, "glow"
                 elif hit == "star":
@@ -230,6 +292,23 @@ class Painter:
             return (_mul(C["pattern"], 0.9) if (int(pw[0] / 2) + int(pw[2] / 2)) % 2 else C["pattern"]), None, "club"
         if role == "armor":
             return C["pattern"], None, "armor"
+        if role == "ear":
+            i, j = ij
+            w, h = wh
+            edge = min(i, j, w - 1 - i, h - 1 - j)
+            return (C["primary"] if edge == 0 else _mix(C["belly"], C["accent"], 0.25)), None, "skin"
+        if role == "crown":
+            ymin, ymax = boxinfo
+            rel = (pw[1] - ymin) / max(ymax - ymin, 1)
+            gold = (255.0, 205.0, 60.0)
+            return (_mix(gold, (255.0, 255.0, 255.0), 0.5) if rel > 0.7 else gold), None, "crystal"
+        if role == "shell":
+            i, j = ij
+            return (_mul(self.pattern2, 0.75) if (i % 4 == 0 or j % 4 == 0) else self.pattern2), None, "armor"
+        if role == "flame":
+            ymin, ymax = boxinfo
+            rel = (pw[1] - ymin) / max(ymax - ymin, 1)
+            return _mix(self.glow, (255.0, 250.0, 220.0), rel * 0.7), 1.0, "crystal"
         return C["primary"], None, "skin"
 
     def eye_px(self, dy, dz, hs):
@@ -243,14 +322,22 @@ class Painter:
             return (255.0, 255.0, 255.0) if (a == n // 2 and b == n // 2) else C["eye"]
         if st == "fierce":
             if a == n // 2 or (n % 2 == 0 and a == n // 2 - 1 and n > 3):
-                return (20.0, 16.0, 16.0)
+                return self.pupil or (20.0, 16.0, 16.0)
             return C["eye"]
         # cute: preto com brilho branco no canto superior frontal
         if b == 0 and a == 0:
             return (255.0, 255.0, 255.0)
         if n >= 4 and ((b == 1 and a == 0) or (b == 0 and a == 1)):
             return (255.0, 255.0, 255.0)
-        return (24.0, 20.0, 28.0)
+        return self.pupil or (24.0, 20.0, 28.0)
+
+
+import functools  # noqa: E402
+
+
+@functools.lru_cache(maxsize=200_000)
+def _adj_cached(col, adj_key):
+    return tuple(float(c) for c in adjust_rgb(col, dict(adj_key)))
 
 
 # ================================================================ rasterização
@@ -260,6 +347,7 @@ def paint_faces(model, genome, crisp=False):
     pt = Painter(model, genome, crisp)
     out = []
     s = pt.seed
+    adj_key = tuple(sorted((pt.adj or {}).items()))
     for bi, box in enumerate(model.boxes):
         B = model.bones[box["bone"]]
         c_w, R_w = model.box_world_frame(box)
@@ -279,11 +367,14 @@ def paint_faces(model, genome, crisp=False):
                     q = box["c"] + box["R"] @ p
                     pw = B["pos"] + B["R"] @ q
                     col, nz, role = pt.pixel(box, fname, q, pw, info, (i, j), (w, h))
+                    if pt.adj:
+                        col = _adj_cached(tuple(round(c, 1) for c in col), adj_key)
                     clean[j, i] = col
                     roles[j, i] = role
                     if nz is None:
-                        f = 1.0 + (vnoise(pw[0], pw[1], pw[2], 2.5, s) - 0.5) * 0.16
-                        f *= 0.95 + 0.1 * hash01(s, int(math.floor(pw[0] * 2)), int(math.floor(pw[1] * 2)), int(math.floor(pw[2] * 2)))
+                        gr = pt.grain
+                        f = 1.0 + (vnoise(pw[0], pw[1], pw[2], 2.5, s) - 0.5) * 0.16 * gr
+                        f *= 1.0 + (0.1 * hash01(s, int(math.floor(pw[0] * 2)), int(math.floor(pw[1] * 2)), int(math.floor(pw[2] * 2))) - 0.05) * gr
                         noise[j, i] = f
             out.append(dict(box=bi, face=fname, w=w, h=h, n=n, u=u, v=v, o=o, clean=clean, noise=noise, roles=roles))
     return out

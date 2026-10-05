@@ -7,7 +7,7 @@ no espaço local de um osso. Decals e zonas usam coordenadas locais do osso.
 import math
 import numpy as np
 
-from .mathx import rx, ry, rz
+from .mathx import rx, ry, rz  # noqa: F401
 
 I3 = np.eye(3)
 
@@ -284,7 +284,7 @@ def coplanar_conflicts(m, tol=1e-3):
     return out
 
 
-def fix_coplanar(m, eps=0.2, passes=4):
+def fix_coplanar(m, eps=0.2, passes=10):
     """Recua a face da caixa menor (eps px) em cada conflito de z-fighting."""
     for _ in range(passes):
         conf = coplanar_conflicts(m)
@@ -294,6 +294,13 @@ def fix_coplanar(m, eps=0.2, passes=4):
         for i, j, ax, sgn in conf:
             a, b = m.boxes[i], m.boxes[j]
             cands = sorted([(i, a, sgn), (j, b, sgn)], key=lambda t: np.prod(t[1]["size"]))
+            if abs(a["size"][ax] - b["size"][ax]) < 1e-6:
+                # mesma espessura no eixo: desloca a menor (uma vez, sentido fixo)
+                k, box, _ = cands[0]
+                if (k, ax, "mv") not in done:
+                    done.add((k, ax, "mv"))
+                    box["c"] = box["c"] + box["R"][:, ax] * (eps * 0.6)
+                continue
             pick = None
             for k, box, sg in cands:
                 orig = box.setdefault("size0", box["size"].copy())
@@ -301,6 +308,12 @@ def fix_coplanar(m, eps=0.2, passes=4):
                     pick = (k, box, sg)
                     break
             if pick is None:
+                # não dá para encolher mais: desloca a menor um tiquinho para dentro
+                k, box, _ = cands[0]
+                if (k, ax, "mv") in done:
+                    continue
+                done.add((k, ax, "mv"))
+                box["c"] = box["c"] + box["R"][:, ax] * (eps * 0.6)
                 continue
             k, box, sgn = pick
             if (k, ax, sgn) in done:
@@ -564,3 +577,131 @@ def _features(m, P, feats):
         w, h = (mx[0] - mn[0]) * 2.6, (mx[1] - mn[1]) * 2.0
         cy = (mn[1] + mx[1]) / 2
         _wb(m, last, (-w / 2, cy - h / 2, mx[2] - 2), (w / 2, cy + h / 2, mx[2] + 5), "club", tag="club")
+    _features_extra(m, P, feats, smn, smx, top, eye_y, eye_z, nmn, nmx, spine, rnd)
+
+
+def _features_extra(m, P, feats, smn, smx, top, eye_y, eye_z, nmn, nmx, spine, rnd):
+    """Partes adicionais (painel): cabeça, costas, cauda e membros."""
+    sw = smx[0] - smn[0]
+    sl = smx[2] - smn[2]
+    hp = m.bones["Head"]["pos"]
+
+    def headbox(mn, mx, role, tag=None, **kw):
+        return m.box_world("Head", mn, mx, role, tag=tag or role, **kw)
+
+    def lbox(bone, c_world, size, role, R=None, tag=None):
+        B = m.bones[bone]
+        Rw = np.eye(3) if R is None else R
+        return m.box_local(bone, B["R"].T @ (np.array(c_world, float) - B["pos"]), size, role, R=B["R"].T @ Rw, tag=tag or role)
+
+    # ---------------- cabeça
+    if "horn_unicorn" in feats:
+        z = smn[2] + min(3, sl * 0.3)
+        headbox((-1, top, z - 1), (1, top + 3, z + 1), "horn")
+        headbox((-0.5, top + 3, z - 2), (0.5, top + 6, z - 1), "horn")
+    if "horns_ram" in feats:
+        for s in (-1, 1):
+            x = s * (sw / 2)
+            zb = smx[2] - 3
+            headbox((min(x, x + s * 3), top - 2, zb - 1), (max(x, x + s * 3), top + 1, zb + 1), "horn")
+            headbox((min(x + s * 2, x + s * 4), top - 6, zb - 1), (max(x + s * 2, x + s * 4), top - 2, zb + 1), "horn")
+            headbox((min(x + s * 2, x + s * 4), top - 7, zb - 4), (max(x + s * 2, x + s * 4), top - 5, zb - 1), "horn")
+    if "ears" in feats:
+        for s in (-1, 1):
+            x = s * (sw / 2 - 1.5)
+            headbox((x - 1, top, smx[2] - 4), (x + 1, top + 3, smx[2] - 3), "ear")
+    if "crown" in feats:
+        for k, x in enumerate(np.linspace(-sw / 2 + 1, sw / 2 - 1, 5)):
+            hgt = 3 if k % 2 == 0 else 2
+            headbox((x - 0.5, top, eye_z + 1), (x + 0.5, top + hgt, eye_z + 2), "crown")
+        headbox((-sw / 2 + 0.5, top, eye_z + 1.5), (sw / 2 - 0.5, top + 1, eye_z + 2.5), "crown")
+    if "halo" in feats:
+        y = top + 5
+        r = sw * 0.35
+        zc = (smn[2] + smx[2]) / 2
+        headbox((-r, y, zc - r), (r, y + 1, zc - r + 1), "crystal")
+        headbox((-r, y, zc + r - 1), (r, y + 1, zc + r), "crystal")
+        headbox((-r, y, zc - r + 1), (-r + 1, y + 1, zc + r - 1), "crystal")
+        headbox((r - 1, y, zc - r + 1), (r, y + 1, zc + r - 1), "crystal")
+    if "cheek_frills" in feats:
+        for s in (-1, 1):
+            x = s * (sw / 2 + 0.5)
+            headbox((x - 0.5, smn[1] + 1, smx[2] - 4), (x + 0.5, top - 1, smx[2]), "frill")
+    if "beard" in feats:
+        jmn, jmx = (np.array(v) for v in m.meta["jaw"])
+        jb = m.bones["Jaw"]["pos"]
+        mn = np.array([jmn[0] + 0.5, jmn[1] - 2, jmn[2] + 1])
+        mx = np.array([jmx[0] - 0.5, jmn[1], jmn[2] + 5])
+        m.box_local("Jaw", (mn + mx) / 2 - jb, mx - mn, "feather", tag="feather")
+    if "fangs" in feats:
+        for s in (-1, 1):
+            x = s * ((nmx[0] - nmn[0]) / 2 - 1.5)
+            headbox((x - 0.5, smn[1] - 3, nmn[2] + 1), (x + 0.5, smn[1], nmn[2] + 2), "tooth")
+    if "third_eye" in feats:
+        skull = next(b for b in m.boxes if b["bone"] == "Head" and any(d["kind"] == "eye" for d in b["decals"]))
+        y = (max(nmx[1], smn[1] + (smx[1] - smn[1]) * 0.5) + top) / 2
+        skull["decals"].append(dict(kind="eye3", pos=np.array([0.0, y, smn[2]]) - hp, size=2, faces=("-Z",)))
+
+    # ---------------- costas
+    if "spines_long" in feats:
+        for bone, mn, mx in spine:
+            if not bone.startswith(("Chest", "Hips")):
+                continue
+            L = mx[2] - mn[2]
+            for k in range(max(1, int(L // 4))):
+                z = mn[2] + (k + 0.5) * L / max(1, int(L // 4))
+                lbox(bone, (0, mx[1] + 3.5, z), (1, 8, 1), "horn", R=rx(math.radians(-20)))
+    if "dorsal_fins" in feats:
+        for bone, mn, mx in spine:
+            if not bone.startswith("Tail"):
+                continue
+            L = mx[2] - mn[2]
+            hgt = max(2, (mx[1] - mn[1]) * 0.6)
+            m.box_world(bone, (-0.5, mx[1] - 0.5, mn[2] + L * 0.2), (0.5, mx[1] + hgt, mn[2] + L * 0.7), "sail", tag="sail")
+    if "shell" in feats:
+        hmn, hmx = (np.array(v) for v in m.meta["hips"])
+        cmn, cmx = (np.array(v) for v in m.meta["chest"])
+        m.box_world("Hips", (hmn[0] - 1, hmx[1] - 2, hmn[2] - 1), (hmx[0] + 1, hmx[1] + 3, hmx[2] - 1), "shell", tag="shell")
+        m.box_world("Chest", (cmn[0] - 0.5, cmx[1] - 1.5, cmn[2] + 2), (cmx[0] + 0.5, cmx[1] + 2.5, cmx[2]), "shell", tag="shell")
+    if "warts" in feats:
+        for bone, mn, mx in spine:
+            if bone.startswith("Neck"):
+                continue
+            for k in range(3):
+                s = 1 if k % 2 else -1
+                z = mn[2] + (mx[2] - mn[2]) * rnd.uniform(0.15, 0.85)
+                y = mn[1] + (mx[1] - mn[1]) * rnd.uniform(0.45, 0.85)
+                x0 = mx[0] if s > 0 else mn[0]
+                m.box_world(bone, (min(x0, x0 + s), y - 0.5, z - 0.5), (max(x0, x0 + s), y + 0.5, z + 0.5), "armor", tag="armor")
+
+    # ---------------- cauda
+    if m.meta["tail"]:
+        last = "Tail%d" % len(m.meta["tail"])
+        tmn, tmx = (np.array(v) for v in m.meta["tail"][-1])
+        tw, th = tmx[0] - tmn[0], tmx[1] - tmn[1]
+        cy = (tmn[1] + tmx[1]) / 2
+        if "tail_fan" in feats:
+            m.box_world(last, (-tw * 1.8, cy - 0.5, tmx[2] - 2), (tw * 1.8, cy + 0.5, tmx[2] + 6), "feather", tag="feather")
+        if "tail_fork" in feats:
+            for s in (-1, 1):
+                lbox(last, (s * 1.5, cy, tmx[2] + 2.5), (max(1, tw * 0.6), max(1, th * 0.6), 6), "skin",
+                     R=ry(math.radians(s * 25)), tag="tail")
+        if "tail_flame" in feats:
+            for k, (w, h) in enumerate(((tw + 2, th + 2), (tw, th + 3), (max(1, tw - 2), th + 4))):
+                z0 = tmx[2] - 1 + k * 2
+                m.box_world(last, (-w / 2, cy - h / 2 + k, z0), (w / 2, cy + h / 2 + k, z0 + 3), "flame", tag="flame")
+
+    # ---------------- membros
+    if "leg_feathers" in feats:
+        for lg in m.legs:
+            sh = lg["bones"][1]
+            L2 = lg["L2"]
+            box = next(b for b in m.boxes if b["bone"] == sh)
+            w = box["size"][0] + 2
+            m.box_local(sh, (0, -L2 * 0.3, 0), (w, L2 * 0.45, box["size"][2] + 2), "feather", tag="feather")
+    if "arm_wings" in feats:
+        for a in m.arms:
+            fo = a["bones"][1]
+            box = next(b for b in m.boxes if b["bone"] == fo)
+            L = box["size"][1]
+            m.box_local(fo, (0, -L / 2, 3), (1, L + 2, 6), "feather", tag="feather")

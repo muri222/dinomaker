@@ -2,44 +2,64 @@
 "use strict";
 
 const $ = (s) => document.querySelector(s);
+const $$ = (s) => [...document.querySelectorAll(s)];
 const el = (tag, attrs = {}, ...kids) => {
   const e = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) {
+    if (v === undefined || v === null || v === false) continue;
     if (k === "class") e.className = v;
     else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
-    else e.setAttribute(k, v);
+    else e.setAttribute(k, v === true ? "" : v);
   }
-  for (const k of kids) e.append(k);
+  for (const k of kids) if (k !== null && k !== undefined) e.append(k);
   return e;
 };
-
-const FEAT_PT = {
-  teeth: "Dentes", beak: "Bico", horns_brow: "Chifres na testa", horn_nose: "Chifre no nariz",
-  horns_long: "Chifres longos", frill: "Babado (frill)", frill_spikes: "Espinhos no babado",
-  plates: "Placas nas costas", thagomizer: "Espetos na cauda", back_spikes: "Espinhos nas costas",
-  sail: "Vela", hump: "Corcunda", armor: "Armadura", side_spikes: "Espinhos laterais", club: "Clava na cauda",
-  crest_tube: "Crista tubo", crest_fan: "Crista leque", crest_double: "Crista dupla", crest_small: "Cristinha",
-  crest_head: "Crista de ptero", dome: "Cúpula (cabeça dura)", feathers: "Penas", sickle_claw: "Garra foice",
-  big_claws: "Garras grandes", thumb_spike: "Espinho no polegar", neck_spikes: "Espinhos no pescoço",
-  wings: "Asas", crystals: "Cristais", antlers: "Galhada", mane: "Juba", gem: "Gema na testa",
-  tusks: "Presas", glow_eyes: "Olhos brilhantes",
+const svg = (d) => {
+  const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("class", "i");
+  s.innerHTML = d;
+  return s;
 };
-const ARCH_PT = {
-  theropod: "Terópode (T-Rex)", raptor: "Raptor", spinosaur: "Espinossauro", sauropod: "Saurópode (pescoço longo)",
-  ceratopsian: "Ceratopsídeo (Trici)", stegosaur: "Estegossauro", ankylosaur: "Anquilossauro",
-  hadrosaur: "Hadrossauro (bico de pato)", pachycephalosaur: "Paquicefalossauro", pterosaur: "Pterossauro",
-};
-const CLIP_PT = { Idle: "Parado", Walk: "Andar", Run: "Correr", Attack: "Atacar", Roar: "Rugir", Hit: "Dano",
-  Eat: "Comer", Death: "Morrer", Fly: "Voar", Flap: "Asas" };
-const GROUP_PT = { head: "Cabeça", neck: "Pescoço", tail: "Cauda", legs: "Pernas", arms: "Braços",
-  body: "Corpo (comprimento)", bulk: "Robustez (largura)" };
-const COLOR_PT = { primary: "Corpo", belly: "Barriga", accent: "Destaque", pattern: "Padrão", claw: "Garras/chifres", eye: "Olhos" };
+const clone = (o) => JSON.parse(JSON.stringify(o));
 
-let META = null;
-let spec = null;          // spec atual (fonte da verdade do editor)
-let editingId = null;     // id do dino da biblioteca sendo editado
-let lastGenome = null;
-let LIB = [];
+const PT = {
+  feat: {
+    teeth: "Dentes", fangs: "Presas de cima", beak: "Bico", tusks: "Presas de baixo", beard: "Barba",
+    horns_brow: "Chifres na testa", horn_nose: "Chifre no nariz", horns_long: "Chifres longos", horn_unicorn: "Chifre de unicórnio",
+    horns_ram: "Chifres de carneiro", antlers: "Galhada", ears: "Orelhas", crown: "Coroa", dome: "Cúpula",
+    frill: "Babado (frill)", frill_spikes: "Espinhos no babado", cheek_frills: "Abas nas bochechas", gem: "Gema",
+    third_eye: "Terceiro olho", halo: "Auréola", crest_small: "Cristinha", crest_fan: "Crista leque",
+    crest_tube: "Crista tubo", crest_double: "Crista dupla", crest_head: "Crista de ptero",
+    plates: "Placas", sail: "Vela", hump: "Corcunda", back_spikes: "Espinhos", spines_long: "Espinhos longos",
+    dorsal_fins: "Nadadeiras", crystals: "Cristais", armor: "Armadura", shell: "Casco", side_spikes: "Espinhos laterais",
+    neck_spikes: "Espinhos no pescoço", mane: "Juba", warts: "Verrugas", thagomizer: "Espetos na cauda",
+    club: "Clava", tail_fan: "Cauda leque", tail_fork: "Cauda bifurcada", tail_flame: "Cauda de fogo",
+    sickle_claw: "Garra foice", big_claws: "Garras grandes", thumb_spike: "Espinho no polegar", feathers: "Penas",
+    leg_feathers: "Pernas peludas", arm_wings: "Asas nos braços", wings: "Asas (ptero)", glow_eyes: "Olhos brilhantes",
+  },
+  arch: {
+    theropod: "Terópode", raptor: "Raptor", spinosaur: "Espinossauro", sauropod: "Saurópode",
+    ceratopsian: "Ceratopsídeo", stegosaur: "Estegossauro", ankylosaur: "Anquilossauro",
+    hadrosaur: "Hadrossauro", pachycephalosaur: "Paquicefalossauro", pterosaur: "Pterossauro",
+  },
+  clip: { Idle: "Parado", Walk: "Andar", Run: "Correr", Attack: "Atacar", Roar: "Rugir", Hit: "Dano",
+    Eat: "Comer", Death: "Morrer", Fly: "Voar", Flap: "Asas" },
+  group: { head: "Cabeça", neck: "Pescoço", tail: "Cauda", legs: "Pernas", arms: "Braços",
+    body: "Corpo (comprimento)", bulk: "Robustez (largura)" },
+  color: { primary: "Corpo", belly: "Barriga", accent: "Destaque", pattern: "Padrão", pattern2: "Padrão 2",
+    claw: "Garras", horn: "Chifres", eye: "Íris", pupil: "Pupila", glow: "Brilho", mouth: "Boca", tooth: "Dentes" },
+  pattern: { none: "Liso", spots: "Manchas", stripes: "Listras", tiger: "Tigre", dorsal: "Faixa dorsal", bands: "Anéis",
+    mottled: "Mesclado", rosettes: "Rosetas", lava: "Lava", zigzag: "Raio", galaxy: "Galáxia", checker: "Xadrez",
+    gradient: "Degradê", speckles: "Pintinhas", camo: "Camuflado", hearts: "Corações", stars: "Estrelas",
+    scales: "Escamas", split: "Meio a meio" },
+  eyes: { cute: "Fofo", fierce: "Feroz", glow: "Brilhante" },
+  vfx: { fire: "Fogo", ice: "Gelo", electric: "Elétrico", magic: "Mágico", toxic: "Tóxico", nature: "Natureza",
+    water: "Água", none: "Só poeira" },
+  attack: { bite: "Mordida", claw: "Garras", headbutt: "Cabeçada", tailswipe: "Rabada", stomp: "Pisão", peck: "Bicada" },
+};
+
+let META = null, spec = null, loaded = null, editingId = null, lastData = null, LIB = [];
+const UNDO = [], REDO = [];
 
 async function api(path, body) {
   const r = await fetch(path, body === undefined ? {} : {
@@ -49,37 +69,38 @@ async function api(path, body) {
   if (!r.ok) throw Object.assign(new Error(j.erro || r.statusText), { status: r.status });
   return j;
 }
-
 function toast(msg, bad = false) {
   const t = $("#toast");
   t.textContent = msg;
   t.className = "on" + (bad ? " bad" : "");
   clearTimeout(toast.h);
-  toast.h = setTimeout(() => (t.className = ""), 4500);
+  toast.h = setTimeout(() => (t.className = bad ? "bad" : ""), 4200);
 }
 
-/* ============================== 3D ============================== */
-const V = {};
+/* ================================ 3D ================================ */
+const V = { clip: "Idle", t: 0, fx: true };
 function initViewer() {
   const host = $("#viewport");
-  V.renderer = new THREE.WebGLRenderer({ antialias: true });
-  V.renderer.setPixelRatio(window.devicePixelRatio);
+  V.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  V.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   V.renderer.outputEncoding = THREE.sRGBEncoding;
-  V.renderer.setClearColor(0x2a2f3a);
   host.append(V.renderer.domElement);
   V.scene = new THREE.Scene();
-  V.camera = new THREE.PerspectiveCamera(40, 1, 1, 5000);
+  V.camera = new THREE.PerspectiveCamera(38, 1, 1, 5000);
   V.controls = new THREE.OrbitControls(V.camera, V.renderer.domElement);
   V.controls.enableDamping = true;
-  V.scene.add(new THREE.HemisphereLight(0xffffff, 0x556070, 0.75));
-  const sun = new THREE.DirectionalLight(0xffffff, 0.75);
-  sun.position.set(-1, 2, -1.5);
-  V.scene.add(sun);
-  V.grid = new THREE.GridHelper(600, 60, 0x4a5163, 0x363c4a);
+  V.scene.add(new THREE.HemisphereLight(0xe8f4ff, 0x30363f, 0.8));
+  const key = new THREE.DirectionalLight(0xffffff, 0.75);
+  key.position.set(-1.2, 2, -1.4);
+  V.scene.add(key);
+  const rim = new THREE.DirectionalLight(0x4cc4ea, 0.25);
+  rim.position.set(1.5, 0.8, 1.6);
+  V.scene.add(rim);
+  V.grid = new THREE.GridHelper(800, 80, 0x2b3540, 0x1b2129);
   V.scene.add(V.grid);
   V.root = new THREE.Group();
   V.scene.add(V.root);
-  V.clip = "Idle"; V.t = 0; V.speed = 1;
+  initParticles();
   V.clock = new THREE.Clock();
   const resize = () => {
     const w = host.clientWidth, h = host.clientHeight;
@@ -87,13 +108,14 @@ function initViewer() {
     V.camera.aspect = w / Math.max(h, 1);
     V.camera.updateProjectionMatrix();
   };
-  window.addEventListener("resize", resize);
   new ResizeObserver(resize).observe(host);
   resize();
   V.camera.position.set(120, 90, -160);
   const loop = () => {
     requestAnimationFrame(loop);
-    animate(V.clock.getDelta());
+    const dt = Math.min(V.clock.getDelta(), 0.05);
+    animate(dt);
+    stepParticles(dt);
     V.controls.update();
     V.renderer.render(V.scene, V.camera);
   };
@@ -117,7 +139,6 @@ function buildModel(data, refit) {
     V.root.add(m);
     return m;
   });
-  // pré-decompõe as poses (posição + quaternion) para interpolar suave
   V.anims = {};
   for (const [name, a] of Object.entries(data.anims)) {
     V.anims[name] = {
@@ -130,6 +151,7 @@ function buildModel(data, refit) {
       })),
     };
   }
+  V.vfx = data.vfx;
   if (!V.anims[V.clip]) V.clip = "Idle";
   buildClipBar();
   animate(0);
@@ -139,10 +161,13 @@ function buildModel(data, refit) {
 function animate(dt) {
   if (!V.anims || !V.anims[V.clip]) return;
   const a = V.anims[V.clip];
-  V.t += dt * V.speed;
+  V.t += dt;
   let f = V.t * a.fps;
   if (a.loop) f = f % a.n;
-  else if (f >= a.n - 1) { f = a.n - 1; if (V.t * a.fps > a.n + a.fps * 1.2) V.t = 0; }
+  else if (f >= a.n - 1) {
+    f = a.n - 1;
+    if (V.t * a.fps > a.n + a.fps * 1.2) { V.t = 0; onClipStart(); }
+  }
   const i0 = Math.floor(f), i1 = a.loop ? (i0 + 1) % a.n : Math.min(i0 + 1, a.n - 1), w = f - i0;
   const P = new THREE.Vector3(), Q = new THREE.Quaternion(), S = new THREE.Vector3(1, 1, 1);
   V.meshes.forEach((m, bi) => {
@@ -158,8 +183,9 @@ function fitCamera() {
   const c = box.getCenter(new THREE.Vector3());
   const size = box.getSize(new THREE.Vector3()).length();
   V.controls.target.copy(c);
-  V.camera.position.set(c.x + size * 0.75, c.y + size * 0.45, c.z - size * 0.9);
+  V.camera.position.set(c.x + size * 0.78, c.y + size * 0.42, c.z - size * 0.88);
   V.camera.near = size / 100; V.camera.far = size * 20;
+  V.scene.fog = new THREE.Fog(0x0b0d10, size * 1.4, size * 3.2);
   V.camera.updateProjectionMatrix();
 }
 
@@ -167,158 +193,375 @@ function buildClipBar() {
   const bar = $("#clipbar");
   bar.innerHTML = "";
   for (const name of Object.keys(V.anims)) {
-    bar.append(el("button", { class: name === V.clip ? "on" : "", onclick: () => { V.clip = name; V.t = 0; buildClipBar(); } },
-      CLIP_PT[name] || name));
+    bar.append(el("button", { class: "chip", "aria-pressed": String(name === V.clip),
+      onclick: () => { V.clip = name; V.t = 0; onClipStart(); buildClipBar(); } }, PT.clip[name] || name));
   }
-  bar.append(el("button", { onclick: fitCamera, title: "Centralizar câmera" }, "⟲"));
 }
 
-/* ============================== EDITOR ============================== */
-const SLIDERS = [];
-function buildEditorControls() {
-  // base: espécies reais por corpo + fantasia por corpo
-  const base = $("#f-base");
+/* ---------- partículas (preview dos VFX) ---------- */
+const PMAX = 900;
+function initParticles() {
+  const g = new THREE.BufferGeometry();
+  V.pPos = new Float32Array(PMAX * 3);
+  V.pCol = new Float32Array(PMAX * 3);
+  g.setAttribute("position", new THREE.BufferAttribute(V.pPos, 3));
+  g.setAttribute("color", new THREE.BufferAttribute(V.pCol, 3));
+  const c = document.createElement("canvas");
+  c.width = c.height = 64;
+  const x = c.getContext("2d");
+  const grd = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+  grd.addColorStop(0, "rgba(255,255,255,1)"); grd.addColorStop(0.35, "rgba(255,255,255,.6)"); grd.addColorStop(1, "rgba(255,255,255,0)");
+  x.fillStyle = grd; x.fillRect(0, 0, 64, 64);
+  V.pMat = new THREE.PointsMaterial({ size: 4, map: new THREE.CanvasTexture(c), vertexColors: true, transparent: true,
+    depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true });
+  V.points = new THREE.Points(g, V.pMat);
+  V.points.frustumCulled = false;
+  V.scene.add(V.points);
+  V.parts = [];
+  V.emitAcc = 0;
+}
+const hexRGB = (h) => { const n = parseInt(h.slice(1), 16); return [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255]; };
+function anchorWorld(a) {
+  const m = V.meshes && V.meshes[a.bone];
+  return m ? new THREE.Vector3(...a.local).applyMatrix4(m.matrix) : null;
+}
+function spawn(p, origin, dir, spread, count) {
+  if (!p || !origin) return;
+  const k = V.vfx.scale;
+  const cols = p.colors.map((c) => hexRGB(c || "#ffffff"));
+  for (let i = 0; i < count && V.parts.length < PMAX; i++) {
+    const d = dir ? dir.clone() : new THREE.Vector3(Math.random() - .5, Math.random() - .5, Math.random() - .5).normalize();
+    if (dir) d.add(new THREE.Vector3(Math.random() - .5, Math.random() - .5, Math.random() - .5).multiplyScalar(spread)).normalize();
+    const sp = (p.speed[0] + Math.random() * (p.speed[1] - p.speed[0])) * k;
+    const life = p.life[0] + Math.random() * (p.life[1] - p.life[0]);
+    const jitter = new THREE.Vector3(Math.random() - .5, Math.random() - .5, Math.random() - .5).multiplyScalar(6);
+    V.parts.push({ p: origin.clone().add(dir ? new THREE.Vector3() : jitter), v: d.multiplyScalar(sp),
+      a: new THREE.Vector3(...(p.accel || [0, 0, 0])).multiplyScalar(k), t: 0, life, cols });
+  }
+}
+function onClipStart() {
+  if (!V.fx || !V.vfx || !V.vfx.opt.breath) return;
+  if (V.clip !== "Roar" && V.clip !== "Attack") return;
+  const delay = V.clip === "Roar" ? 450 : 400;
+  setTimeout(() => {
+    const head = V.meshes[V.vfx.anchors.mouth.bone];
+    const o = anchorWorld(V.vfx.anchors.mouth);
+    if (!o) return;
+    const fwd = new THREE.Vector3(0, 0, -1).transformDirection(head.matrix);
+    spawn(V.vfx.breath, o, fwd, 0.35, Math.round((V.clip === "Roar" ? 60 : 25) * V.vfx.opt.intensity));
+  }, delay);
+}
+function stepParticles(dt) {
+  const vx = V.vfx;
+  if (V.fx && vx && vx.aura && V.meshes) {
+    V.emitAcc += dt * vx.aura.rate;
+    const n = Math.floor(V.emitAcc);
+    V.emitAcc -= n;
+    if (n > 0) {
+      spawn(vx.aura, anchorWorld(vx.anchors.body), null, 0, n);
+      if (vx.anchors.tail && Math.random() < 0.5) spawn(vx.aura, anchorWorld(vx.anchors.tail), null, 0, Math.ceil(n / 2));
+    }
+    V.pMat.size = Math.max(1.5, (vx.aura.size[0] || 0.4) * vx.scale * 4);
+  } else if (vx && vx.breath) {
+    V.pMat.size = Math.max(1.5, (vx.breath.size[0] || 0.6) * vx.scale * 3.5);
+  }
+  const keep = [];
+  for (const q of V.parts) {
+    q.t += dt;
+    if (q.t >= q.life) continue;
+    q.v.addScaledVector(q.a, dt).multiplyScalar(1 - dt * 0.8);
+    q.p.addScaledVector(q.v, dt);
+    keep.push(q);
+  }
+  V.parts = keep;
+  for (let i = 0; i < PMAX; i++) {
+    const q = V.parts[i];
+    if (!q) { V.pPos[i * 3 + 1] = -99999; continue; }
+    V.pPos.set([q.p.x, q.p.y, q.p.z], i * 3);
+    const u = q.t / q.life, cs = q.cols, k = Math.min(cs.length - 1, u * (cs.length - 1));
+    const a = cs[Math.floor(k)], b = cs[Math.min(cs.length - 1, Math.floor(k) + 1)], w = k - Math.floor(k);
+    const fade = 1 - u;
+    V.pCol.set([(a[0] + (b[0] - a[0]) * w) * fade, (a[1] + (b[1] - a[1]) * w) * fade, (a[2] + (b[2] - a[2]) * w) * fade], i * 3);
+  }
+  V.points.geometry.attributes.position.needsUpdate = true;
+  V.points.geometry.attributes.color.needsUpdate = true;
+}
+
+/* ================================ CONTROLES ================================ */
+const CTL = [];   // {sync()} de cada controle
+function setRangeFill(inp) {
+  const p = ((inp.value - inp.min) / (inp.max - inp.min)) * 100;
+  inp.style.setProperty("--p", p + "%");
+}
+function slider({ label, min, max, step, get, set, fmt = (x) => (+x).toFixed(2), isSet, reset }) {
+  const v = el("span", { class: "v" });
+  const inp = el("input", { type: "range", min, max, step });
+  const rs = el("button", { class: "rs", title: "Voltar ao padrão", onclick: () => change(() => reset()) }, svg('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>'));
+  const box = el("div", { class: "ctl" }, el("div", { class: "top" }, el("span", {}, label), reset ? rs : null, v), inp);
+  inp.addEventListener("input", () => { change(() => set(+inp.value), true); v.textContent = fmt(inp.value); setRangeFill(inp); });
+  CTL.push({ sync: () => { const x = get(); inp.value = x; v.textContent = fmt(x); setRangeFill(inp); box.classList.toggle("set", !!(isSet && isSet())); } });
+  return box;
+}
+function chipToggle(label, get, set, cls = "chip") {
+  const b = el("button", { class: cls, onclick: () => change(() => set(!get())) }, label);
+  CTL.push({ sync: () => b.setAttribute("aria-pressed", String(!!get())) });
+  return b;
+}
+function chipChoice(options, get, set, cls = "chip solid") {
+  const wrap = el("div", { class: "chips" });
+  const btns = options.map(([val, label]) => {
+    const b = el("button", { class: cls, onclick: () => change(() => set(val)) }, label);
+    wrap.append(b);
+    return [val, b];
+  });
+  CTL.push({ sync: () => btns.forEach(([val, b]) => b.setAttribute("aria-pressed", String(get() === val))) });
+  return wrap;
+}
+function colorSw(key) {
+  const inp = el("input", { type: "color" });
+  const hex = el("span", { class: "hex" });
+  const lab = el("label", { class: "sw" }, inp, el("span", {}, PT.color[key] || key), hex);
+  inp.addEventListener("input", () => { change(() => (spec.palette[key] = inp.value), true); hex.textContent = inp.value; });
+  CTL.push({ sync: () => {
+    const v = spec.palette[key] || (lastData && lastData.colors[key]) || "#888888";
+    inp.value = v; hex.textContent = v;
+  } });
+  return lab;
+}
+function section(title, open, ...kids) {
+  const meta = el("span", { class: "label" });
+  const d = el("details", { class: "sec", open }, el("summary", {}, title, meta), el("div", { class: "body" }, ...kids));
+  d.meta = meta;
+  return d;
+}
+const sub = (t) => el("div", { class: "sub" }, t);
+const fieldrow = (label, ctl) => el("label", { class: "fieldrow" }, el("span", {}, label), ctl);
+
+function buildSections() {
+  const host = $("#sections");
+  host.innerHTML = "";
+  CTL.length = 0;
+  const g = () => lastData && lastData.genome;
+  const P = (k) => (spec.params[k] !== undefined ? spec.params[k] : (g() ? g().params[k] : 0));
+
+  // ---- base
+  const base = el("select", { class: "input" });
   for (const a of META.archetypes) {
-    const og = el("optgroup", { label: ARCH_PT[a.key] || a.key });
+    const og = el("optgroup", { label: PT.arch[a.key] || a.key });
     for (const sp of META.species[a.key] || []) og.append(el("option", { value: "sp:" + sp.key }, sp.name));
-    og.append(el("option", { value: "fa:" + a.key }, "✨ Fantasia (" + (ARCH_PT[a.key] || a.key).split(" (")[0] + ")"));
+    og.append(el("option", { value: "fa:" + a.key }, "✦ Fantasia (corpo de " + (PT.arch[a.key] || a.key) + ")"));
     base.append(og);
   }
-  base.onchange = async () => {
+  base.onchange = () => {
     const [k, v] = base.value.split(":");
-    const body = k === "sp" ? { species: v } : { archetype: v, fantasy: true };
-    await newDino(body);
+    newDino(k === "sp" ? { species: v } : { archetype: v, fantasy: true });
   };
+  CTL.push({ sync: () => { const v = spec.species ? "sp:" + spec.species : "fa:" + spec.archetype; base.value = v; } });
+  const attack = el("select", { class: "input" }, ...META.attacks.map((a) => el("option", { value: a }, PT.attack[a] || a)));
+  attack.onchange = () => change(() => (spec.attack = attack.value));
+  CTL.push({ sync: () => (attack.value = spec.attack) });
+  host.append(section("Base", true,
+    fieldrow("Espécie / corpo", base),
+    slider({ label: "Tamanho geral", min: 0.05, max: 0.4, step: 0.005, get: () => spec.px_size, set: (v) => (spec.px_size = v),
+      fmt: (x) => (+x).toFixed(3) + " stud/px" }),
+    slider({ label: "Personalidade (calmo → agitado)", min: 0.4, max: 1.8, step: 0.05,
+      get: () => (spec.anim.energy ?? 1), set: (v) => (spec.anim.energy = v), fmt: (x) => "×" + (+x).toFixed(2),
+      isSet: () => spec.anim.energy !== undefined, reset: () => delete spec.anim.energy }),
+    el("div", { class: "chips" }, chipToggle("Chibi (cabeça e olhos maiores)", () => spec.chibi, (on) => {
+      spec.chibi = on;
+      spec.variation.head = +(spec.variation.head * (on ? 1.25 : 1 / 1.25)).toFixed(3);
+      spec.variation.legs = +(spec.variation.legs * (on ? 0.85 : 1 / 0.85)).toFixed(3);
+    })),
+    fieldrow("Ataque", attack),
+  ));
 
-  const box = $("#sliders");
-  const add = (key, label, min, max, step, get, set, fmt = (x) => (+x).toFixed(2)) => {
-    const out = el("b");
-    const inp = el("input", { type: "range", min, max, step });
-    inp.oninput = () => { out.textContent = fmt(inp.value); set(+inp.value); schedulePreview(); };
-    box.append(el("div", { class: "slider" }, el("label", {}, label, out), inp));
-    SLIDERS.push({ inp, out, get, fmt });
-  };
-  add("px", "Tamanho geral", 0.05, 0.4, 0.005, () => spec.px_size, (v) => (spec.px_size = v),
-    (x) => (+x).toFixed(3) + " stud/px");
-  for (const g of META.groups) {
-    add(g, GROUP_PT[g], 0.5, 1.8, 0.01, () => spec.variation[g] ?? 1, (v) => (spec.variation[g] = v), (x) => "×" + (+x).toFixed(2));
+  // ---- proporções
+  host.append(section("Proporções", true, ...META.groups.map((gk) => slider({
+    label: PT.group[gk], min: 0.5, max: 1.8, step: 0.01, get: () => spec.variation[gk] ?? 1,
+    set: (v) => (spec.variation[gk] = v), fmt: (x) => "×" + (+x).toFixed(2) }))));
+
+  // ---- medidas avançadas
+  const groups = {};
+  for (const p of META.params) (groups[p.group] = groups[p.group] || []).push(p);
+  const adv = [];
+  for (const [gname, list] of Object.entries(groups)) {
+    adv.push(sub(gname));
+    for (const p of list) {
+      adv.push(slider({ label: p.label, min: p.min, max: p.max, step: p.step, get: () => P(p.key),
+        set: (v) => (spec.params[p.key] = p.int ? Math.round(v) : v), fmt: (x) => (p.int ? Math.round(x) : (+x).toFixed(p.step < 0.1 ? 2 : 1)),
+        isSet: () => spec.params[p.key] !== undefined, reset: () => delete spec.params[p.key] }));
+    }
   }
-  const P = (k) => () => (spec.params[k] ?? (lastGenome ? lastGenome.params[k] : 1));
-  add("snout", "Focinho (comprimento)", 2, 24, 1, P("snout_len"), (v) => (spec.params.snout_len = v), (x) => x + " px");
-  add("necks", "Segmentos do pescoço", 1, 7, 1, P("neck_segs"), (v) => (spec.params.neck_segs = v), (x) => x);
-  add("tails", "Segmentos da cauda", 1, 9, 1, P("tail_segs"), (v) => (spec.params.tail_segs = v), (x) => x);
+  const advSec = section("Medidas avançadas", false, el("p", { class: "small" }, "Ajuste fino de cada peça. Valores destacados em ciano foram fixados por você; ↺ volta ao automático."), ...adv);
+  host.append(advSec);
+  CTL.push({ sync: () => (advSec.meta.textContent = Object.keys(spec.params).length + " fixadas") });
 
-  $("#f-chibi").onchange = (e) => {
-    const on = e.target.checked;
-    if (on === !!spec.chibi) return;
-    spec.chibi = on;
-    spec.variation.head = +(spec.variation.head * (on ? 1.25 : 1 / 1.25)).toFixed(3);
-    spec.variation.legs = +(spec.variation.legs * (on ? 0.85 : 1 / 0.85)).toFixed(3);
-    syncControls(); schedulePreview();
-  };
+  // ---- cores
+  const pal = el("select", { class: "input" }, el("option", { value: "" }, "— aplicar paleta pronta —"),
+    ...Object.keys(META.palettes).map((p) => el("option", { value: p }, p)));
+  pal.onchange = () => { if (pal.value) change(() => Object.assign(spec.palette, META.palettes[pal.value])); pal.value = ""; };
+  const adj = (k, label, min, max, step, def, fmt) => slider({ label, min, max, step, get: () => spec.color_adjust[k] ?? def,
+    set: (v) => (spec.color_adjust[k] = v), fmt, isSet: () => spec.color_adjust[k] !== undefined && spec.color_adjust[k] !== def,
+    reset: () => delete spec.color_adjust[k] });
+  const tex = (k, label, min, max, step, def, fmt) => slider({ label, min, max, step, get: () => spec.texture[k] ?? def,
+    set: (v) => (spec.texture[k] = v), fmt, isSet: () => spec.texture[k] !== undefined, reset: () => delete spec.texture[k] });
+  host.append(section("Cores", true,
+    pal,
+    el("div", { class: "colors" }, ...["primary", "belly", "accent", "pattern", "pattern2", "horn", "claw", "eye", "pupil", "glow", "mouth", "tooth"].map(colorSw)),
+    sub("Ajuste global"),
+    adj("hue", "Matiz", -180, 180, 1, 0, (x) => Math.round(x) + "°"),
+    adj("sat", "Saturação", 0, 2, 0.01, 1, (x) => "×" + (+x).toFixed(2)),
+    adj("val", "Brilho", 0.3, 1.6, 0.01, 1, (x) => "×" + (+x).toFixed(2)),
+    adj("contrast", "Contraste", 0.5, 1.6, 0.01, 1, (x) => "×" + (+x).toFixed(2)),
+    sub("Textura"),
+    tex("belly", "Altura da barriga", 0, 0.5, 0.01, 0.3, (x) => Math.round(x * 100) + "%"),
+    tex("grain", "Granulado pixel", 0, 3, 0.05, 1, (x) => "×" + (+x).toFixed(2)),
+  ));
 
-  for (const s of META.eye_styles) $("#f-eyestyle").append(el("option", { value: s }, { cute: "Fofo", fierce: "Feroz", glow: "Brilhante" }[s] || s));
-  $("#f-eyestyle").onchange = (e) => { spec.eyes.style = e.target.value; schedulePreview(); };
-  $("#f-eyesize").oninput = (e) => { spec.eyes.size = +e.target.value; $("#v-eyesize").textContent = e.target.value; schedulePreview(); };
+  // ---- padrão
+  host.append(section("Padrão da pele", true,
+    chipChoice(META.patterns.map((p) => [p, PT.pattern[p] || p]), () => spec.pattern.type, (v) => (spec.pattern.type = v)),
+    slider({ label: "Escala", min: 3, max: 10, step: 1, get: () => spec.pattern.scale ?? 6, set: (v) => (spec.pattern.scale = v), fmt: (x) => Math.round(x) }),
+    slider({ label: "Densidade", min: 0.1, max: 1, step: 0.05, get: () => spec.pattern.density ?? 0.6, set: (v) => (spec.pattern.density = v) }),
+    el("div", { class: "chips" }, chipToggle("Padrão também nas pernas", () => spec.texture.pattern_legs, (v) => (spec.texture.pattern_legs = v))),
+  ));
 
-  for (const p of Object.keys(META.palettes)) $("#f-palette").append(el("option", { value: p }, p));
-  $("#f-palette").onchange = (e) => {
-    if (!e.target.value) return;
-    Object.assign(spec.palette, META.palettes[e.target.value]);
-    e.target.value = "";
-    syncControls(); schedulePreview();
-  };
-  const cbox = $("#colors");
-  for (const [k, lbl] of Object.entries(COLOR_PT)) {
-    const inp = el("input", { type: "color", id: "c-" + k });
-    inp.oninput = () => { spec.palette[k] = inp.value; schedulePreview(); };
-    cbox.append(el("label", {}, inp, lbl));
-  }
+  // ---- olhos
+  host.append(section("Olhos", false,
+    chipChoice(META.eye_styles.map((s) => [s, PT.eyes[s] || s]), () => spec.eyes.style, (v) => (spec.eyes.style = v)),
+    slider({ label: "Tamanho", min: 1, max: 6, step: 1, get: () => spec.eyes.size, set: (v) => (spec.eyes.size = v), fmt: (x) => Math.round(x) }),
+    el("div", { class: "colors" }, colorSw("eye"), colorSw("pupil")),
+  ));
 
-  for (const p of META.patterns) $("#f-pattern").append(el("option", { value: p }, p));
-  $("#f-pattern").onchange = (e) => { spec.pattern.type = e.target.value; schedulePreview(); };
-  $("#f-pscale").oninput = (e) => { spec.pattern.scale = +e.target.value; $("#v-pscale").textContent = e.target.value; schedulePreview(); };
-  $("#f-pdens").oninput = (e) => { spec.pattern.density = +e.target.value; $("#v-pdens").textContent = e.target.value; schedulePreview(); };
+  // ---- partes
+  const featSec = section("Partes", true, ...Object.entries(META.feature_groups).flatMap(([gname, list]) => [
+    sub(gname),
+    el("div", { class: "chips" }, ...list.map((f) => chipToggle(PT.feat[f] || f, () => spec.features_exact.includes(f), (on) => {
+      const s = new Set(spec.features_exact);
+      on ? s.add(f) : s.delete(f);
+      spec.features_exact = [...s];
+    }))),
+  ]));
+  host.append(featSec);
+  CTL.push({ sync: () => (featSec.meta.textContent = spec.features_exact.length + " ativas") });
 
-  const fb = $("#feats");
-  for (const f of META.features) {
-    const c = el("input", { type: "checkbox", value: f });
-    c.onchange = () => {
-      const set = new Set(spec.features_exact);
-      c.checked ? set.add(f) : set.delete(f);
-      spec.features_exact = [...set];
-      schedulePreview();
-    };
-    fb.append(el("label", {}, c, FEAT_PT[f] || f));
-  }
-
-  for (const a of META.attacks) $("#f-attack").append(el("option", { value: a }, a));
-  $("#f-attack").onchange = (e) => { spec.attack = e.target.value; schedulePreview(); };
-  $("#f-vfx").append(el("option", { value: "" }, "automático"));
-  for (const t of META.vfx) $("#f-vfx").append(el("option", { value: t }, t));
-  $("#f-vfx").onchange = (e) => { spec.vfx = e.target.value ? { theme: e.target.value } : {}; schedulePreview(); };
-
-  $("#f-name").oninput = (e) => { spec.name = e.target.value; schedulePreview(800); };
-  $("#b-random").onclick = () => newDino(Math.random() < 0.5 ? { fantasy: true } : {});
-  $("#b-save-new").onclick = () => save("new");
-  $("#b-save-replace").onclick = () => save("replace");
+  // ---- vfx
+  const vf = (k) => (spec.vfx[k] !== undefined ? spec.vfx[k] : META.vfx_defaults[k]);
+  const vset = (k) => (v) => (spec.vfx[k] = v);
+  const vcol = el("input", { type: "color" });
+  const vhex = el("span", { class: "hex" });
+  vcol.addEventListener("input", () => { change(() => (spec.vfx.color = vcol.value), true); vhex.textContent = vcol.value; });
+  CTL.push({ sync: () => {
+    const c = spec.vfx.color || (lastData && lastData.vfx.glow) || (lastData && lastData.colors.glow) || "#4cc4ea";
+    vcol.value = c; vhex.textContent = spec.vfx.color ? c : "do tema";
+  } });
+  host.append(section("Efeitos (VFX)", false,
+    chipChoice([["", "Automático"], ...META.vfx.map((t) => [t, PT.vfx[t] || t])], () => spec.vfx.theme || "", vset("theme")),
+    el("div", { class: "colors" }, el("label", { class: "sw" }, vcol, el("span", {}, "Cor dos efeitos"), vhex),
+      el("button", { class: "chip", onclick: () => change(() => delete spec.vfx.color) }, "usar cor do tema")),
+    slider({ label: "Intensidade", min: 0, max: 3, step: 0.05, get: () => vf("intensity"), set: vset("intensity"), fmt: (x) => "×" + (+x).toFixed(2) }),
+    slider({ label: "Tamanho das partículas", min: 0.3, max: 3, step: 0.05, get: () => vf("size"), set: vset("size"), fmt: (x) => "×" + (+x).toFixed(2) }),
+    slider({ label: "Brilho da luz", min: 0, max: 5, step: 0.1, get: () => vf("brightness"), set: vset("brightness"), fmt: (x) => (+x).toFixed(1) }),
+    el("div", { class: "chips" }, ...[["aura", "Aura"], ["breath", "Bafo"], ["dust", "Poeira"], ["burst", "Faíscas"], ["light", "Luz"]]
+      .map(([k, l]) => chipToggle(l, () => vf(k), vset(k)))),
+  ));
 }
 
 function syncControls() {
   $("#f-name").value = spec.name || "";
-  const base = spec.species ? "sp:" + spec.species : "fa:" + spec.archetype;
-  if ([...$("#f-base").options].some((o) => o.value === base)) $("#f-base").value = base;
-  for (const s of SLIDERS) { const v = s.get(); s.inp.value = v; s.out.textContent = s.fmt(v); }
-  $("#f-chibi").checked = !!spec.chibi;
-  $("#f-eyestyle").value = spec.eyes.style;
-  $("#f-eyesize").value = spec.eyes.size; $("#v-eyesize").textContent = spec.eyes.size;
-  for (const k of Object.keys(COLOR_PT)) { const i = $("#c-" + k); if (spec.palette[k]) i.value = spec.palette[k]; }
-  $("#f-pattern").value = spec.pattern.type;
-  $("#f-pscale").value = spec.pattern.scale ?? 6; $("#v-pscale").textContent = spec.pattern.scale ?? 6;
-  $("#f-pdens").value = spec.pattern.density ?? 0.6; $("#v-pdens").textContent = spec.pattern.density ?? 0.6;
-  const fs = new Set(spec.features_exact);
-  for (const c of $("#feats").querySelectorAll("input")) c.checked = fs.has(c.value);
-  $("#f-attack").value = spec.attack;
-  $("#f-vfx").value = (spec.vfx && spec.vfx.theme) || "";
-  $("#editing").textContent = editingId ? "Editando: " + editingId + " (Salvar por cima mantém o lugar dele)" : "Novo dino (ainda não salvo)";
+  CTL.forEach((c) => c.sync());
+  $("#editing").innerHTML = editingId ? `Editando <b>${editingId}</b> · salvar por cima mantém o lugar dele` : "Novo dino (ainda não salvo)";
   $("#b-save-replace").disabled = !editingId;
+  $("#t-undo").disabled = !UNDO.length;
+  $("#t-redo").disabled = !REDO.length;
 }
 
+/* ---------- mudanças, desfazer/refazer ---------- */
+let pendingSnap = null, snapTimer = null;
+function change(fn, continuous = false) {
+  const before = JSON.stringify(spec);
+  fn();
+  if (continuous) {
+    if (!pendingSnap) pendingSnap = before;
+    clearTimeout(snapTimer);
+    snapTimer = setTimeout(() => { UNDO.push(pendingSnap); pendingSnap = null; REDO.length = 0; syncControls(); }, 500);
+  } else {
+    UNDO.push(before);
+    REDO.length = 0;
+  }
+  if (UNDO.length > 200) UNDO.shift();
+  if (!continuous) syncControls();
+  schedulePreview(continuous ? 300 : 120);
+}
+function undo() {
+  if (!UNDO.length) return;
+  REDO.push(JSON.stringify(spec));
+  spec = JSON.parse(UNDO.pop());
+  syncControls(); schedulePreview(60);
+}
+function redo() {
+  if (!REDO.length) return;
+  UNDO.push(JSON.stringify(spec));
+  spec = JSON.parse(REDO.pop());
+  syncControls(); schedulePreview(60);
+}
+function rnd(a, b) { return a + Math.random() * (b - a); }
+function mutateShape() {
+  change(() => {
+    for (const k of META.groups) spec.variation[k] = +Math.min(1.8, Math.max(0.5, (spec.variation[k] ?? 1) * rnd(0.86, 1.16))).toFixed(3);
+    spec.px_size = +Math.min(0.4, Math.max(0.05, spec.px_size * rnd(0.9, 1.1))).toFixed(3);
+  });
+}
+function hsl2hex(h, s, l) {
+  const f = (n) => { const k = (n + h / 30) % 12, a = s * Math.min(l, 1 - l); return Math.round(255 * (l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)))); };
+  return "#" + [f(0), f(8), f(4)].map((x) => x.toString(16).padStart(2, "0")).join("");
+}
+function mutateColor() {
+  change(() => {
+    const h = rnd(0, 360), sch = Math.random();
+    const acc = (h + (sch < 0.5 ? 180 : 120) + rnd(-20, 20)) % 360;
+    spec.palette.primary = hsl2hex(h, rnd(0.45, 0.8), rnd(0.38, 0.55));
+    spec.palette.belly = hsl2hex((h + rnd(20, 50)) % 360, rnd(0.35, 0.7), rnd(0.72, 0.86));
+    spec.palette.accent = hsl2hex(acc, rnd(0.6, 0.9), rnd(0.5, 0.62));
+    spec.palette.pattern = hsl2hex(h, rnd(0.5, 0.8), rnd(0.22, 0.34));
+    spec.palette.pattern2 = hsl2hex(acc, rnd(0.4, 0.7), rnd(0.3, 0.45));
+    spec.color_adjust = {};
+  });
+}
+
+/* ---------- preview ---------- */
 let previewTimer = null, previewSeq = 0;
-function schedulePreview(ms = 350) {
+function schedulePreview(ms = 250) {
   clearTimeout(previewTimer);
-  previewTimer = setTimeout(runPreview, ms);
+  previewTimer = setTimeout(() => runPreview(false), ms);
 }
-
-async function runPreview(refit = false) {
+async function runPreview(refit) {
   const seq = ++previewSeq;
   $("#busy").classList.add("on");
   try {
     const data = await api("/api/preview", { spec, exclude: editingId });
     if (seq !== previewSeq) return;
-    lastGenome = data.genome;
+    lastData = data;
     buildModel(data, refit);
     showStats(data);
     showOriginality(data.originality);
-    for (const s of SLIDERS) if (document.activeElement !== s.inp) { const v = s.get(); s.inp.value = v; s.out.textContent = s.fmt(v); }
+    CTL.forEach((c) => { if (!c.focus) c.sync(); });
   } catch (e) {
     toast("Erro no preview: " + e.message, true);
   } finally {
     if (seq === previewSeq) $("#busy").classList.remove("on");
   }
 }
-
 function showStats(d) {
   const s = d.stats;
-  $("#stats").innerHTML = `Altura <b>${s.altura}</b> studs · Comprimento <b>${s.comprimento}</b> · Andar <b>${s.walk}</b> / Correr <b>${s.run}</b> studs/s · ${s.pecas} peças · ${s.ossos} ossos`;
+  $("#stats").innerHTML = `<b>${s.altura}</b> altura · <b>${s.comprimento}</b> comp. studs · andar <b>${s.walk}</b> · correr <b>${s.run}</b> · ${s.pecas} peças · ${s.ossos} ossos · ${s.ms} ms`;
 }
-
 function showOriginality(o) {
   const pct = Math.round(o.score * 100), lim = Math.round(o.threshold * 100);
-  const col = o.ok ? (o.score > o.threshold - 0.1 ? "var(--warn)" : "var(--acc)") : "var(--bad)";
-  const msg = o.name_taken ? "⚠️ Já existe um dino com esse nome." :
-    o.ok ? (o.nearest ? `Original ✓ — mais parecido: <b>${o.nearest}</b> (${pct}%)` : "Original ✓") :
-      `⚠️ Parecido demais com <b>${o.nearest}</b> (${pct}% ≥ ${lim}%) — mude cores, partes ou proporções`;
+  const col = !o.ok ? "var(--neg)" : o.score > o.threshold - 0.1 ? "var(--warn)" : "var(--accent)";
+  const msg = o.name_taken ? "Já existe um dino com esse nome." :
+    o.ok ? (o.nearest ? `Original · mais parecido: <b>${o.nearest}</b> (${pct}%)` : "Original") :
+      `Parecido demais com <b>${o.nearest}</b> (${pct}% ≥ ${lim}%). Mude partes, padrão ou proporções.`;
   $("#orig").innerHTML = `${msg}<div class="bar"><i style="width:${pct}%;background:${col}"></i><s style="left:${lim}%"></s></div>`;
 }
 
@@ -329,23 +572,26 @@ async function newDino(body) {
     loadSpec(r.spec, null);
   } catch (e) { toast(e.message, true); $("#busy").classList.remove("on"); }
 }
-
+function normalize(s) {
+  s.params = s.params || {}; s.vfx = s.vfx || {}; s.color_adjust = s.color_adjust || {};
+  s.texture = s.texture || {}; s.anim = s.anim || {}; s.palette = s.palette || {};
+  s.features_exact = s.features_exact || [];
+  return s;
+}
 function loadSpec(s, id) {
-  spec = JSON.parse(JSON.stringify(s));
-  spec.params = spec.params || {};
-  spec.vfx = spec.vfx || {};
+  spec = normalize(clone(s));
+  loaded = clone(spec);
   editingId = id;
-  lastGenome = null;
+  UNDO.length = 0; REDO.length = 0;
   syncControls();
   runPreview(true);
 }
-
 async function save(mode) {
   try {
     const job = await api("/api/save", { spec, mode, replace_id: editingId, force: $("#f-force").checked });
-    toast("Gerando " + spec.name + " (Blender)… acompanhe no topo.");
+    toast("Gerando " + spec.name + " no Blender… acompanhe no topo.");
     watchJob(job, null, (j) => {
-      toast("✓ " + j.result.name + " salvo no histórico.");
+      toast("Salvo: " + j.result.name);
       editingId = j.result.id;
       syncControls();
       loadLibrary();
@@ -355,12 +601,9 @@ async function save(mode) {
   }
 }
 
-/* ============================== JOBS ============================== */
+/* ================================ JOBS ================================ */
 const ACTIVE = new Map();
-function watchJob(job, onTick, onDone) {
-  ACTIVE.set(job.id, { onTick, onDone });
-  updateJobsBar();
-}
+function watchJob(job, onTick, onDone) { ACTIVE.set(job.id, { onTick, onDone }); updateJobsBar(); }
 async function pollJobs() {
   for (const [id, h] of ACTIVE) {
     try {
@@ -376,11 +619,13 @@ async function pollJobs() {
   updateJobsBar();
 }
 function updateJobsBar() {
-  $("#jobsbar").textContent = ACTIVE.size ? `⏳ ${ACTIVE.size} tarefa(s) rodando…` : "";
+  const b = $("#jobsbar");
+  b.hidden = !ACTIVE.size;
+  b.innerHTML = `<span class="spin"></span>${ACTIVE.size} tarefa(s)`;
 }
 setInterval(pollJobs, 1000);
 
-/* ============================== BIBLIOTECA ============================== */
+/* ================================ BIBLIOTECA ================================ */
 async function loadLibrary() {
   LIB = await api("/api/library");
   renderLibrary();
@@ -388,41 +633,52 @@ async function loadLibrary() {
 }
 function matches(d, q) {
   q = q.trim().toLowerCase();
-  return !q || [d.name, d.id, d.species, d.archetype, d.palette, d.pattern].join(" ").toLowerCase().includes(q);
+  return !q || [d.name, d.id, d.species, d.archetype, d.palette, d.pattern, PT.arch[d.archetype]].join(" ").toLowerCase().includes(q);
 }
 function renderLibrary() {
   const q = $("#lib-search").value;
   const grid = $("#lib-grid");
   grid.innerHTML = "";
   const list = LIB.filter((d) => matches(d, q));
-  $("#lib-count").textContent = `${list.length} de ${LIB.length} dinos`;
+  $("#lib-count").textContent = `${list.length} de ${LIB.length}`;
   for (const d of list) {
-    const img = d.thumb ? el("img", { src: d.thumb, loading: "lazy" }) : el("div", { class: "noimg" }, d.legacy ? "feito à mão" : "sem preview");
-    const del = el("button", { class: "del", title: "Remover do histórico", onclick: async (ev) => {
+    const img = d.thumb ? el("img", { src: d.thumb, loading: "lazy", alt: "" }) : el("div", { class: "noimg" }, d.legacy ? "feito à mão" : "sem miniatura");
+    const del = el("button", { class: "del", title: "Remover", onclick: async (ev) => {
       ev.stopPropagation();
       if (d.legacy) return toast("Dinos feitos à mão ficam no histórico para evitar cópias.");
       if (!confirm(`Remover "${d.name}" do histórico e apagar os arquivos?`)) return;
       await api("/api/forget", { id: d.id, delete_files: true });
       loadLibrary();
-    } }, "×");
-    const card = el("div", { class: "dcard", onclick: async () => {
-      if (!d.editable) return toast("Esse é um dino legado (feito à mão): não dá para editar aqui.");
+    } }, svg('<path d="M18 6 6 18M6 6l12 12"/>'));
+    grid.append(el("div", { class: "dcard", onclick: async () => {
+      if (!d.editable) return toast("Dino feito à mão: não dá para editar aqui.");
       const r = await api("/api/dino/" + d.id);
       showTab("editor");
       loadSpec(r.spec, d.id);
-    } }, img, el("div", { class: "info" }, del, el("b", {}, d.name), el("small", {}, (ARCH_PT[d.archetype] || d.archetype).split(" (")[0] + " · " + (d.pattern || ""))));
-    grid.append(card);
+    } }, img, d.fantasy ? el("span", { class: "tagx" }, "fantasia") : null, del,
+      el("div", { class: "info" }, el("b", {}, d.name), el("small", {}, (PT.arch[d.archetype] || d.archetype) + " · " + (PT.pattern[d.pattern] || d.pattern || "")))));
   }
 }
 
-/* ============================== LOTE ============================== */
+/* ================================ LOTE ================================ */
 function buildBatch() {
-  for (const a of META.archetypes) $("#bt-archs").append(el("label", {}, el("input", { type: "checkbox", value: a.key }), ARCH_PT[a.key] || a.key));
-  for (const t of META.themes) $("#bt-themes").append(el("label", {}, el("input", { type: "checkbox", value: t }), t));
+  const kinds = { v: "mix" };
+  const kb = $("#bt-kinds");
+  const kBtns = [["mix", "Misto"], ["real", "Só espécies reais"], ["fantasy", "Só fantasia"]].map(([v, l]) => {
+    const b = el("button", { class: "chip solid", onclick: () => { kinds.v = v; kBtns.forEach(([vv, bb]) => bb.setAttribute("aria-pressed", String(vv === v))); } }, l);
+    kb.append(b);
+    return [v, b];
+  });
+  kBtns[0][1].setAttribute("aria-pressed", "true");
+  const sel = { a: new Set(), t: new Set() };
+  const toggles = (host, items, set) => items.forEach(([v, l]) => {
+    const b = el("button", { class: "chip", "aria-pressed": "false", onclick: () => { set.has(v) ? set.delete(v) : set.add(v); b.setAttribute("aria-pressed", String(set.has(v))); } }, l);
+    host.append(b);
+  });
+  toggles($("#bt-archs"), META.archetypes.map((a) => [a.key, PT.arch[a.key] || a.key]), sel.a);
+  toggles($("#bt-themes"), META.themes.map((t) => [t, t]), sel.t);
   $("#bt-go").onclick = async () => {
-    const pick = (sel) => [...document.querySelectorAll(sel + " input:checked")].map((c) => c.value);
-    const body = { count: +$("#bt-count").value, name: $("#bt-name").value, kinds: $("#bt-kinds").value,
-      archetypes: pick("#bt-archs"), themes: pick("#bt-themes") };
+    const body = { count: +$("#bt-count").value, name: $("#bt-name").value, kinds: kinds.v, archetypes: [...sel.a], themes: [...sel.t] };
     $("#bt-log").textContent = "escolhendo conceitos únicos…\n";
     $("#bt-bar").style.width = "2%";
     $("#bt-go").disabled = true;
@@ -434,13 +690,13 @@ function buildBatch() {
     }, (j) => {
       $("#bt-go").disabled = false;
       $("#bt-bar").style.width = "100%";
-      toast(`✓ Lote pronto: ${j.result.ids.length} dinos novos.`);
+      toast(`Lote pronto: ${j.result.ids.length} dinos novos.`);
       loadLibrary();
     });
   };
 }
 
-/* ============================== EXPORTAR ============================== */
+/* ================================ EXPORTAR ================================ */
 const EXSEL = new Set();
 function renderExportList() {
   const q = $("#ex-search").value;
@@ -471,38 +727,55 @@ function buildExport() {
     }, (j) => {
       $("#ex-go").disabled = false;
       $("#ex-bar").style.width = "100%";
-      $("#ex-log").innerHTML += `\n✓ ${j.result.count} dinos — <a href="${j.result.zip}" style="color:var(--acc)">baixar zip</a>`;
+      $("#ex-log").innerHTML += `\n${j.result.count} dinos · <a href="${j.result.zip}">baixar zip</a>`;
       window.location.href = j.result.zip;
     });
   };
 }
 
-/* ============================== TABS / BOOT ============================== */
+/* ================================ BOOT ================================ */
 function showTab(name) {
-  document.querySelectorAll("nav button").forEach((b) => b.classList.toggle("on", b.dataset.tab === name));
-  document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("on", t.id === "tab-" + name));
-  if (name === "editor") window.dispatchEvent(new Event("resize"));
+  $$(".nav-links a").forEach((a) => (a.dataset.tab === name ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
+  $$(".tab").forEach((t) => t.classList.toggle("on", t.id === "tab-" + name));
+  if (location.hash !== "#" + name) history.replaceState(null, "", "#" + name);
 }
-
 async function boot() {
-  document.querySelectorAll("nav button").forEach((b) => (b.onclick = () => showTab(b.dataset.tab)));
+  $$("[data-tab]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); showTab(a.dataset.tab); }));
   $("#lib-search").oninput = renderLibrary;
   $("#lib-fill").onclick = async () => {
-    const falta = LIB.filter((d) => d.editable && !d.thumb).length;
-    if (!falta) return toast("Todas as miniaturas já existem.");
+    const falta = LIB.filter((d) => d.editable && !d.built).length;
+    if (!falta) return toast("Todos os dinos já têm arquivos gerados.");
     if (!confirm(`Gerar ${falta} dino(s) no Blender? (uns 5–15 s cada, em paralelo)`)) return;
     $("#lib-fill").disabled = true;
     const job = await api("/api/fill", {});
     watchJob(job, (j) => {
       if (j.progress) $("#lib-fill-st").textContent = `${j.progress.done}/${j.progress.total}`;
       if (j.progress && j.progress.done % 5 === 0) loadLibrary();
-    }, () => { $("#lib-fill").disabled = false; $("#lib-fill-st").textContent = "✓"; loadLibrary(); });
+    }, () => { $("#lib-fill").disabled = false; $("#lib-fill-st").textContent = "pronto"; loadLibrary(); });
   };
+  $("#f-name").addEventListener("input", (e) => change(() => (spec.name = e.target.value), true));
+  $("#b-random").onclick = () => { showTab("editor"); newDino(Math.random() < 0.5 ? { fantasy: true } : {}); };
+  $("#b-save-new").onclick = () => save("new");
+  $("#b-save-replace").onclick = () => save("replace");
+  $("#t-undo").onclick = undo;
+  $("#t-redo").onclick = redo;
+  $("#t-mshape").onclick = mutateShape;
+  $("#t-mcolor").onclick = mutateColor;
+  $("#t-reset").onclick = () => loaded && change(() => (spec = clone(loaded)));
+  $("#t-cam").onclick = fitCamera;
+  $("#t-fx").onclick = () => { V.fx = !V.fx; $("#t-fx").setAttribute("aria-pressed", String(V.fx)); if (!V.fx) V.parts = []; };
+  document.addEventListener("keydown", (e) => {
+    if (e.target.matches("input[type=text],input[type=search],input[type=number]")) return;
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") { e.preventDefault(); e.shiftKey ? redo() : undo(); }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "y") { e.preventDefault(); redo(); }
+  });
   META = await api("/api/meta");
   initViewer();
-  buildEditorControls();
+  buildSections();
   buildBatch();
   buildExport();
+  const tab = location.hash.slice(1);
+  if (["biblioteca", "lote", "exportar"].includes(tab)) showTab(tab);
   await loadLibrary();
   await newDino({});
 }

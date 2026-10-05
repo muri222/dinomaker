@@ -9,7 +9,7 @@ import os
 import random
 import re
 
-from .species import (ARCHETYPES, SPECIES, PALETTES, PATTERNS, EYE_STYLES, SIZE_CLASSES,
+from .species import (ARCHETYPES, SPECIES, PALETTES, PATTERNS, EYE_STYLES, SIZE_CLASSES, clamp_params,
                       FANTASY_FEATURES, CLAW_COLORS, MOUTH_COLOR, TOOTH_COLOR, SYLLABLES_A, SYLLABLES_B)
 
 GROUPS = {
@@ -40,6 +40,30 @@ def hsv_shift(hexc, dh=0.0, ds=0.0, dv=0.0):
     s = min(max(s + ds, 0), 1)
     v = min(max(v + dv, 0), 1)
     return rgb2hex([c * 255 for c in colorsys.hsv_to_rgb(h, s, v)])
+
+
+def adjust_rgb(rgb, adj):
+    """Ajuste global de cor: hue (graus), sat e val (multiplicadores), contrast."""
+    if not adj:
+        return rgb
+    dh = float(adj.get("hue", 0)) / 360.0
+    sm, vm = float(adj.get("sat", 1)), float(adj.get("val", 1))
+    ct = float(adj.get("contrast", 1))
+    if dh == 0 and sm == 1 and vm == 1 and ct == 1:
+        return rgb
+    r, g, b = (min(max(c / 255.0, 0), 1) for c in rgb)
+    h, s_, v = colorsys.rgb_to_hsv(r, g, b)
+    h = (h + dh) % 1.0
+    s_ = min(max(s_ * sm, 0), 1)
+    v = min(max(v * vm, 0), 1)
+    r, g, b = colorsys.hsv_to_rgb(h, s_, v)
+    if ct != 1:
+        r, g, b = (min(max((c - 0.5) * ct + 0.5, 0), 1) for c in (r, g, b))
+    return (r * 255, g * 255, b * 255)
+
+
+def adjust_hex(hexc, adj):
+    return rgb2hex(adjust_rgb(hex2rgb(hexc), adj)) if adj else hexc
 
 
 def hue(hexc):
@@ -128,6 +152,7 @@ def resolve(spec, history=None, seed=None):
         feats.append("teeth")
 
     P.update(spec.get("params", {}))
+    clamp_params(P)
     size = spec.get("size", P.pop("size", "medium"))
     P.pop("size", None)
     P["seed"] = seed
@@ -187,6 +212,9 @@ def resolve(spec, history=None, seed=None):
         "params": P,
         "description": spec.get("description", ""),
         "vfx": spec.get("vfx", {}),
+        "color_adjust": spec.get("color_adjust", {}),
+        "texture": spec.get("texture", {}),
+        "anim": spec.get("anim", {}),
     }
 
 
@@ -205,7 +233,7 @@ def signature(g):
             P["body_w"] / body,
         ],
         "features": sorted(g["features"]),
-        "hues": [hue(g["palette"]["primary"]), hue(g["palette"]["accent"]), hue(g["palette"]["belly"])],
+        "hues": [hue(adjust_hex(g["palette"][k], g.get("color_adjust"))) for k in ("primary", "accent", "belly")],
         "pattern": g["pattern"]["type"],
         "eyes": g["eyes"]["style"],
         "size": g["size"],
@@ -293,6 +321,8 @@ def genome_to_spec(g):
         "size": g["size"], "px_size": g["px_size"], "palette": dict(g["palette"]), "pattern": dict(g["pattern"]),
         "eyes": dict(g["eyes"]), "features_exact": list(g["features"]), "variation": dict(g["variation"]),
         "attack": g["attack"], "vfx": dict(g.get("vfx") or {}), "params": dict(g.get("param_overrides") or {}),
+        "color_adjust": dict(g.get("color_adjust") or {}), "texture": dict(g.get("texture") or {}),
+        "anim": dict(g.get("anim") or {}),
         "description": g.get("description", ""),
     }
     if g["species"] != "custom":

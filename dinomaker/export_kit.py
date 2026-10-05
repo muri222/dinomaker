@@ -94,6 +94,6 @@ def kit_node(model, genome, clips, meta):
     kit.props.append(attrs_xml({
         "DinoName": genome["name"], "DinoId": genome["id"], "Species": genome["species"], "Archetype": genome["archetype"],
         "Wander": False, "WanderRadius": 40.0, "Action": "", "ActionNonce": 0.0,
-        "AttackStyle": genome["attack"], "Flying": False, "VFX": True, "VFXTheme": theme,
+        "AttackStyle": genome["attack"], "Flying": False, "VFX": True, "VFXTheme": theme, "VFXIntensity": float((genome.get("vfx") or {}).get("intensity", 1.0)),
     }))
     return kit, theme

@@ -3,126 +3,149 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#08090b">
 <title>DinoMaker</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦖</text></svg>">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23f4f7f9'/%3E%3Cstop offset='1' stop-color='%23aab5bf'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Cpath d='M8 21h3v-5h4v-4h6v3h3v-3h-2V8h-9v4H9v4H8z' fill='%2308090b'/%3E%3Crect x='17' y='10' width='2' height='2' fill='%2327a9d4'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="/ui/style.css">
 </head>
 <body>
-<header>
-  <div class="brand">🦖 DinoMaker</div>
-  <nav>
-    <button data-tab="editor" class="on">Editor</button>
-    <button data-tab="biblioteca">Biblioteca</button>
-    <button data-tab="lote">Lote</button>
-    <button data-tab="exportar">Exportar</button>
+<div class="ambient" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<header class="site-header">
+  <nav class="nav-pill" aria-label="Principal">
+    <div class="nav-bg"></div>
+    <a class="brand" href="#editor" data-tab="editor">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="bm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f7f9"/><stop offset="1" stop-color="#aab5bf"/></linearGradient></defs><rect width="32" height="32" rx="9" fill="url(#bm)"/><path d="M8 21h3v-5h4v-4h6v3h3v-3h-2V8h-9v4H9v4H8z" fill="#08090b"/><rect x="17" y="10" width="2" height="2" fill="#27a9d4"/></svg>
+      <span>DinoMaker</span>
+    </a>
+    <div class="nav-links">
+      <a href="#editor" data-tab="editor" aria-current="page">Editor</a>
+      <a href="#biblioteca" data-tab="biblioteca">Biblioteca</a>
+      <a href="#lote" data-tab="lote">Lote</a>
+      <a href="#exportar" data-tab="exportar">Exportar</a>
+    </div>
+    <div class="nav-cta">
+      <span class="pill" id="jobsbar" hidden></span>
+      <button class="btn btn-primary btn-sm" id="b-random" title="Novo dino aleatório e original">
+        <svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" class="i-fill"/><circle cx="15.5" cy="15.5" r="1.3" class="i-fill"/><circle cx="12" cy="12" r="1.3" class="i-fill"/></svg>
+        Novo dino
+      </button>
+    </div>
   </nav>
-  <div id="jobsbar"></div>
 </header>
 
 <main>
-  <!-- ================= EDITOR ================= -->
+  <!-- ================================ EDITOR ================================ -->
   <section id="tab-editor" class="tab on">
-    <div class="viewer">
-      <div id="viewport"></div>
-      <div class="clipbar" id="clipbar"></div>
-      <div class="stats" id="stats"></div>
-      <div class="busy" id="busy">gerando preview…</div>
+    <div class="editor">
+      <div class="stage">
+        <div class="frame">
+          <div id="viewport"></div>
+          <div class="ov ov-tl chips" id="clipbar"></div>
+          <div class="ov ov-tr tools">
+            <button class="tool" id="t-undo" title="Desfazer (Ctrl+Z)"><svg class="i" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg></button>
+            <button class="tool" id="t-redo" title="Refazer (Ctrl+Y)"><svg class="i" viewBox="0 0 24 24"><path d="m15 14 5-5-5-5"/><path d="M20 9H10a6 6 0 0 0 0 12h3"/></svg></button>
+            <span class="tsep"></span>
+            <button class="tool" id="t-mshape" title="Mutar formas (variação leve)"><svg class="i" viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></button>
+            <button class="tool" id="t-mcolor" title="Mutar cores"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18c1.5 0 2-1 2-2s-1-1.5-1-2.5S14 15 15 15h2a4 4 0 0 0 4-4c0-4.4-4-8-9-8Z"/><circle cx="7.5" cy="11" r="1" class="i-fill"/><circle cx="10.5" cy="7.5" r="1" class="i-fill"/><circle cx="15" cy="8" r="1" class="i-fill"/></svg></button>
+            <button class="tool" id="t-reset" title="Voltar ao carregado"><svg class="i" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button>
+            <span class="tsep"></span>
+            <button class="tool" id="t-fx" aria-pressed="true" title="Mostrar efeitos (VFX) no preview"><svg class="i" viewBox="0 0 24 24"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8Z"/><path d="M19 17l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7Z"/></svg></button>
+            <button class="tool" id="t-cam" title="Centralizar câmera"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/></svg></button>
+          </div>
+          <div class="ov ov-bl stats mono tnum" id="stats"></div>
+          <div class="ov ov-br busy" id="busy"><span class="spin"></span>gerando</div>
+        </div>
+      </div>
+
+      <aside class="panel" id="panel">
+        <div class="ph">
+          <span class="label">Dino</span>
+          <input class="input name" id="f-name" type="text" placeholder="Nome do dino" aria-label="Nome do dino">
+          <div class="editing" id="editing"></div>
+        </div>
+        <div class="orig" id="orig"></div>
+        <div class="sections" id="sections"></div>
+        <div class="savebar">
+          <button class="btn btn-primary" id="b-save-new">Salvar como novo</button>
+          <button class="btn btn-ghost" id="b-save-replace" disabled>Salvar por cima</button>
+          <label class="chk small"><input type="checkbox" id="f-force"> salvar mesmo se parecido com outro</label>
+        </div>
+      </aside>
     </div>
-    <aside class="panel" id="panel">
-      <div class="row head">
-        <input id="f-name" type="text" placeholder="Nome do dino">
-        <button id="b-random" title="Novo dino aleatório e único">🎲</button>
-      </div>
-      <div class="row"><label>Base</label><select id="f-base"></select></div>
-      <div class="editing" id="editing"></div>
-
-      <details open><summary>Tamanho e proporções</summary>
-        <div id="sliders"></div>
-        <label class="chk"><input type="checkbox" id="f-chibi"> Chibi (cabeça e olhos maiores)</label>
-      </details>
-
-      <details open><summary>Olhos</summary>
-        <div class="row"><label>Estilo</label><select id="f-eyestyle"></select></div>
-        <div class="slider"><label>Tamanho do olho <b id="v-eyesize"></b></label><input type="range" id="f-eyesize" min="1" max="5" step="1"></div>
-      </details>
-
-      <details open><summary>Cores</summary>
-        <div class="row"><label>Paleta pronta</label><select id="f-palette"><option value="">— aplicar paleta —</option></select></div>
-        <div class="colors" id="colors"></div>
-      </details>
-
-      <details><summary>Padrão da pele</summary>
-        <div class="row"><label>Tipo</label><select id="f-pattern"></select></div>
-        <div class="slider"><label>Escala <b id="v-pscale"></b></label><input type="range" id="f-pscale" min="3" max="10" step="1"></div>
-        <div class="slider"><label>Densidade <b id="v-pdens"></b></label><input type="range" id="f-pdens" min="0.1" max="1" step="0.05"></div>
-      </details>
-
-      <details><summary>Partes (chifres, vela, cristais…)</summary>
-        <div class="feats" id="feats"></div>
-      </details>
-
-      <details><summary>Comportamento e efeitos</summary>
-        <div class="row"><label>Ataque</label><select id="f-attack"></select></div>
-        <div class="row"><label>Tema VFX</label><select id="f-vfx"></select></div>
-      </details>
-
-      <div class="orig" id="orig"></div>
-      <div class="actions">
-        <button class="primary" id="b-save-new">Salvar como novo</button>
-        <button id="b-save-replace" disabled>Salvar por cima</button>
-      </div>
-      <label class="chk small"><input type="checkbox" id="f-force"> salvar mesmo se parecido com outro</label>
-    </aside>
   </section>
 
-  <!-- ================= BIBLIOTECA ================= -->
+  <!-- ================================ BIBLIOTECA ================================ -->
   <section id="tab-biblioteca" class="tab">
-    <div class="toolbar">
-      <input id="lib-search" type="search" placeholder="Buscar nome, espécie, padrão…">
-      <span id="lib-count"></span>
-      <button id="lib-fill" title="Gera no Blender os dinos do histórico que ainda não têm arquivos">Gerar miniaturas que faltam</button>
-      <span id="lib-fill-st"></span>
-    </div>
-    <div class="grid" id="lib-grid"></div>
-  </section>
-
-  <!-- ================= LOTE ================= -->
-  <section id="tab-lote" class="tab">
-    <div class="card form">
-      <h2>Gerar lote de dinos novos</h2>
-      <p class="hint">Cada um passa pelo bloqueio de originalidade contra todo o histórico — nada repete.</p>
-      <div class="row"><label>Quantidade</label><input id="bt-count" type="number" min="1" max="500" value="10"></div>
-      <div class="row"><label>Nome do lote</label><input id="bt-name" type="text" value="Lote"></div>
-      <div class="row"><label>Tipo</label>
-        <select id="bt-kinds"><option value="mix">Misto (reais + fantasia)</option><option value="real">Só espécies reais</option><option value="fantasy">Só fantasia</option></select></div>
-      <h3>Corpos <small>(nenhum marcado = todos)</small></h3><div class="feats" id="bt-archs"></div>
-      <h3>Temas de fantasia <small>(nenhum marcado = todos)</small></h3><div class="feats" id="bt-themes"></div>
-      <div class="actions"><button class="primary" id="bt-go">Gerar lote</button></div>
-      <div class="progress"><div id="bt-bar"></div></div>
-      <pre class="log" id="bt-log"></pre>
-    </div>
-  </section>
-
-  <!-- ================= EXPORTAR ================= -->
-  <section id="tab-exportar" class="tab">
-    <div class="card form">
-      <h2>Exportar pacote para o Roblox</h2>
-      <p class="hint">Gera um zip com os FBX (textura embutida), o arquivo único de kits e o plugin — o mesmo fluxo que você já usa.</p>
-      <div class="row"><label>Nome do pacote</label><input id="ex-name" type="text" value="Pacote"></div>
+    <div class="wrap page">
+      <header class="page-head">
+        <span class="label">Biblioteca</span>
+        <h2 class="h2 grad">Todos os seus dinos, num lugar só</h2>
+        <p class="lead">Clique em um dino para abrir no editor. Os feitos à mão ficam no histórico para o gerador nunca copiar.</p>
+      </header>
       <div class="toolbar">
-        <input id="ex-search" type="search" placeholder="Filtrar…">
-        <button id="ex-all">Marcar todos</button><button id="ex-none">Desmarcar</button>
-        <span id="ex-count"></span>
+        <input class="input" id="lib-search" type="search" placeholder="Buscar nome, espécie, padrão…">
+        <span class="small mono tnum" id="lib-count"></span>
+        <button class="btn btn-ghost btn-sm" id="lib-fill" title="Gera no Blender FBX, kit e previews dos dinos que ainda não têm (necessário para exportar)">Gerar arquivos que faltam</button>
+        <span class="small mono" id="lib-fill-st"></span>
       </div>
-      <div class="list" id="ex-list"></div>
-      <div class="actions"><button class="primary" id="ex-go">Gerar zip</button></div>
-      <div class="progress"><div id="ex-bar"></div></div>
-      <pre class="log" id="ex-log"></pre>
+      <div class="grid" id="lib-grid"></div>
+    </div>
+  </section>
+
+  <!-- ================================ LOTE ================================ -->
+  <section id="tab-lote" class="tab">
+    <div class="wrap page narrow">
+      <header class="page-head">
+        <span class="label">Gerador em lote</span>
+        <h2 class="h2 grad">Dezenas de dinos novos, nenhum repetido</h2>
+        <p class="lead">Cada conceito passa pelo bloqueio de originalidade contra todo o histórico antes de ser gerado.</p>
+      </header>
+      <div class="card form">
+        <div class="grid2">
+          <label class="field"><span class="field-label">Quantidade</span><input class="input" id="bt-count" type="number" min="1" max="500" value="10"></label>
+          <label class="field"><span class="field-label">Nome do lote</span><input class="input" id="bt-name" type="text" value="Lote"></label>
+        </div>
+        <span class="field-label">Tipo</span>
+        <div class="chips" id="bt-kinds"></div>
+        <span class="field-label">Corpos <small>(nenhum marcado = todos)</small></span>
+        <div class="chips" id="bt-archs"></div>
+        <span class="field-label">Temas de fantasia <small>(nenhum marcado = todos)</small></span>
+        <div class="chips" id="bt-themes"></div>
+        <div class="row-end"><button class="btn btn-primary btn-lg" id="bt-go">Gerar lote</button></div>
+        <div class="progress"><div id="bt-bar"></div></div>
+        <pre class="log mono" id="bt-log"></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================ EXPORTAR ================================ -->
+  <section id="tab-exportar" class="tab">
+    <div class="wrap page narrow">
+      <header class="page-head">
+        <span class="label">Exportar</span>
+        <h2 class="h2 grad">Do painel para o Roblox Studio</h2>
+        <p class="lead">Um zip com os FBX (textura embutida), o arquivo único de kits e o plugin. Importe, clique em Instalar kits e pronto.</p>
+      </header>
+      <div class="card form">
+        <label class="field"><span class="field-label">Nome do pacote</span><input class="input" id="ex-name" type="text" value="Pacote"></label>
+        <div class="toolbar">
+          <input class="input" id="ex-search" type="search" placeholder="Filtrar…">
+          <button class="btn btn-ghost btn-sm" id="ex-all">Marcar todos</button>
+          <button class="btn btn-muted btn-sm" id="ex-none">Desmarcar</button>
+          <span class="small mono tnum" id="ex-count"></span>
+        </div>
+        <div class="list" id="ex-list"></div>
+        <div class="row-end"><button class="btn btn-primary btn-lg" id="ex-go">Gerar zip</button></div>
+        <div class="progress"><div id="ex-bar"></div></div>
+        <pre class="log mono" id="ex-log"></pre>
+      </div>
     </div>
   </section>
 </main>
 
-<div id="toast"></div>
+<div id="toast" role="status" aria-live="polite"></div>
 <script src="/ui/vendor/three.min.js"></script>
 <script src="/ui/vendor/OrbitControls.js"></script>
 <script src="/ui/app.js"></script>

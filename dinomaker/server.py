@@ -26,12 +26,13 @@ from .genome import (load_history, save_history, resolve, genome_to_spec, most_s
 from .model import build_model
 from .pipeline import generate, pack_kits, ROOT
 from .species import (ARCHETYPES, SPECIES, PALETTES, PATTERNS, EYE_STYLES, SIZE_CLASSES, ALL_FEATURES,
-                      CLAW_COLORS)
-from .texture import paint_faces, build_atlas, FACES
-from .vfx import THEMES as VFX_THEMES
+                      CLAW_COLORS, PARAM_SPEC, INT_PARAMS, FEATURE_GROUPS)
+from .texture import paint_faces, build_atlas, FACES, Painter
+from .vfx import THEMES as VFX_THEMES, VFX_DEFAULTS, effective_vfx
 
 UI = os.path.join(os.path.dirname(__file__), "ui")
 OUT = os.path.join(ROOT, "output")
+LIBDIR = os.path.join(ROOT, "library")
 LOCK = threading.Lock()
 JOBS = {}
 POOL = ThreadPoolExecutor(2)
@@ -92,7 +93,26 @@ def preview(spec, exclude=None):
                                    for fi in frames]}
     mn, mx = m.bbox()
     s = g["px_size"]
+    # VFX para o preview (unidades em px do modelo)
+    theme, T, opt = effective_vfx(g)
+    kk = max(0.6, (mx[1] - mn[1]) * s / 6.0) / s
+    cmn, cmx = (np.array(v) for v in m.meta["chest"])
+    hmn, hmx = (np.array(v) for v in m.meta["hips"])
+    body = (cmn + hmx) / 2
+    smn = np.array(m.meta["snout"][0]) if m.meta["snout"][0][2] < m.meta["skull"][0][2] else np.array(m.meta["skull"][0])
+    mouth = np.array([0.0, smn[1], smn[2] - 0.5])
+
+    def anchor(bone, pw):
+        B = m.bones[bone]
+        return {"bone": index[bone], "local": [round(float(x), 3) for x in B["R"].T @ (pw - B["pos"])]}
+    vfx = {"theme": theme, "opt": opt, "scale": kk, "glow": T.get("glow"),
+           "aura": T.get("aura"), "breath": T.get("breath"),
+           "anchors": {"body": anchor("Chest", body), "mouth": anchor("Head", mouth)}}
+    if m.meta["tail"]:
+        tmn, tmx = (np.array(v) for v in m.meta["tail"][-1])
+        vfx["anchors"]["tail"] = anchor("Tail%d" % len(m.meta["tail"]), (tmn + tmx) / 2)
     return {
+        "colors": Painter(m, g).effective_colors(), "vfx": vfx,
         "genome": g, "spec": genome_to_spec(g), "bones": bones, "anims": anims,
         "atlas": "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode(),
         "px_size": s, "originality": originality(g, exclude),
@@ -120,6 +140,13 @@ def new_job(kind, fn, *args):
     return job
 
 
+def _rm_thumb(did):
+    try:
+        os.remove(os.path.join(LIBDIR, "thumbs", did + ".jpg"))
+    except OSError:
+        pass
+
+
 def job_save(job, spec, mode, replace_id):
     with LOCK:
         h = load_history(Ctx.history)
@@ -127,6 +154,7 @@ def job_save(job, spec, mode, replace_id):
         if mode == "replace" and replace_id and replace_id != g["id"]:
             h["dinos"] = [d for d in h["dinos"] if d["id"] != replace_id]
             shutil.rmtree(os.path.join(OUT, replace_id), ignore_errors=True)
+            _rm_thumb(replace_id)
             save_history(Ctx.history, h)
     job["log"].append("gerando %s (Blender)..." % g["name"])
     generate({}, OUT, Ctx.history, genome=g, log=job["log"].append)
@@ -194,10 +222,10 @@ def job_export(job, ids, name):
 
 
 def job_fill(job):
-    """Gera (Blender) os dinos do histórico que ainda não têm arquivos/miniatura."""
+    """Gera (Blender) os dinos do histórico que ainda não têm arquivos (FBX, kit, previews)."""
     h = load_history(Ctx.history)
     todo = [d["genome"] for d in h["dinos"] if d.get("genome") and not
-            os.path.exists(os.path.join(OUT, d["id"], "preview", "idle_front34.png"))]
+            os.path.exists(os.path.join(OUT, d["id"], "B_mesh", d["id"] + ".fbx"))]
     if not todo:
         job["log"].append("nada faltando")
         return {"count": 0}
@@ -220,6 +248,9 @@ def meta():
         "sizes": SIZE_CLASSES, "features": ALL_FEATURES, "themes": list(THEMES), "vfx": list(VFX_THEMES),
         "attacks": ["bite", "claw", "headbutt", "tailswipe", "stomp", "peck"], "claws": CLAW_COLORS,
         "groups": ["head", "neck", "tail", "legs", "arms", "body", "bulk"], "threshold": Ctx.threshold,
+        "params": [{"key": k, "label": v[0], "group": v[1], "min": v[2], "max": v[3], "step": v[4], "int": k in INT_PARAMS}
+                   for k, v in PARAM_SPEC.items()],
+        "feature_groups": FEATURE_GROUPS, "vfx_defaults": VFX_DEFAULTS,
     }
 
 
@@ -228,10 +259,13 @@ def library():
     out = []
     for d in h["dinos"]:
         thumb = os.path.join(OUT, d["id"], "preview", "idle_front34.png")
+        small = os.path.join(LIBDIR, "thumbs", d["id"] + ".jpg")
+        url = ("/files/library/thumbs/%s.jpg" % d["id"] if os.path.exists(small) else
+               "/files/output/%s/preview/idle_front34.png" % d["id"] if os.path.exists(thumb) else None)
         out.append({"id": d["id"], "name": d["name"], "species": d["species"], "archetype": d["archetype"],
                     "fantasy": d.get("fantasy"), "palette": d.get("palette"), "pattern": d.get("pattern"),
                     "legacy": bool(d.get("legacy")), "editable": bool(d.get("genome")),
-                    "thumb": "/files/output/%s/preview/idle_front34.png" % d["id"] if os.path.exists(thumb) else None,
+                    "thumb": url,
                     "built": os.path.exists(os.path.join(OUT, d["id"], "B_mesh", d["id"] + ".fbx")),
                     "created": d.get("created")})
     novos = sorted([d for d in out if not d["legacy"]], key=lambda d: d.get("created") or "", reverse=True)
@@ -278,9 +312,9 @@ class Handler(BaseHTTPRequestHandler):
                 return self._file(os.path.join(UI, "index.html"))
             if p.startswith("/ui/"):
                 return self._file(os.path.normpath(os.path.join(UI, p[4:])) if ".." not in p else "")
-            if p.startswith("/files/output/"):
+            if p.startswith("/files/output/") or p.startswith("/files/library/"):
                 full = os.path.normpath(os.path.join(ROOT, p[len("/files/"):]))
-                if not full.startswith(OUT) or ".." in p:
+                if not (full.startswith(OUT + os.sep) or full.startswith(LIBDIR + os.sep)) or ".." in p:
                     return self._json({"erro": "proibido"}, 403)
                 return self._file(full)
             if p == "/api/meta":
@@ -335,6 +369,7 @@ class Handler(BaseHTTPRequestHandler):
                     save_history(Ctx.history, h)
                 if b.get("delete_files"):
                     shutil.rmtree(os.path.join(OUT, b["id"]), ignore_errors=True)
+                    _rm_thumb(b["id"])
                 return self._json({"ok": True})
             return self._json({"erro": "rota"}, 404)
         except Exception as e:  # noqa: BLE001

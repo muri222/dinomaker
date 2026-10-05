@@ -122,12 +122,43 @@ def _cf(M):
     return cf_xml("CFrame", M)
 
 
+VFX_DEFAULTS = dict(theme="", color="", intensity=1.0, size=1.0, aura=True, breath=True, dust=True, burst=True,
+                    light=True, brightness=1.6)
+
+
+def effective_vfx(genome):
+    """Parâmetros finais dos efeitos (tema + ajustes do painel)."""
+    opt = dict(VFX_DEFAULTS)
+    opt.update({k: v for k, v in (genome.get("vfx") or {}).items() if v is not None})
+    theme = opt["theme"] or auto_theme(genome)
+    T = json_copy(THEMES.get(theme, THEMES["none"]))
+    col = opt.get("color")
+    for key in ("aura", "breath"):
+        p = T.get(key)
+        if not p:
+            continue
+        if col:
+            p["colors"] = [p["colors"][0]] + [col] * (len(p["colors"]) - 1)
+        p["size"] = tuple(v * float(opt["size"]) for v in p["size"])
+        if "rate" in p:
+            p["rate"] = p["rate"] * float(opt["intensity"])
+    if col:
+        T["glow"] = col
+    if not opt["aura"]:
+        T["aura"] = None
+    return theme, T, opt
+
+
+def json_copy(x):
+    import json
+    return json.loads(json.dumps(x))
+
+
 def add_vfx(Node, model, genome, main_part, s, kit_folder=None):
     """Cria Attachments com emissores nas partes principais. Retorna o tema.
     kit_folder != None (versão B): os Attachments vão para essa pasta com CFrame no
     espaço do modelo (studs) + atributo Bone; o DinoRig os move para os ossos importados."""
-    theme = genome.get("vfx", {}).get("theme") or auto_theme(genome)
-    T = THEMES.get(theme, THEMES["none"])
+    theme, T, opt = effective_vfx(genome)
     mn, mx = model.bbox()
     k = max(0.6, (mx[1] - mn[1]) * s / 6.0)  # escala dos efeitos pelo tamanho do dino
     accent = genome["palette"]["accent"]
@@ -153,20 +184,22 @@ def add_vfx(Node, model, genome, main_part, s, kit_folder=None):
     mouth = np.array([0.0, smn[1], smn[2] - 0.5])
     Rf = np.array([[1, 0, 0], [0, 0, 1], [0, -1, 0]], float)  # Y local -> -Z mundo
     a = attach("Head", mouth, Rf, "FX_Mouth")
-    a.add(emitter(Node, "Breath", T["breath"], k, accent, False))
+    if opt["breath"]:
+        a.add(emitter(Node, "Breath", T["breath"], k, accent, False))
 
     cmn, cmx = (np.array(v) for v in model.meta["chest"])
     hmn, hmx = (np.array(v) for v in model.meta["hips"])
     body = (cmn + hmx) / 2
     a = attach("Chest", body, name="FX_Body")
     burst = dict(tex=SPARK, colors=["#ffffff", "#ffe8a0"], size=(0.6, 0.0), life=(0.3, 0.6), speed=(8, 14), light=0.8)
-    a.add(emitter(Node, "Burst", burst, k, accent, False))
+    if opt["burst"]:
+        a.add(emitter(Node, "Burst", burst, k, accent, False))
     if T["aura"]:
         a.add(emitter(Node, "Aura", T["aura"], k, accent, True))
     glow = T.get("glow") or (accent if theme == "magic" else None)
-    if glow:
+    if glow and opt["light"]:
         r, g, b = _c3(glow)
-        a.add(Node("PointLight", "Glow", ['<float name="Brightness">1.6</float>',
+        a.add(Node("PointLight", "Glow", ['<float name="Brightness">%g</float>' % float(opt["brightness"]),
                                           '<float name="Range">%g</float>' % (8 * k),
                                           '<Color3 name="Color"><R>%g</R><G>%g</G><B>%g</B></Color3>' % (r, g, b),
                                           '<bool name="Shadows">false</bool>']))
@@ -176,6 +209,8 @@ def add_vfx(Node, model, genome, main_part, s, kit_folder=None):
         a = attach("Tail%d" % n, (tmn + tmx) / 2, name="FX_Tail")
         a.add(emitter(Node, "Aura", dict(T["aura"], rate=T["aura"]["rate"] * 0.5), k * 0.7, accent, True))
 
+    if not opt["dust"]:
+        return theme
     dust = dict(tex=SMOKE, colors=["#d8d0c0", "#a89c88"], size=(0.4, 1.4), life=(0.4, 0.8), speed=(1, 3), accel=(0, 1, 0), light=0)
     for lg in model.legs:
         foot = lg["bones"][2]

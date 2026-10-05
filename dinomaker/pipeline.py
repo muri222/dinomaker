@@ -215,6 +215,8 @@ def generate(spec, out_root, history_path, threshold=0.82, formats=("A", "B"), p
         export_kit(kit_path, model, g, clips, meta)
         log("[dinomaker] B: kit " + validate_rbxmx(kit_path))
     os.remove(bj)
+    if previews:
+        save_thumb(out_dir, g["id"])
 
     with open(os.path.join(out_dir, "README.md"), "w", encoding="utf-8") as f:
         f.write(DINO_README.format(
@@ -229,6 +231,23 @@ def generate(spec, out_root, history_path, threshold=0.82, formats=("A", "B"), p
         save_history(history_path, hist)
     log("[dinomaker] pronto: %s" % out_dir)
     return g, out_dir
+
+
+THUMBS = os.path.join(ROOT, "library", "thumbs")
+
+
+def save_thumb(out_dir, did):
+    """Miniatura leve (versionada no git) para a biblioteca do painel."""
+    src = os.path.join(out_dir, "preview", "idle_front34.png")
+    if not os.path.exists(src):
+        return None
+    from PIL import Image
+    os.makedirs(THUMBS, exist_ok=True)
+    im = Image.open(src).convert("RGB")
+    im.thumbnail((320, 320))
+    dst = os.path.join(THUMBS, did + ".jpg")
+    im.save(dst, quality=86)
+    return dst
 
 
 def pack_kits(genomes, out_root, name="Lote", log=print):

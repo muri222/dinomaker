@@ -41,13 +41,25 @@ gera, revisa os previews e entrega.
 python -m dinomaker painel        # ou dois cliques em DinoMaker.bat (Windows)
 ```
 Abre `http://localhost:8765` no navegador:
-- **Editor**: preview 3D ao vivo com textura e animações; barras para tamanho, cabeça, pescoço, cauda,
-  pernas, braços, corpo, robustez, focinho e segmentos; olhos, cores, padrão, partes (chifres, vela,
-  cristais…), ataque e VFX. **Medidor de originalidade** contra todo o histórico.
-  "Salvar como novo" (precisa ser original) ou "Salvar por cima" (edita um dino existente).
-- **Biblioteca**: todos os dinos com miniatura; clique para editar.
+- **Editor**: preview 3D ao vivo com textura, animações e **partículas de VFX**. Seções:
+  Base (espécie/corpo, tamanho, personalidade, chibi, ataque) · Proporções (7 grupos) ·
+  **Medidas avançadas** (~60 medidas por peça, cada uma com ↺ para voltar ao automático) ·
+  Cores (12 cores + paletas + ajuste global de matiz/saturação/brilho/contraste, altura da barriga, granulado) ·
+  Padrão (19 tipos, escala, densidade, nas pernas) · Olhos · **Partes** (51, em 7 grupos) ·
+  VFX (tema, cor, intensidade, tamanho, brilho, liga/desliga aura/bafo/poeira/faíscas/luz).
+  Desfazer/refazer (Ctrl+Z / Ctrl+Y), mutar formas, mutar cores. **Medidor de originalidade**
+  contra todo o histórico. "Salvar como novo" (precisa ser original) ou "Salvar por cima".
+- **Biblioteca**: todos os dinos (os 100 do Kit100 já vêm no `history/history.json` com miniatura em
+  `library/thumbs/`); clique para editar. "Gerar arquivos que faltam" recria FBX/kit/previews no Blender
+  (necessário antes de exportar dinos que vieram só pelo git).
 - **Lote**: N dinos novos e únicos (reais, fantasia ou misto; filtra por corpo e tema).
 - **Exportar**: escolha os dinos e baixe o zip pronto (FBX + arquivo único de kits + plugin).
+
+### Quantos dinos diferentes dá para criar?
+Medido com o próprio bloqueio de originalidade (limiar 0.82, `tools/estimate_capacity.py`):
+- **Lote automático**: ~6.100 únicos em 120 mil sorteios (aceitação já em 1,6%) → teto prático **~8–10 mil**.
+- **Painel (tudo personalizável)**: 44 mil únicos em 46 mil tentativas (94% ainda aceitos) — longe de saturar;
+  na prática **centenas de milhares a milhões** de dinos distinguíveis.
 
 ## Importação rápida da versão B (vários dinos)
 ```bash

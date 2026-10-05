@@ -52,7 +52,14 @@ Formato do spec (tudo opcional — o que faltar é sorteado; no arquivo real nã
   "chibi": false,
   "studs": false,                       // superfície com studs estilo LEGO
   "attack": "bite",                     // bite | claw | headbutt | tailswipe | stomp | peck
-  "vfx": {"theme": "fire"},             // fire | ice | electric | magic | toxic | nature | water | none (auto se omitido)
+  "vfx": {"theme": "fire", "color": "#ff7a00", "intensity": 1.0, "size": 1.0, "brightness": 1.6,
+          "aura": true, "breath": true, "dust": true, "burst": true, "light": true},  // tema: fire|ice|electric|magic|toxic|nature|water|none
+  "color_adjust": {"hue": 0, "sat": 1, "val": 1, "contrast": 1},   // ajuste global (graus / multiplicadores)
+  "texture": {"belly": 0.3, "grain": 1, "pattern_legs": false},
+  "anim": {"energy": 1.0},              // 0.4 calmo … 1.8 agitado
+  // exatos: "exact": true + "features_exact": [...] (lista final, sem sorteio). Lista de features/medidas: species.py
+  // (FEATURE_GROUPS, PARAM_SPEC). Padrões: none spots stripes tiger dorsal bands mottled rosettes lava zigzag galaxy
+  // checker gradient speckles camo hearts stars scales split
   "description": "T-Rex com rachaduras de lava brilhando"
 }
 ```
