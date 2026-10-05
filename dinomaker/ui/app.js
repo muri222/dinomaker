@@ -117,6 +117,11 @@ function initViewer() {
     animate(dt);
     stepParticles(dt);
     V.controls.update();
+    if (V.scene.fog && V.size) {  // névoa só no chão distante: acompanha o zoom, o dino nunca escurece
+      const d = V.camera.position.distanceTo(V.controls.target);
+      V.scene.fog.near = d + V.size * 0.8;
+      V.scene.fog.far = d + V.size * 3;
+    }
     V.renderer.render(V.scene, V.camera);
   };
   loop();
@@ -185,7 +190,10 @@ function fitCamera() {
   V.controls.target.copy(c);
   V.camera.position.set(c.x + size * 0.78, c.y + size * 0.42, c.z - size * 0.88);
   V.camera.near = size / 100; V.camera.far = size * 20;
-  V.scene.fog = new THREE.Fog(0x0b0d10, size * 1.4, size * 3.2);
+  V.size = size;
+  V.scene.fog = V.scene.fog || new THREE.Fog(0x0b0d10, 1, 2);
+  V.controls.maxDistance = size * 6;
+  V.controls.minDistance = size * 0.15;
   V.camera.updateProjectionMatrix();
 }
 
