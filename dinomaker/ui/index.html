@@ -70,6 +70,8 @@
         <div class="savebar">
           <button class="btn btn-primary" id="b-save-new">Salvar como novo</button>
           <button class="btn btn-ghost" id="b-save-replace" disabled>Salvar por cima</button>
+          <button class="btn btn-ghost wide" id="b-export" title="Salva (se precisar) e baixa o zip pronto para o Roblox Studio">
+            <svg class="i" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>Exportar para o Roblox</button>
           <label class="chk small"><input type="checkbox" id="f-force"> salvar mesmo se parecido com outro</label>
         </div>
       </aside>
@@ -116,6 +118,14 @@
         <div class="progress"><div id="bt-bar"></div></div>
         <pre class="log mono" id="bt-log"></pre>
       </div>
+    </div>
+    <div class="wrap page" id="bt-results" hidden>
+      <div class="toolbar">
+        <span class="label">Resultado</span>
+        <span class="small mono tnum" id="bt-rcount"></span>
+        <button class="btn btn-primary btn-sm" id="bt-export">Exportar este lote</button>
+      </div>
+      <div class="grid" id="bt-grid"></div>
     </div>
   </section>
 

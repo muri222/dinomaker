@@ -582,23 +582,50 @@ function loadSpec(s, id) {
   spec = normalize(clone(s));
   loaded = clone(spec);
   editingId = id;
+  savedSnap = id ? JSON.stringify(spec) : null;
   UNDO.length = 0; REDO.length = 0;
   syncControls();
   runPreview(true);
 }
-async function save(mode) {
+async function save(mode, then) {
   try {
+    const snap = JSON.stringify(spec);
     const job = await api("/api/save", { spec, mode, replace_id: editingId, force: $("#f-force").checked });
     toast("Gerando " + spec.name + " no Blender… acompanhe no topo.");
     watchJob(job, null, (j) => {
       toast("Salvo: " + j.result.name);
       editingId = j.result.id;
+      savedSnap = snap;
       syncControls();
       loadLibrary();
+      if (then) then(j.result.id);
     });
   } catch (e) {
-    toast(e.status === 409 ? "Não salvei: " + e.message : "Erro: " + e.message, true);
+    toast(e.status === 409 ? "Não salvei: " + e.message + " (marque \"salvar mesmo se parecido\" para forçar)" : "Erro: " + e.message, true);
   }
+}
+let savedSnap = null;
+function exportCurrent() {
+  if (editingId && savedSnap === JSON.stringify(spec)) return exportIds([editingId], spec.name);
+  save(editingId ? "replace" : "new", (id) => exportIds([id], spec.name));
+}
+
+/* exporta ids -> zip (FBX + kits + plugin) e baixa sozinho */
+function exportIds(ids, name, bar, log, done) {
+  if (!ids.length) return toast("Nenhum dino para exportar.", true);
+  return api("/api/export", { ids, name }).then((job) => {
+    toast(`Exportando ${ids.length} dino(s)… os que ainda não têm FBX são gerados agora.`);
+    watchJob(job, (j) => {
+      if (log) log.textContent = j.log.join("\n");
+      if (bar && j.progress) bar.style.width = (100 * j.progress.done / j.progress.total) + "%";
+    }, (j) => {
+      if (bar) bar.style.width = "100%";
+      if (log) log.innerHTML += `\n${j.result.count} dinos · <a href="${j.result.zip}">baixar zip</a>`;
+      toast(`Zip pronto: ${j.result.count} dino(s).`);
+      window.location.href = j.result.zip;
+      if (done) done(j);
+    });
+  }).catch((e) => toast("Erro ao exportar: " + e.message, true));
 }
 
 /* ================================ JOBS ================================ */
@@ -645,23 +672,28 @@ function renderLibrary(more = false) {
   const list = LIB.filter((d) => matches(d, q));
   $("#lib-count").textContent = `${list.length} de ${LIB.length}`;
   $("#lib-more").hidden = list.length <= libShown;
-  for (const d of list.slice(0, libShown)) {
-    const img = d.thumb ? el("img", { src: d.thumb, loading: "lazy", alt: "" }) : el("div", { class: "noimg" }, d.legacy ? "feito à mão" : "sem miniatura");
-    const del = el("button", { class: "del", title: "Remover", onclick: async (ev) => {
-      ev.stopPropagation();
-      if (d.legacy) return toast("Dinos feitos à mão ficam no histórico para evitar cópias.");
-      if (!confirm(`Remover "${d.name}" do histórico e apagar os arquivos?`)) return;
-      await api("/api/forget", { id: d.id, delete_files: true });
-      loadLibrary();
-    } }, svg('<path d="M18 6 6 18M6 6l12 12"/>'));
-    grid.append(el("div", { class: "dcard", onclick: async () => {
-      if (!d.editable) return toast("Dino feito à mão: não dá para editar aqui.");
-      const r = await api("/api/dino/" + d.id);
-      showTab("editor");
-      loadSpec(r.spec, d.id);
-    } }, img, d.fantasy ? el("span", { class: "tagx" }, "fantasia") : null, del,
-      el("div", { class: "info" }, el("b", {}, d.name), el("small", {}, (PT.arch[d.archetype] || d.archetype) + " · " + (PT.pattern[d.pattern] || d.pattern || "")))));
-  }
+  for (const d of list.slice(0, libShown)) grid.append(dinoCard(d));
+}
+function dinoCard(d) {
+  const img = d.thumb ? el("img", { src: d.thumb, loading: "lazy", alt: "" }) : el("div", { class: "noimg" }, d.legacy ? "feito à mão" : "sem miniatura");
+  const del = el("button", { class: "del", title: "Remover", onclick: async (ev) => {
+    ev.stopPropagation();
+    if (d.legacy) return toast("Dinos feitos à mão ficam no histórico para evitar cópias.");
+    if (!confirm(`Remover "${d.name}" do histórico e apagar os arquivos?`)) return;
+    await api("/api/forget", { id: d.id, delete_files: true });
+    loadLibrary();
+  } }, svg('<path d="M18 6 6 18M6 6l12 12"/>'));
+  const exp = d.editable ? el("button", { class: "exp", title: "Exportar para o Roblox", onclick: (ev) => {
+    ev.stopPropagation();
+    exportIds([d.id], d.name);
+  } }, svg('<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>')) : null;
+  return el("div", { class: "dcard", onclick: async () => {
+    if (!d.editable) return toast("Dino feito à mão: não dá para editar aqui.");
+    const r = await api("/api/dino/" + d.id);
+    showTab("editor");
+    loadSpec(r.spec, d.id);
+  } }, img, d.fantasy ? el("span", { class: "tagx" }, "fantasia") : null, exp, del,
+    el("div", { class: "info" }, el("b", {}, d.name), el("small", {}, (PT.arch[d.archetype] || d.archetype) + " · " + (PT.pattern[d.pattern] || d.pattern || ""))));
 }
 
 /* ================================ LOTE ================================ */
@@ -686,18 +718,40 @@ function buildBatch() {
     $("#bt-log").textContent = "escolhendo conceitos únicos…\n";
     $("#bt-bar").style.width = "2%";
     $("#bt-go").disabled = true;
+    BATCH.ids = []; BATCH.name = body.name || "Lote";
+    renderBatchResults();
     const job = await api("/api/batch", body);
+    let seen = 0;
     watchJob(job, (j) => {
       $("#bt-log").textContent = j.log.join("\n");
       const p = j.progress;
-      if (p && p.stage === "gerando") $("#bt-bar").style.width = (100 * p.done / p.total) + "%";
+      if (p && p.stage === "gerando") {
+        $("#bt-bar").style.width = (100 * p.done / p.total) + "%";
+        if (p.id && !p.error && !BATCH.ids.includes(p.id)) BATCH.ids.push(p.id);
+        if (BATCH.ids.length - seen >= 3 || p.done === p.total) { seen = BATCH.ids.length; loadLibrary().then(renderBatchResults); }
+      }
     }, (j) => {
       $("#bt-go").disabled = false;
       $("#bt-bar").style.width = "100%";
+      BATCH.ids = j.result.ids;
       toast(`Lote pronto: ${j.result.ids.length} dinos novos.`);
-      loadLibrary();
+      loadLibrary().then(renderBatchResults);
     });
   };
+  $("#bt-export").onclick = () => exportIds(BATCH.ids, BATCH.name, $("#bt-bar"), $("#bt-log"));
+}
+const BATCH = { ids: [], name: "Lote" };
+function renderBatchResults() {
+  const by = new Map(LIB.map((d) => [d.id, d]));
+  const list = BATCH.ids.map((i) => by.get(i)).filter(Boolean);
+  $("#bt-results").hidden = !BATCH.ids.length;
+  $("#bt-rcount").textContent = `${list.length} dino(s) neste lote`;
+  $("#bt-export").disabled = !list.length;
+  const grid = $("#bt-grid");
+  const first = !grid.children.length && list.length;
+  grid.innerHTML = "";
+  list.forEach((d) => grid.append(dinoCard(d)));
+  if (first) $("#bt-results").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 /* ================================ EXPORTAR ================================ */
@@ -719,21 +773,11 @@ function buildExport() {
   $("#ex-search").oninput = renderExportList;
   $("#ex-all").onclick = () => { LIB.filter((x) => x.editable && matches(x, $("#ex-search").value)).forEach((d) => EXSEL.add(d.id)); renderExportList(); };
   $("#ex-none").onclick = () => { EXSEL.clear(); renderExportList(); };
-  $("#ex-go").onclick = async () => {
+  $("#ex-go").onclick = () => {
     if (!EXSEL.size) return toast("Selecione pelo menos um dino.", true);
-    $("#ex-go").disabled = true;
     $("#ex-log").textContent = "";
     $("#ex-bar").style.width = "2%";
-    const job = await api("/api/export", { ids: [...EXSEL], name: $("#ex-name").value });
-    watchJob(job, (j) => {
-      $("#ex-log").textContent = j.log.join("\n");
-      if (j.progress) $("#ex-bar").style.width = (100 * j.progress.done / j.progress.total) + "%";
-    }, (j) => {
-      $("#ex-go").disabled = false;
-      $("#ex-bar").style.width = "100%";
-      $("#ex-log").innerHTML += `\n${j.result.count} dinos · <a href="${j.result.zip}">baixar zip</a>`;
-      window.location.href = j.result.zip;
-    });
+    exportIds([...EXSEL], $("#ex-name").value, $("#ex-bar"), $("#ex-log"));
   };
 }
 
@@ -751,6 +795,7 @@ async function boot() {
   $("#b-random").onclick = () => { showTab("editor"); newDino(Math.random() < 0.5 ? { fantasy: true } : {}); };
   $("#b-save-new").onclick = () => save("new");
   $("#b-save-replace").onclick = () => save("replace");
+  $("#b-export").onclick = exportCurrent;
   $("#t-undo").onclick = undo;
   $("#t-redo").onclick = redo;
   $("#t-mshape").onclick = mutateShape;

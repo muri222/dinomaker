@@ -198,6 +198,11 @@ main{position:relative;z-index:1;height:100%;padding-top:calc(var(--nav-h) + 24p
 .dcard .info small{color:var(--text-3);font-size:.75rem}
 .dcard .del{position:absolute;right:8px;top:8px;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:rgba(8,9,11,.6);color:var(--text-2);opacity:0;transition:opacity var(--d-fast) ease}
 .dcard:hover .del{opacity:1}
+.dcard .exp{position:absolute;right:40px;top:8px;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:rgba(8,9,11,.6);color:var(--accent-text);opacity:0;transition:opacity var(--d-fast) ease}
+.dcard:hover .exp{opacity:1}
+.dcard .exp:hover{background:var(--accent);color:var(--accent-ink)}
+.savebar .wide{grid-column:1/-1}
+#bt-results{padding-top:0}
 .dcard .tagx{position:absolute;left:8px;top:8px;height:20px;padding:0 7px;border-radius:5px;display:inline-flex;align-items:center;background:rgba(8,9,11,.65);border:1px solid var(--line-2);color:var(--text-2);font-size:10.5px}
 
 /* lote / exportar */
