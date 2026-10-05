@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DinoMaker</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦖</text></svg>">
+<link rel="stylesheet" href="/ui/style.css">
+</head>
+<body>
+<header>
+  <div class="brand">🦖 DinoMaker</div>
+  <nav>
+    <button data-tab="editor" class="on">Editor</button>
+    <button data-tab="biblioteca">Biblioteca</button>
+    <button data-tab="lote">Lote</button>
+    <button data-tab="exportar">Exportar</button>
+  </nav>
+  <div id="jobsbar"></div>
+</header>
+
+<main>
+  <!-- ================= EDITOR ================= -->
+  <section id="tab-editor" class="tab on">
+    <div class="viewer">
+      <div id="viewport"></div>
+      <div class="clipbar" id="clipbar"></div>
+      <div class="stats" id="stats"></div>
+      <div class="busy" id="busy">gerando preview…</div>
+    </div>
+    <aside class="panel" id="panel">
+      <div class="row head">
+        <input id="f-name" type="text" placeholder="Nome do dino">
+        <button id="b-random" title="Novo dino aleatório e único">🎲</button>
+      </div>
+      <div class="row"><label>Base</label><select id="f-base"></select></div>
+      <div class="editing" id="editing"></div>
+
+      <details open><summary>Tamanho e proporções</summary>
+        <div id="sliders"></div>
+        <label class="chk"><input type="checkbox" id="f-chibi"> Chibi (cabeça e olhos maiores)</label>
+      </details>
+
+      <details open><summary>Olhos</summary>
+        <div class="row"><label>Estilo</label><select id="f-eyestyle"></select></div>
+        <div class="slider"><label>Tamanho do olho <b id="v-eyesize"></b></label><input type="range" id="f-eyesize" min="1" max="5" step="1"></div>
+      </details>
+
+      <details open><summary>Cores</summary>
+        <div class="row"><label>Paleta pronta</label><select id="f-palette"><option value="">— aplicar paleta —</option></select></div>
+        <div class="colors" id="colors"></div>
+      </details>
+
+      <details><summary>Padrão da pele</summary>
+        <div class="row"><label>Tipo</label><select id="f-pattern"></select></div>
+        <div class="slider"><label>Escala <b id="v-pscale"></b></label><input type="range" id="f-pscale" min="3" max="10" step="1"></div>
+        <div class="slider"><label>Densidade <b id="v-pdens"></b></label><input type="range" id="f-pdens" min="0.1" max="1" step="0.05"></div>
+      </details>
+
+      <details><summary>Partes (chifres, vela, cristais…)</summary>
+        <div class="feats" id="feats"></div>
+      </details>
+
+      <details><summary>Comportamento e efeitos</summary>
+        <div class="row"><label>Ataque</label><select id="f-attack"></select></div>
+        <div class="row"><label>Tema VFX</label><select id="f-vfx"></select></div>
+      </details>
+
+      <div class="orig" id="orig"></div>
+      <div class="actions">
+        <button class="primary" id="b-save-new">Salvar como novo</button>
+        <button id="b-save-replace" disabled>Salvar por cima</button>
+      </div>
+      <label class="chk small"><input type="checkbox" id="f-force"> salvar mesmo se parecido com outro</label>
+    </aside>
+  </section>
+
+  <!-- ================= BIBLIOTECA ================= -->
+  <section id="tab-biblioteca" class="tab">
+    <div class="toolbar">
+      <input id="lib-search" type="search" placeholder="Buscar nome, espécie, padrão…">
+      <span id="lib-count"></span>
+    </div>
+    <div class="grid" id="lib-grid"></div>
+  </section>
+
+  <!-- ================= LOTE ================= -->
+  <section id="tab-lote" class="tab">
+    <div class="card form">
+      <h2>Gerar lote de dinos novos</h2>
+      <p class="hint">Cada um passa pelo bloqueio de originalidade contra todo o histórico — nada repete.</p>
+      <div class="row"><label>Quantidade</label><input id="bt-count" type="number" min="1" max="500" value="10"></div>
+      <div class="row"><label>Nome do lote</label><input id="bt-name" type="text" value="Lote"></div>
+      <div class="row"><label>Tipo</label>
+        <select id="bt-kinds"><option value="mix">Misto (reais + fantasia)</option><option value="real">Só espécies reais</option><option value="fantasy">Só fantasia</option></select></div>
+      <h3>Corpos <small>(nenhum marcado = todos)</small></h3><div class="feats" id="bt-archs"></div>
+      <h3>Temas de fantasia <small>(nenhum marcado = todos)</small></h3><div class="feats" id="bt-themes"></div>
+      <div class="actions"><button class="primary" id="bt-go">Gerar lote</button></div>
+      <div class="progress"><div id="bt-bar"></div></div>
+      <pre class="log" id="bt-log"></pre>
+    </div>
+  </section>
+
+  <!-- ================= EXPORTAR ================= -->
+  <section id="tab-exportar" class="tab">
+    <div class="card form">
+      <h2>Exportar pacote para o Roblox</h2>
+      <p class="hint">Gera um zip com os FBX (textura embutida), o arquivo único de kits e o plugin — o mesmo fluxo que você já usa.</p>
+      <div class="row"><label>Nome do pacote</label><input id="ex-name" type="text" value="Pacote"></div>
+      <div class="toolbar">
+        <input id="ex-search" type="search" placeholder="Filtrar…">
+        <button id="ex-all">Marcar todos</button><button id="ex-none">Desmarcar</button>
+        <span id="ex-count"></span>
+      </div>
+      <div class="list" id="ex-list"></div>
+      <div class="actions"><button class="primary" id="ex-go">Gerar zip</button></div>
+      <div class="progress"><div id="ex-bar"></div></div>
+      <pre class="log" id="ex-log"></pre>
+    </div>
+  </section>
+</main>
+
+<div id="toast"></div>
+<script src="/ui/vendor/three.min.js"></script>
+<script src="/ui/vendor/OrbitControls.js"></script>
+<script src="/ui/app.js"></script>
+</body>
+</html>

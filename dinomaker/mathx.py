@@ -1,4 +1,5 @@
 """Matemática mínima de transformações (espaço Roblox: X direita, Y cima, frente = -Z)."""
+import functools
 import math
 import numpy as np
 
@@ -61,6 +62,7 @@ def envelope(t, a, b, c, d):
     return 1.0 - smooth((t - c) / max(d - c, 1e-6))
 
 
+@functools.lru_cache(maxsize=2_000_000)
 def hash01(*vals):
     """Hash determinístico -> [0,1)."""
     h = 2166136261
@@ -77,6 +79,11 @@ def hash01(*vals):
 
 
 def vnoise(x, y, z, cell, seed):
+    return _vnoise(round(x, 3), round(y, 3), round(z, 3), cell, seed)
+
+
+@functools.lru_cache(maxsize=1_000_000)
+def _vnoise(x, y, z, cell, seed):
     """Value noise 3D trilinear com células de tamanho 'cell'."""
     fx, fy, fz = x / cell, y / cell, z / cell
     ix, iy, iz = math.floor(fx), math.floor(fy), math.floor(fz)

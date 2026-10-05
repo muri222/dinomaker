@@ -97,7 +97,8 @@ def resolve(spec, history=None, seed=None):
     var = {g: round(rng.uniform(lo, hi), 3) for g in GROUPS}
     var.update(spec.get("variation", {}))
     chibi = spec.get("chibi", rng.random() < (0.35 if fantasy else 0.15))
-    if chibi:
+    exact = bool(spec.get("exact"))  # vindo do editor: variação/features já são finais
+    if chibi and not exact:
         var["head"] = round(var["head"] * 1.25, 3)
         var["legs"] = round(var["legs"] * 0.85, 3)
     for g, keys in GROUPS.items():
@@ -119,9 +120,11 @@ def resolve(spec, history=None, seed=None):
                 feats.remove(f[1:])
         elif f not in feats:
             feats.append(f)
-    if "beak" in feats and "teeth" in feats and "teeth" not in spec.get("features", []):
+    if exact and "features_exact" in spec:
+        feats = list(dict.fromkeys(spec["features_exact"]))
+    elif "beak" in feats and "teeth" in feats and "teeth" not in spec.get("features", []):
         feats.remove("teeth")
-    if P["diet"] == "carnivore" and "beak" not in feats and "teeth" not in feats:
+    if not exact and P["diet"] == "carnivore" and "beak" not in feats and "teeth" not in feats:
         feats.append("teeth")
 
     P.update(spec.get("params", {}))
@@ -171,7 +174,7 @@ def resolve(spec, history=None, seed=None):
         "chibi": bool(chibi),
         "seed": seed,
         "size": size,
-        "px_size": SIZE_CLASSES.get(size, size if isinstance(size, (int, float)) else 0.14),
+        "px_size": float(spec["px_size"]) if spec.get("px_size") else SIZE_CLASSES.get(size, size if isinstance(size, (int, float)) else 0.14),
         "palette_name": pal_name,
         "palette": palette,
         "pattern": pattern,
@@ -180,6 +183,7 @@ def resolve(spec, history=None, seed=None):
         "attack": spec.get("attack", P["attack"]),
         "studs": bool(spec.get("studs", False)),
         "variation": var,
+        "param_overrides": dict(spec.get("params", {})),
         "params": P,
         "description": spec.get("description", ""),
         "vfx": spec.get("vfx", {}),
@@ -280,3 +284,19 @@ def add_to_history(hist, g, out_dir):
         "features": g["features"], "created": datetime.datetime.now().isoformat(timespec="seconds"),
         "output": out_dir, "signature": signature(g), "genome": g,
     })
+
+
+def genome_to_spec(g):
+    """Genoma -> spec editável (o editor muda campos e chama resolve de novo)."""
+    sp = {
+        "exact": True, "name": g["name"], "seed": g["seed"], "fantasy": g["fantasy"], "chibi": g.get("chibi", False),
+        "size": g["size"], "px_size": g["px_size"], "palette": dict(g["palette"]), "pattern": dict(g["pattern"]),
+        "eyes": dict(g["eyes"]), "features_exact": list(g["features"]), "variation": dict(g["variation"]),
+        "attack": g["attack"], "vfx": dict(g.get("vfx") or {}), "params": dict(g.get("param_overrides") or {}),
+        "description": g.get("description", ""),
+    }
+    if g["species"] != "custom":
+        sp["species"] = g["species"]
+    else:
+        sp["archetype"] = g["archetype"]
+    return sp

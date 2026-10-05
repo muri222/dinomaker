@@ -53,6 +53,9 @@ def main(argv=None):
     pk.add_argument("ids", nargs="*", help="ids (vazio = todos os não-legados)")
     pk.add_argument("--name", default="Lote")
     pk.add_argument("--out", default=DEFAULT_OUT)
+    pn = sub.add_parser("painel", help="abre o painel de criação/edição no navegador")
+    pn.add_argument("--port", type=int, default=8765)
+    pn.add_argument("--no-browser", action="store_true")
     r = sub.add_parser("forget", help="remove um dino do histórico")
     r.add_argument("id")
 
@@ -96,6 +99,11 @@ def main(argv=None):
         h = load_history(a.history)
         todo = [d for d in h["dinos"] if not d.get("legacy") and d.get("genome") and (not a.ids or d["id"] in a.ids)]
         pack_kits([d["genome"] for d in todo], a.out, a.name)
+        return 0
+
+    if a.cmd == "painel":
+        from .server import serve
+        serve(a.port, open_browser=not a.no_browser, history=a.history)
         return 0
 
     if a.cmd == "forget":

@@ -36,6 +36,19 @@ Com o Claude Code, use a skill **`/dino`** (`.claude/skills/dino/SKILL.md`): o C
 conceito (nome, espécie real ou fantasia, paleta, gancho visual), checa o histórico,
 gera, revisa os previews e entrega.
 
+## Painel (criar / editar / lote / exportar)
+```bash
+python -m dinomaker painel        # ou dois cliques em DinoMaker.bat (Windows)
+```
+Abre `http://localhost:8765` no navegador:
+- **Editor**: preview 3D ao vivo com textura e animações; barras para tamanho, cabeça, pescoço, cauda,
+  pernas, braços, corpo, robustez, focinho e segmentos; olhos, cores, padrão, partes (chifres, vela,
+  cristais…), ataque e VFX. **Medidor de originalidade** contra todo o histórico.
+  "Salvar como novo" (precisa ser original) ou "Salvar por cima" (edita um dino existente).
+- **Biblioteca**: todos os dinos com miniatura; clique para editar.
+- **Lote**: N dinos novos e únicos (reais, fantasia ou misto; filtra por corpo e tema).
+- **Exportar**: escolha os dinos e baixe o zip pronto (FBX + arquivo único de kits + plugin).
+
 ## Importação rápida da versão B (vários dinos)
 ```bash
 python -m dinomaker pack --name Lote1      # output/Lote1_DinoKits.rbxm + output/DinoMaker_Plugin.rbxm
